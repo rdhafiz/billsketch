@@ -14,10 +14,25 @@
 
                     <div class="col-lg-8 offset-lg-2">
                         <div class="card shadow-lg">
-                            <div class="card-body p-5" style="height: 400px">
-
-
-
+                            <div class="card-body p-5">
+                                <div class="reset_form">
+                                    <div class="title h3 text-center fw-bold mb-4">Reset</div>
+                                    <form action="">
+                                        <div class="form-group mb-4">
+                                            <label for="current_password">Current Password</label>
+                                            <input type="password" class="form-control mt-2" id="current_password" name="current_password">
+                                        </div>
+                                        <div class="form-group mb-4">
+                                            <label for="new_password">New Password</label>
+                                            <input type="password" class="form-control mt-2" id="new_password" name="new_password">
+                                        </div>
+                                        <div class="form-group mb-4">
+                                            <label for="password_confirmation">Confirm Password</label>
+                                            <input type="password" class="form-control mt-2" id="password_confirmation" name="password_confirmation">
+                                        </div>
+                                        <button class="btn btn-dark w-25">Submit</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
