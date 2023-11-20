@@ -14,10 +14,17 @@
 
                     <div class="col-lg-8 offset-lg-2">
                         <div class="card shadow-lg">
-                            <div class="card-body p-5" style="height: 400px">
-
-
-
+                            <div class="card-body p-5">
+                                <div class="title h3 text-center fw-bold mb-4">Forgot</div>
+                                <div class="forgot_form">
+                                    <form action="">
+                                        <div class="form-group mb-4">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control mt-2" id="email" name="email">
+                                        </div>
+                                        <button class="btn btn-dark w-25">Submit</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

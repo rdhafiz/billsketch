@@ -20,13 +20,10 @@
                             <div class="col-md-12 col-lg-8">
 
                                 <div class="banner_preview" data-aos="zoom-in" data-aos-duration="500" data-aos-delay="700">
-                                    <div class="title" data-aos="fade-up" data-aos-duration="500" data-aos-delay="1000">Your Invoices, Your Way</div>
+                                    <div class="title" data-aos="fade-up" data-aos-duration="500" data-aos-delay="1000">Terms of Service</div>
                                 </div>
                                 <div class="banner_description_left" data-aos="fade-up" data-aos-duration="500" data-aos-delay="1500">
-                                    Create professional invoices effortlessly, share them seamlessly, and send with ease.
-                                    Download invoices in a snap and set up recurring invoices for recurring needs.
-                                    <br><br>
-                                    <h2 class="text-theme"><strong>Simple, Smart, Secure.</strong></h2>
+                                    Please read these terms carefully before using our service.
                                 </div>
                             </div>
 
