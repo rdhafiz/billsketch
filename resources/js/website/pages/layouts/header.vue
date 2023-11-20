@@ -2,7 +2,7 @@
 
     <!-- Start Header Section -->
     <div class="header" :class="header_theme">
-        <nav class="navbar navbar-expand-lg">
+        <nav class="navbar navbar-expand-lg p-0">
             <div class="container-lg">
 
                 <!-- Start Website Name -->
@@ -30,13 +30,13 @@
                 <!-- Start Main Menu -->
                 <ul class="navbar-nav animate__animated ms-auto mb-2 mb-lg-0" :class="{'navbar-nav-show': openMenu === true}">
                     <li class="nav-item">
-                        <a href="" class="nav-link">How It Works</a>
+                        <router-link :to="{name: 'HowItWorks'}" class="nav-link">How It Works</router-link>
                     </li>
                     <li class="nav-item">
-                        <a href="" class="nav-link">Contact Us</a>
+                        <router-link :to="{name: 'ContactUs'}" class="nav-link">Contact Us</router-link>
                     </li>
                     <li class="nav-item">
-                        <a href="" class="nav-link">FAQ</a>
+                        <router-link :to="{name: 'Faq'}" class="nav-link">FAQ</router-link>
                     </li>
 <!--                    <li class="nav-item">-->
 <!--                        <router-link :to="{name: 'AboutUs'}" class="nav-link">About Us</router-link>-->
