@@ -2,12 +2,12 @@
 
     <!-- Start Header Section -->
     <div class="header" :class="header_theme">
-        <nav class="navbar navbar-expand-lg p-0">
+        <nav class="navbar navbar-expand-lg">
             <div class="container-lg">
 
                 <!-- Start Website Name -->
                 <a class="navbar-brand" href="/">
-                    <img :src="'/assets/images/mediprospects.png'" alt="">
+                    <img :src="'/assets/images/bilify.png'" alt="">
                 </a>
                 <!-- End Website Name -->
 
