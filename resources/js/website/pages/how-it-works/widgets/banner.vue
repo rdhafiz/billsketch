@@ -20,13 +20,12 @@
                             <div class="col-md-12 col-lg-8">
 
                                 <div class="banner_preview" data-aos="zoom-in" data-aos-duration="500" data-aos-delay="700">
-                                    <div class="title" data-aos="fade-up" data-aos-duration="500" data-aos-delay="1000">Your Invoices, Your Way</div>
+                                    <div class="title" data-aos="fade-up" data-aos-duration="500" data-aos-delay="1000">How Bilify Works</div>
                                 </div>
                                 <div class="banner_description_left" data-aos="fade-up" data-aos-duration="500" data-aos-delay="1500">
-                                    Create professional invoices effortlessly, share them seamlessly, and send with ease.
-                                    Download invoices in a snap and set up recurring invoices for recurring needs.
+                                    Explore the seamless workflow of Bilify <br> And simplify your invoicing
                                     <br><br>
-                                    <h2 class="text-theme"><strong>Simple, Smart, Secure.</strong></h2>
+                                    <h4 class="text-theme"><a class="text-decoration-none"><strong>Get Started with Bilify <i class="fa fa-fw fa-arrow-right"></i></strong></a></h4>
                                 </div>
                             </div>
 

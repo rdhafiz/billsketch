@@ -22,7 +22,7 @@
                     /*margin-bottom: 5px;*/
                     display: inline-block;
                     font-size: 14px;
-                    padding: 3px;
+                    padding: 5px;
                     font-weight: bold;
                     opacity: 1;
                     cursor: pointer;
@@ -64,7 +64,8 @@
                     }
                     &:hover, &:active, &:focus {
                         a {
-                            padding: 3px;
+                            color: var(--theme-color);
+                            padding: 5px;
                         }
                     }
                 }
