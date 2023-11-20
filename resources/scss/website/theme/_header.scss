@@ -9,6 +9,13 @@
     background-color: transparent;
     @include transition(all 0.4s linear);
 
+    .navbar-brand {
+        img {
+            max-height: 35px;
+            //filter: brightness(0);
+        }
+    }
+
     /**
      * =====================
      * Mobile Menu Bar
@@ -271,7 +278,7 @@
 
         .navbar-brand {
             img {
-                filter: brightness(0);
+                //filter: brightness(0);
             }
         }
 

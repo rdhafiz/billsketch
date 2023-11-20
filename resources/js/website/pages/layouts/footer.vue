@@ -7,8 +7,8 @@
                     <div class="w-100 short-links mb-3">
                         <div class="w-100 pt-4">
                             <div class="w-100">
-                                <a class="w-100" href="/" style="filter: brightness(0)">
-                                    <img :src="'/assets/images/mediprospects.png'" alt="">
+                                <a class="w-100" href="/">
+                                    <img style="height: 35px" :src="'/assets/images/bilify.png'" alt="">
                                 </a>
                             </div>
                             <div class="w-100 mt-3">
