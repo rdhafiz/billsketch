@@ -54,9 +54,12 @@
                         font-size: 25px;
                     }
                 }
-                .address, .phone, .email, .map{
+                .address, .phone, .email{
                     display: flex;
                     align-items: center;
+                    .icon{
+                        font-size: 20px;
+                    }
                 }
                 a{
                     display: block;

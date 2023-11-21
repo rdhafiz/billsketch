@@ -331,9 +331,6 @@
         z-index: 2;
         background: linear-gradient(to right, #000000 , rgba(#000000, 0.5));
         align-items: center;
-        @media screen and (max-width: 767px) {
-            height: 80vh;
-        }
         .banner_preview{
             width: 100%;
             display: inline-block;
@@ -348,6 +345,10 @@
                 font-weight: 800;
                 color: var(--color-white);
                 text-shadow: 1px 1px 1px var(--color-black);
+                @media screen and (max-width: 767px) {
+                    font-size: 30px;
+                    line-height: 30px;
+                }
             }
             .sub_title{
                 width: 100%;

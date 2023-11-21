@@ -3,10 +3,10 @@
     <!----------------------->
     <!-- Start How It Works -->
     <!----------------------->
-    <div class="page_works bg-light">
+    <div class="page_how_it_works bg-light">
 
         <!-- Start How It Works  Content -->
-        <div class="page_works_content">
+        <div class="page_how_it_works_content">
             <div class="w-100 py-5">
                 <div class="container">
                     <h1 class="m-0 p-0 text-center"><strong>How It Works</strong></h1>

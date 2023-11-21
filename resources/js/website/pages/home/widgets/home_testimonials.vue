@@ -12,7 +12,7 @@
                     <h1 class="m-0 p-0 text-center"><strong>Testimonials</strong></h1>
                     <div class="testimonial_items my-5">
                         <div class="row justify-content-center">
-                            <div class="col-6">
+                            <div class="col-10 col-lg-6">
                                 <div class="content">
                                     <div class="avatar">
                                         <img :src="'/assets/images/profile.png'" alt="user image">

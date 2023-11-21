@@ -44,27 +44,25 @@
                                     <div class="title mb-5">Our Contact Information</div>
                                     <div class="address mb-4 mt-5">
                                         <span class="icon me-3">
-                                            <i class="fa fa-location-arrow" aria-hidden="true"></i>
+                                            <i class="fa fa-home"></i>
                                         </span>
-                                        <span class="text">
-                                            Shahi Tower, New Market <br> Jashore, Khulna, Bangladesh
-                                        </span>
+                                        <span class="text">5-7 High Street, London, E13 0AD</span>
                                     </div>
-                                    <a class="phone mb-4">
+                                    <a href="tel:01700000000" class="phone mb-4">
                                         <span class="icon me-3">
                                             <i class="fa fa-phone" aria-hidden="true"></i>
                                         </span>
                                         <span class="text">01700000000</span>
                                     </a>
-                                    <a class="email mb-4">
+                                    <a href="mailto:hello@mediprospects.ai" class="email mb-4">
                                         <span class="icon me-3">
-                                            <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                            <i class="fa fa-envelope"></i>
                                         </span>
-                                        <span class="text">redishketch@gmail.com</span>
+                                        <span class="text">hello@mediprospects.ai</span>
                                     </a>
                                     <div class="map pt-4">
                                         <iframe
-                                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3667.8152213900376!2d89.21354308577313!3d23.17694315658789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ff115afe36f205%3A0x6914a3d55e81646a!2sJashore%2C%20High%20Court%20Mor!5e0!3m2!1sen!2sbd!4v1700546882238!5m2!1sen!2sbd"
+                                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.0203922280502!2d0.017110276911066244!3d51.531185808965006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47d8a7ebd4aa364f%3A0xb268e69019c23683!2s5-7%20High%20St%2C%20London%20E13%200AD%2C%20UK!5e0!3m2!1sen!2sbd!4v1700555592488!5m2!1sen!2sbd"
                                             width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"
                                             referrerpolicy="no-referrer-when-downgrade"></iframe>
                                     </div>
