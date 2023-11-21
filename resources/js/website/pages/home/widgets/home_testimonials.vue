@@ -25,20 +25,6 @@
                                 </div>
                             </div>
                         </div>
-<!--                        <div class="row justify-content-center">
-                            <div class="col-6">
-                                <div class="content">
-                                    <div class="avatar">
-                                        <img :src="'/assets/images/profile.png'" alt="user image">
-                                    </div>
-                                    <div class="text">
-                                        The invoice system has revolutionized how I manage my billing. Highly recommended!
-                                    </div>
-                                    <div class="name">John Doe</div>
-                                    <div class="role text-muted">Small Business Owner</div>
-                                </div>
-                            </div>
-                        </div>-->
                     </div>
                 </div>
             </div>
@@ -55,14 +41,6 @@
 export default {
     methods: {},
 
-    mounted() {
-    //     $('.testimonial_items').owlCarousel({
-    //         dots: false,
-    //         margin: 20,
-    //         autoplay: true,
-    //         touchDrag: false,
-    //         mouseDrag: false,
-    // })
-  }
+    mounted() {}
 }
 </script>
