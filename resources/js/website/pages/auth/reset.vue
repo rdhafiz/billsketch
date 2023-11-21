@@ -7,40 +7,52 @@
         </div>
         <!-- End Home Banner Video -->
 
-        <!-- Start Home Banner Content -->
-        <div class="page_banner_content">
+        <!-- Start Auth Content -->
+        <div class="auth_content">
             <div class="w-100">
                 <div class="container">
-
-                    <div class="col-lg-8 offset-lg-2">
-                        <div class="card shadow-lg">
-                            <div class="card-body p-5">
-                                <div class="reset_form">
-                                    <div class="title h3 text-center fw-bold mb-4">Reset</div>
-                                    <form action="">
-                                        <div class="form-group mb-4">
-                                            <label for="current_password">Current Password</label>
-                                            <input type="password" class="form-control mt-2" id="current_password" name="current_password">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="card shadow-lg">
+                                <div class="card-body px-3 px-sm-5 py-5">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-7">
+                                            <div class="auth_bg">
+                                                <img src="/assets/images/auth_bg.jpg" alt="auth images">
+                                            </div>
                                         </div>
-                                        <div class="form-group mb-4">
-                                            <label for="new_password">New Password</label>
-                                            <input type="password" class="form-control mt-2" id="new_password" name="new_password">
+                                        <div class="col-lg-5">
+                                            <div class="login_form">
+                                                <div class="title h2 fw-bold mb-5">Reset</div>
+                                                <form action="">
+                                                    <div class="form-group mb-4">
+                                                        <label for="current_password">Current Password</label>
+                                                        <input type="password" class="form-control mt-2" id="current_password" name="current_password">
+                                                    </div>
+                                                    <div class="form-group mb-4">
+                                                        <label for="new_password">New Password</label>
+                                                        <input type="password" class="form-control mt-2" id="new_password" name="new_password">
+                                                    </div>
+                                                    <div class="form-group mb-4">
+                                                        <label for="password_confirmation">Confirm Password</label>
+                                                        <input type="password" class="form-control mt-2" id="password_confirmation" name="password_confirmation">
+                                                    </div>
+                                                    <button class="btn btn-dark auth-btn w-100">Update</button>
+                                                    <div class="page_switch text-center mt-4">
+                                                        <router-link :to="{name: 'Login'}">Back to Login</router-link>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
-                                        <div class="form-group mb-4">
-                                            <label for="password_confirmation">Confirm Password</label>
-                                            <input type="password" class="form-control mt-2" id="password_confirmation" name="password_confirmation">
-                                        </div>
-                                        <button class="btn btn-dark w-25">Submit</button>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
-        <!-- End Home Banner Content -->
+        <!-- End Auth Content -->
 
     </div>
 </template>

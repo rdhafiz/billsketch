@@ -1,0 +1,72 @@
+/*Contact Form And Info*/
+.page_contact_form{
+    .page_contact_form_content{
+        .content{
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            background-color: var(--color-white);
+            position: relative;
+            top: -250px;
+            z-index: 99;
+            border-radius: 8px;
+            @media screen and (max-width: 991px) {
+                position: static;
+                top: 0;
+                box-shadow: none;
+                border-radius: 8px;
+            }
+            .contact_form{
+                .title{
+                    font-weight: bold;
+                    font-size: 30px;
+                    color: var(--theme-color);
+                    @media screen and (max-width: 575px) {
+                        font-size: 25px;
+                    }
+                }
+                .contact-btn{
+                    padding: 10px;
+                    min-width: 200px;
+                    border-radius: 8px;
+                    background-color: var(--theme-color);
+                    color: var(--color-white);
+                    font-size: 20px;
+                    border: 1px solid var(--theme-color);
+                    outline: none;
+                    transition: all .4s ease-in-out;
+                    &:hover{
+                        transition: all .4s ease-in-out;
+                        background-color: var(--theme-color-dark);
+                    }
+                }
+            }
+            .contact_info{
+                background-color: var(--theme-color);
+                color: var(--color-white);
+                height: 100%;
+                border-radius: 0 8px 8px 0;
+                @media screen and (max-width: 991px) {
+                    border-radius: 0;
+                }
+                .title{
+                    font-weight: bold;
+                    font-size: 30px;
+                    @media screen and (max-width: 575px) {
+                        font-size: 25px;
+                    }
+                }
+                .address, .phone, .email{
+                    display: flex;
+                    align-items: center;
+                    .icon{
+                        font-size: 20px;
+                    }
+                }
+                a{
+                    display: block;
+                    color: var(--color-white);
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+}

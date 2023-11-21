@@ -1,7 +1,6 @@
 <template>
-    <Home_banner :title="'Contact Us'" :sub_title="'Have questions or need assistance? Reach out to our team.'"></Home_banner>
-    <Dummy_section :bg="'bg-white'" :title="'Contact Information'"></Dummy_section>
-    <Dummy_section :bg="'bg-light border border-top border-bottom'" :title="'Contact Form'"></Dummy_section>
+    <Home_banner></Home_banner>
+    <Contact_form></Contact_form>
     <Cta :title="'We\'re Here to Help'" :sub_title="'Reach out to our team for any assistance or inquiries.'" :action_title="'Send a Message'"></Cta>
 </template>
 <script>
@@ -10,9 +9,11 @@ import Dummy_section from "../layouts/dummy_section.vue";
 
 import AOS from 'aos';
 import Cta from "../layouts/cta.vue";
+import Contact_form from "./widgets/contact_form.vue";
 
 export default {
     components: {
+        Contact_form,
         Cta,
         Dummy_section,
         Home_banner

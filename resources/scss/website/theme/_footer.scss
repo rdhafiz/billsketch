@@ -44,12 +44,18 @@
                 color: var(--color-white);
                 font-size: 60px;
                 margin-bottom: 50px;
+                @media screen and (max-width: 767px) {
+                    font-size: 30px;
+                }
             }
             .cta-sub-title{
                 text-align: center;
                 color: var(--color-white);
                 font-size: 35px;
                 margin-bottom: 50px;
+                @media screen and (max-width: 767px) {
+                    font-size: 25px;
+                }
             }
             .cta-action{
                 cursor: pointer;
@@ -62,6 +68,9 @@
                 background: #000000;
                 padding: 15px 40px;
                 border: 5px solid #222222;
+                @media screen and (max-width: 767px) {
+                    font-size: 20px;
+                }
                 &:active,&:hover{
                     background: #222222;
                     border: 5px solid #000000;
@@ -141,6 +150,21 @@
                             padding: 5px;
                         }
                     }
+                }
+            }
+        }
+    }
+
+    .our_partners{
+        .app_store{
+            display: flex;
+            flex-direction: column;
+            a{
+                display: inline-block;
+                img{
+                    height: 60px;
+                    width: 200px;
+                    object-fit: cover;
                 }
             }
         }

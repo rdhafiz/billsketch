@@ -1,0 +1,67 @@
+/*Auth Content*/
+.page_banner{
+    .auth_content{
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        position: relative;
+        z-index: 2;
+        background: linear-gradient(to right, #000000, rgba(0, 0, 0, 0.5));
+        align-items: center;
+        padding: 70px 0;
+        @media screen and (max-width: 991px) {
+            padding-top: 100px;
+        }
+        .auth_bg{
+            img{
+                max-width: 100%;
+            }
+        }
+        .login-options{
+            .google, .facebook{
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+                padding: 8px 40px;
+                width: 100%;
+                border-radius: 8px;
+                color: var(--color-white);
+                i{
+                    font-size: 30px;
+                    margin-right: 15px;
+                }
+            }
+            .google{
+                background-color: var(--color-red);
+            }
+            .facebook{
+                background-color: var(--color-sky);
+            }
+        }
+        .form-group{
+            &.w-48{
+                width: 48%;
+            }
+            .form-control{
+                height: 46px;
+            }
+        }
+        .auth-btn{
+            background-color: var(--theme-color);
+            border: 1px solid var(--theme-color);
+            padding: 10px 12px;
+            transition: all .4s ease-in-out;
+            &:hover{
+                transition: all .4s ease-in-out;
+                background-color: var(--theme-color-dark);
+            }
+        }
+        .page_switch{
+            a{
+                color: var(--theme-color);
+                text-decoration: none;
+                display: inline-block;
+            }
+        }
+    }
+}

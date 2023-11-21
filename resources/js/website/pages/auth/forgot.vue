@@ -8,27 +8,39 @@
         <!-- End Home Banner Video -->
 
         <!-- Start Home Banner Content -->
-        <div class="page_banner_content">
+        <div class="auth_content">
             <div class="w-100">
                 <div class="container">
-
-                    <div class="col-lg-8 offset-lg-2">
-                        <div class="card shadow-lg">
-                            <div class="card-body p-5">
-                                <div class="title h3 text-center fw-bold mb-4">Forgot</div>
-                                <div class="forgot_form">
-                                    <form action="">
-                                        <div class="form-group mb-4">
-                                            <label for="email">Email</label>
-                                            <input type="email" class="form-control mt-2" id="email" name="email">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="card shadow-lg">
+                                <div class="card-body px-3 px-sm-5 py-5">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-7">
+                                            <div class="auth_bg">
+                                                <img src="/assets/images/auth_bg.jpg" alt="auth images">
+                                            </div>
                                         </div>
-                                        <button class="btn btn-dark w-25">Submit</button>
-                                    </form>
+                                        <div class="col-lg-5">
+                                            <div class="login_form">
+                                                <div class="title h2 fw-bold mb-5">Forgot</div>
+                                                <form action="">
+                                                    <div class="form-group mb-4">
+                                                        <label for="email">Email</label>
+                                                        <input type="email" class="form-control mt-2" id="email" name="email">
+                                                    </div>
+                                                    <router-link :to="{name: 'Reset'}" class="btn btn-dark auth-btn w-100">Submit</router-link>
+                                                    <div class="page_switch text-center mt-4">
+                                                        <router-link :to="{name: 'Login'}">Back to Login</router-link>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
