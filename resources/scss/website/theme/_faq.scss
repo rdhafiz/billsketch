@@ -1,0 +1,31 @@
+/* FAQ */
+.page_faqs{
+    .page_faqs_content{
+        .faq_items{
+            .accordion{
+                .accordion-item{
+                    border: none;
+                    border-bottom: 1px solid var(--theme-light);
+                    background-color: transparent;
+                    &:last-child{
+                        border-bottom: none;
+                    }
+                    .accordion-button{
+                        padding: 20px;
+                        background-color: transparent;
+                        box-shadow: none;
+                        font-size: 24px;
+                        font-weight: bold;
+                        color: var(--theme-color);
+                        @media screen and (max-width: 575px) {
+                            font-size: 18px;
+                        }
+                    }
+                    .accordion-body{
+                        padding: 20px;
+                    }
+                }
+            }
+        }
+    }
+}

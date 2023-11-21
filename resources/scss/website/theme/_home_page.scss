@@ -73,3 +73,35 @@
         }
     }
 }
+
+/* Testimonials */
+.page_testimonials{
+    .page_testimonials_content{
+        .testimonial_items{
+            .content{
+                text-align: center;
+                .avatar{
+                    img{
+                        height: 80px;
+                        width: 80px;
+                    }
+                }
+                .text{
+                    font-size: 24px;
+                    margin-top: 30px;
+                    margin-bottom: 20px;
+                    &:before{
+                        content: "";
+                    }
+                }
+                .name{
+                    font-size: 20px;
+                    font-weight: bold;
+                }
+                .role{
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+}
