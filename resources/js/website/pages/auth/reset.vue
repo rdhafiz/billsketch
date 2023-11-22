@@ -1,48 +1,59 @@
 <template>
-    <div class="page_banner">
+    <Reset_banner></Reset_banner>
 
-        <!-- Start Home Banner Video -->
-        <div class="img-bg">
-            <img class="w-100" :src="'/assets/images/banner/home-banner.jpg'" alt="" loading="lazy">
-        </div>
-        <!-- End Home Banner Video -->
-
-        <!-- Start Auth Content -->
-        <div class="auth_content">
-            <div class="w-100">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-10">
-                            <div class="card shadow-lg">
-                                <div class="card-body px-3 px-sm-5 py-5">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-7">
-                                            <div class="auth_bg">
-                                                <img :src="'/assets/images/auth_bg.jpg'" alt="auth images">
-                                            </div>
+    <div class="floating-section w-100">
+        <div class="container-lg">
+            <div class="floating-section-content w-100">
+                <div class="row">
+                    <div class="col-xl-10 offset-xl-1">
+                        <div class="card shadow-lg border border-2 border-primary">
+                            <div class="card-body px-3 px-sm-5 py-5">
+                                <div class="row">
+                                    <div class="col-xl-7 d-none d-xl-block">
+                                        <div class="auth_bg">
+                                            <img :src="'/assets/images/auth_bg.jpg'" alt="auth images">
                                         </div>
-                                        <div class="col-lg-5">
-                                            <div class="login_form">
-                                                <div class="title h2 fw-bold mb-5">Reset</div>
-                                                <form action="">
-                                                    <div class="form-group mb-4">
-                                                        <label for="current_password">Current Password</label>
-                                                        <input type="password" class="form-control mt-2" id="current_password" name="current_password">
+                                    </div>
+                                    <div class="col-xl-5">
+                                        <div class="w-100 h-100 d-flex align-items-center">
+
+                                            <form class="w-100" action="">
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="reset_code">
+                                                        <strong>Reset Code</strong>
+                                                    </label>
+                                                    <input type="text" class="form-control form-control-lg" id="reset_code"
+                                                           name="reset_code" placeholder="Reset Code"
+                                                           required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="new_password">
+                                                        <strong>New Password</strong>
+                                                    </label>
+                                                    <input type="password" class="form-control form-control-lg" id="new_password"
+                                                           name="new_password" placeholder="Password" required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="password_confirmation">
+                                                        <strong>Confirm Password</strong>
+                                                    </label>
+                                                    <input type="password" class="form-control form-control-lg" id="password_confirmation"
+                                                           name="password_confirmation" placeholder="Confirm Password"
+                                                           required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <button class="btn btn-lg btn-success w-100"><i
+                                                        class="fa fa-fw fa-send"></i> Update
+                                                    </button>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="w-100 text-center">
+                                                        Back to Login?
+                                                        <router-link :to="{name: 'Login'}">Sign In</router-link>
                                                     </div>
-                                                    <div class="form-group mb-4">
-                                                        <label for="new_password">New Password</label>
-                                                        <input type="password" class="form-control mt-2" id="new_password" name="new_password">
-                                                    </div>
-                                                    <div class="form-group mb-4">
-                                                        <label for="password_confirmation">Confirm Password</label>
-                                                        <input type="password" class="form-control mt-2" id="password_confirmation" name="password_confirmation">
-                                                    </div>
-                                                    <button class="btn btn-dark auth-btn w-100">Update</button>
-                                                    <div class="page_switch text-center mt-4">
-                                                        <router-link :to="{name: 'Login'}">Back to Login</router-link>
-                                                    </div>
-                                                </form>
-                                            </div>
+                                                </div>
+                                            </form>
+
                                         </div>
                                     </div>
                                 </div>
@@ -52,14 +63,16 @@
                 </div>
             </div>
         </div>
-        <!-- End Auth Content -->
-
     </div>
+
+
 </template>
 <script>
+import Reset_banner from "./widgets/reset_banner.vue";
 
 export default {
     components: {
+        Reset_banner
     },
     created() {
         window.scroll(0, 0);
