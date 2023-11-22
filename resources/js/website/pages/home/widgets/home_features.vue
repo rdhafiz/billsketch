@@ -3,13 +3,13 @@
     <!----------------------->
     <!-- Start Home Features -->
     <!----------------------->
-    <div class="page_features">
+    <div class="page_features py-5 bg-light border-top border-bottom">
 
         <!-- Start Home Features Content -->
         <div class="page_features_content">
             <div class="w-100 py-5">
                 <div class="container">
-                    <h1 class="m-0 p-0 text-center"><strong>Features</strong></h1>
+                    <h1 class="m-0 p-0 pb-5 text-center"><strong>Features</strong></h1>
                     <div class="feature_items mt-5">
                         <div class="row">
                             <div class="col-12 col-lg-6 position-absolute-feature p-0">

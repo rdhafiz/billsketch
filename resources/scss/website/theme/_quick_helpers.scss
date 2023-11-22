@@ -2,3 +2,15 @@
 .text-theme{
     color: var(--theme-color);
 }
+
+// Button
+.btn-theme{
+    background-color: var(--theme-color);
+    border-color: var(--theme-color);
+    color: #ffffff;
+    &:hover,&:active,&:focus{
+        background-color: var(--theme-color-dark);
+        border-color: var(--theme-color-dark);
+        color: #ffffff;
+    }
+}
