@@ -420,4 +420,19 @@
             }
         }
     }
+
+    &.page_banner_50{
+        width: 100%;
+        z-index: 2;
+        background: linear-gradient(to right, #000000 , rgba(#000000, 0.5));
+        .img-bg {
+            height: 50vh;
+            img {
+                height: 50vh;
+            }
+        }
+        .page_banner_content {
+            height: 50vh;
+        }
+    }
 }

@@ -1,58 +1,56 @@
 <template>
-    <div class="page_banner">
+    <Login_banner></Login_banner>
 
-        <!-- Start Home Banner Video -->
-        <div class="img-bg">
-            <img class="w-100" :src="'/assets/images/banner/home-banner.jpg'" alt="" loading="lazy">
-        </div>
-        <!-- End Home Banner Video -->
-
-        <!-- Start Home Banner Content -->
-        <div class="auth_content">
-            <div class="w-100">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-10">
-                            <div class="card shadow-lg">
-                                <div class="card-body px-3 px-sm-5 py-5">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-7 d-none d-lg-block">
-                                            <div class="auth_bg">
-                                                <img src="/assets/images/auth_bg.jpg" alt="auth images">
-                                            </div>
+    <div class="floating-section w-100">
+        <div class="container-lg">
+            <div class="floating-section-content w-100">
+                <div class="row">
+                    <div class="col-xl-10 offset-lg-1">
+                        <div class="card shadow-lg border border-2 border-primary">
+                            <div class="card-body px-3 px-sm-5 py-5">
+                                <div class="row">
+                                    <div class="col-xl-7 d-none d-xl-block">
+                                        <div class="auth_bg">
+                                            <img :src="'/assets/images/auth_bg.jpg'" alt="auth images">
                                         </div>
-                                        <div class="col-lg-5">
-                                            <div class="login_form">
-                                                <div class="title h2 fw-bold mb-5">Sign In</div>
-                                                <div class="login-options">
-                                                    <a href="" class="facebook mb-3">
-                                                        <i class="fa fa-facebook" aria-hidden="true"></i>
-                                                        <span>Sign In with Facebook</span>
-                                                    </a>
-                                                    <a href="" class="google mb-4">
-                                                        <i class="fa fa-google-plus" aria-hidden="true"></i>
-                                                        <span>Sign In with Google</span>
-                                                    </a>
-                                                </div>
-                                                <form action="">
-                                                    <div class="form-group mb-3">
-                                                        <label for="email">Email</label>
-                                                        <input type="email" class="form-control mt-2" id="email" name="email">
-                                                    </div>
-                                                    <div class="form-group mb-4">
-                                                        <label for="password">Password</label>
-                                                        <input type="password" class="form-control mt-2" id="password" name="password">
-                                                    </div>
-                                                    <button class="btn btn-dark auth-btn w-100">Sign In</button>
-                                                    <div class="page_switch text-center">
-                                                        <router-link :to="{name: 'Forgot'}" class="mt-4 mb-2">Forgot Password?</router-link>
-                                                        <div>
-                                                            Don't have an account?
-                                                            <router-link :to="{name: 'Register'}">Sign Up</router-link>
-                                                        </div>
-                                                    </div>
-                                                </form>
+                                    </div>
+                                    <div class="col-xl-5">
+                                        <div class="w-100">
+
+
+                                            <div class="form-group mb-3">
+                                                <button class="btn btn-lg btn-primary w-100"><i class="fa fa-fw fa-facebook"></i> Sign In with Facebook</button>
                                             </div>
+                                            <div class="form-group mb-3">
+                                                <button class="btn btn-lg btn-danger w-100"><i class="fa fa-fw fa-google-plus"></i> Sign In with Google</button>
+                                            </div>
+                                            <div class="form-group my-4 text-center">
+                                                --- OR ---
+                                            </div>
+
+                                            <form class="w-100" action="">
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label"><strong>Email</strong></label>
+                                                    <input type="email" class="form-control form-control-lg" name="email" placeholder="Email" required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label d-flex justify-content-between align-items-center">
+                                                        <strong>Password</strong>
+                                                        <router-link :to="{name: 'Forgot'}"><small>Forgot Password?</small></router-link>
+                                                    </label>
+                                                    <input type="password" class="form-control form-control-lg" name="password" placeholder="Password" required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <button class="btn btn-lg btn-success w-100"><i class="fa fa-fw fa-send"></i> Sign In</button>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="w-100 text-center">
+                                                        Don't have an account?
+                                                        <router-link :to="{name: 'Register'}">Sign Up</router-link>
+                                                    </div>
+                                                </div>
+                                            </form>
+
                                         </div>
                                     </div>
                                 </div>
@@ -62,14 +60,15 @@
                 </div>
             </div>
         </div>
-        <!-- End Home Banner Content -->
-
     </div>
+
+
 </template>
 <script>
-
+import Login_banner from "./widgets/login_banner.vue";
 export default {
     components: {
+        Login_banner
     },
     created() {
         window.scroll(0, 0);
