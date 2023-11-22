@@ -18,7 +18,7 @@
                                     <div class="row align-items-center">
                                         <div class="col-lg-7">
                                             <div class="auth_bg">
-                                                <img src="/assets/images/auth_bg.jpg" alt="auth images">
+                                                <img :src="'/assets/images/auth_bg.jpg'" alt="auth images">
                                             </div>
                                         </div>
                                         <div class="col-lg-5">
