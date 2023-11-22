@@ -59,31 +59,23 @@
     .page_works_content{
         .work_items{
             .content{
-                height: 100%;
+                height: 450px;
                 width: 100%;
-                background-color: var(--color-black);
+                background-color: var(--color-white);
                 border-radius: 8px;
-                padding: 40px 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
                 text-align: center;
+                padding: 30px;
                 .icon{
-                    font-size: 30px;
-                    color: var(--color-white);
+                    img{ height: 100px; }
                 }
                 .title{
-                    padding: 0 20px;
                     color: var(--theme-color);
-                    margin: 15px 0;
-                    @media screen and (max-width: 767px) {
-                        padding: 0 10px;
-                    }
                 }
                 .desc{
-                    padding: 0 40px;
-                    color: var(--color-white);
-
-                    @media screen and (max-width: 767px){
-                        padding: 0 20px;
-                    }
+                    color: var(--color-black);
                 }
             }
         }

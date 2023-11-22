@@ -1,9 +1,8 @@
 <template>
     <Home_banner></Home_banner>
-    <Home_features></Home_features>
     <Home_works></Home_works>
+    <Home_features></Home_features>
     <Home_testimonials></Home_testimonials>
-
     <Cta :title="'Ready to Simplify Your Invoicing?'" :action_title="'Get Started'"></Cta>
 </template>
 <script>
