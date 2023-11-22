@@ -68,7 +68,7 @@ class AuthController extends Controller
             ->first();
 
         if (!$userInfo instanceof User) {
-            $password = rand(1000, 99999);
+            $password = rand(10000, 999999);
             $userData = [
                 'first_name' => $requestData['first_name'],
                 'last_name' => $requestData['last_name'] ?? null,
@@ -140,11 +140,48 @@ class AuthController extends Controller
                 User::where('id', $userInfo['id'])->forceDelete();
                 return response()->json(['status' => 500, 'message' => 'Cannot save company'], 200);
             }
+            $userInfo->company_id = $companyInfo['id'];
+            if (!$userInfo->save()) {
+                User::where('id', $userInfo['id'])->forceDelete();
+                Companies::where('id', $companyInfo['id'])->forceDelete();
+                return response()->json(['status' => 500, 'message' => 'Cannot register user'], 200);
+            }
         }
         AuthRepository::sendVerificationEmail($userInfo);
         return response()->json(['status' => 200, 'message' => 'A verification mail has been sent to your email, Please verify the email to login'], 200);
     }
-    public function forget(Request $request)
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function verifyAccount(Request $request): JsonResponse
+    {
+        $requestData = $request->all();
+        $validator = Validator::make($requestData, [
+            'code' => 'required|string',
+            'email' => 'required|email',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => 500, 'errors' => $validator->errors()]);
+        }
+        $userInfo = User::where('email', $requestData['email'])->where('activation_code', base64_decode($requestData['code']))->first();
+        if (!$userInfo instanceof User) {
+            return response()->json(['status' => 500, 'message' => 'Cannot find user'], 200);
+        }
+        $userInfo->activation_code = null;
+        if (!$userInfo->save()) {
+            return response()->json(['status' => 500, 'message' => 'Cannot verify user, Please try again'], 200);
+        }
+        $access_token = $userInfo->createToken('authToken')->accessToken;
+        return response()->json(['status' => 200, 'access_token' => $access_token, 'user' => User::parseData($userInfo)]);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function forgotPassword(Request $request): JsonResponse
     {
         $requestData = $request->all();
         $validator = Validator::make($requestData, [
@@ -157,5 +194,42 @@ class AuthController extends Controller
         if (!$userInfo instanceof User) {
             return response()->json(['status' => 500, 'errors' => ['email' => ['Invalid Email']]], 200);
         }
+        $resetCode = rand(100000, 999999);
+        $userInfo->reset_code = $resetCode;
+        if (!$userInfo->save()) {
+            return response()->json(['status' => 500, 'message' => 'Cannot set reset code'], 200);
+        }
+        Mail::send('email.reset_code', ['userInfo' => $userInfo], function ($message) use ($userInfo) {
+            $message->to($userInfo['email'], $userInfo['first_name'].' '.$userInfo['last_name'] ?? '')->subject(env('APP_NAME') . ': Password Reset code');
+            $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+        });
+        return response()->json(['status' => 200, 'message' => 'A reset code has been sent to your email'], 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function resetPassword(Request $request): JsonResponse
+    {
+        $requestData = $request->all();
+        $validator = Validator::make($requestData, [
+            'email' => 'required|email',
+            'reset_code' => 'required|string',
+            'password' => 'required|confirmed',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => 500, 'errors' => $validator->errors()]);
+        }
+        $userInfo = User::where('email', $requestData['email'])->where('reset_code', $requestData['reset_code'])->first();
+        if (!$userInfo instanceof User) {
+            return response()->json(['status' => 500, 'errors' => ['reset_code' => ['Invalid reset code']]], 200);
+        }
+        $userInfo->reset_code = null;
+        $userInfo->password = bcrypt($requestData['password']);
+        if (!$userInfo->save()) {
+            return response()->json(['status' => 500, 'message' => 'Cannot reset password'], 200);
+        }
+        return response()->json(['status'=> 200, 'message' => 'Password reset successful']);
     }
 }

@@ -32,12 +32,24 @@ class User extends Authenticatable
         'password',
     ];
 
-    public static function parseData($userInfo)
+    /**
+     * @param User $userInfo
+     * @return array
+     */
+    public static function parseData(User $userInfo): array
     {
         return [
             'id' => $userInfo['id'],
-            'name' => $userInfo['name'],
-            'email' => $userInfo['email']
+            'full_name' => $userInfo['first_name'].' '.$userInfo['last_name'],
+            'first_name' => $userInfo['first_name'],
+            'last_name' => $userInfo['last_name'],
+            'email' => $userInfo['email'],
+            'phone' => $userInfo['phone'],
+            'gender' => $userInfo['gender'],
+            'avatar' => $userInfo['avatar'],
+            'address' => $userInfo['address'],
+            'city' => $userInfo['city'],
+            'country' => $userInfo['country'],
         ];
     }
 }

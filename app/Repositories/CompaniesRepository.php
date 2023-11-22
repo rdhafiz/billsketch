@@ -13,11 +13,11 @@ class CompaniesRepository
     public static function save(array $data): array|Companies
     {
         $companyModel = new Companies();
-        $companyModel->company_name = $data['company_name'];
-        $companyModel->company_size = $data['company_size'];
-        $companyModel->company_address = $data['company_address'];
-        $companyModel->company_city = $data['company_city'];
-        $companyModel->company_country = $data['company_country'];
+        $companyModel->name = $data['company_name'];
+        $companyModel->size = $data['company_size'];
+        $companyModel->address = $data['company_address'];
+        $companyModel->city = $data['company_city'];
+        $companyModel->country = $data['company_country'];
         $companyModel->logo = $data['logo'] ?? null;
         $companyModel->user_id = $data['user_id'];
         if (!$companyModel->save()) {
