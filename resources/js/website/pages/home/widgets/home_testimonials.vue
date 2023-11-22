@@ -13,12 +13,9 @@
                     <div class="testimonial_items my-5">
                         <swiper :slidesPerView="1"
                                 :modules="modules"
+                                :navigation="true"
                                 :loop="true"
-                                :speed="800"
-                                :autoplay="{
-                                delay: 3000,
-                                disableOnInteraction: false,
-                              }">
+                                :speed="800">
                             <swiper-slide>
                                 <div class="row justify-content-center">
                                     <div class="col-10 col-lg-6">
@@ -71,11 +68,11 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 
 // Import Swiper styles
 import 'swiper/css';
-
+import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 // import required modules
-import {  Autoplay } from 'swiper/modules';
+import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 export default {
     components: {
         Swiper,
@@ -86,7 +83,7 @@ export default {
     mounted() {},
     setup() {
         return {
-            modules: [Autoplay],
+            modules: [ Navigation, Autoplay],
         };
     },
 }
