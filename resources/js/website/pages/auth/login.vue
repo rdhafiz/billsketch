@@ -5,7 +5,7 @@
         <div class="container-lg">
             <div class="floating-section-content w-100">
                 <div class="row">
-                    <div class="col-xl-10 offset-lg-1">
+                    <div class="col-xl-10 offset-xl-1">
                         <div class="card shadow-lg border border-2 border-primary">
                             <div class="card-body px-3 px-sm-5 py-5">
                                 <div class="row">
@@ -30,15 +30,15 @@
 
                                             <form class="w-100" action="">
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label"><strong>Email</strong></label>
-                                                    <input type="email" class="form-control form-control-lg" name="email" placeholder="Email" required>
+                                                    <label class="form-label" for="email"><strong>Email</strong></label>
+                                                    <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Email" required>
                                                 </div>
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label d-flex justify-content-between align-items-center">
+                                                    <label class="form-label d-flex justify-content-between align-items-center" for="password">
                                                         <strong>Password</strong>
                                                         <router-link :to="{name: 'Forgot'}"><small>Forgot Password?</small></router-link>
                                                     </label>
-                                                    <input type="password" class="form-control form-control-lg" name="password" placeholder="Password" required>
+                                                    <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Password" required>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <button class="btn btn-lg btn-success w-100"><i class="fa fa-fw fa-send"></i> Sign In</button>

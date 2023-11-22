@@ -19,7 +19,7 @@
                         <div class="row">
                             <div class="col-md-12 col-lg-8">
                                 <div class="banner_preview" data-aos="zoom-in" data-aos-duration="500" data-aos-delay="700">
-                                    <div class="title" data-aos="fade-up" data-aos-duration="500" data-aos-delay="1000">Sign In Now</div>
+                                    <div class="title" data-aos="fade-up" data-aos-duration="500" data-aos-delay="1000">Reset Password</div>
                                 </div>
                                 <div class="banner_description_left" data-aos="fade-up" data-aos-duration="500" data-aos-delay="1500">
                                     You can use our one click social login or with your secure credential to access you portal

@@ -1,40 +1,38 @@
 <template>
-    <div class="page_banner">
+    <Forgot_banner></Forgot_banner>
 
-        <!-- Start Home Banner Video -->
-        <div class="img-bg">
-            <img class="w-100" :src="'/assets/images/banner/home-banner.jpg'" alt="" loading="lazy">
-        </div>
-        <!-- End Home Banner Video -->
-
-        <!-- Start Home Banner Content -->
-        <div class="auth_content">
-            <div class="w-100">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-10">
-                            <div class="card shadow-lg">
-                                <div class="card-body px-3 px-sm-5 py-5">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-7">
-                                            <div class="auth_bg">
-                                                <img :src="'/assets/images/auth_bg.jpg'" alt="auth images">
-                                            </div>
+    <div class="floating-section w-100">
+        <div class="container-lg">
+            <div class="floating-section-content w-100">
+                <div class="row">
+                    <div class="col-xl-10 offset-xl-1">
+                        <div class="card shadow-lg border border-2 border-primary">
+                            <div class="card-body px-3 px-sm-5 py-5">
+                                <div class="row">
+                                    <div class="col-xl-7 d-none d-xl-block">
+                                        <div class="auth_bg">
+                                            <img :src="'/assets/images/auth_bg.jpg'" alt="auth images">
                                         </div>
-                                        <div class="col-lg-5">
-                                            <div class="login_form">
-                                                <div class="title h2 fw-bold mb-5">Forgot</div>
-                                                <form action="">
-                                                    <div class="form-group mb-4">
-                                                        <label for="email">Email</label>
-                                                        <input type="email" class="form-control mt-2" id="email" name="email">
+                                    </div>
+                                    <div class="col-xl-5">
+                                        <div class="w-100 h-100 d-flex align-items-center">
+
+                                            <form class="w-100" action="">
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="email"><strong>Email</strong></label>
+                                                    <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Email" required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <router-link :to="{name: 'Reset'}" class="btn btn-lg btn-success w-100"><i class="fa fa-fw fa-send"></i> Submit</router-link>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="w-100 text-center">
+                                                        Back to Login?
+                                                        <router-link :to="{name: 'Login'}">Sign In</router-link>
                                                     </div>
-                                                    <router-link :to="{name: 'Reset'}" class="btn btn-dark auth-btn w-100">Submit</router-link>
-                                                    <div class="page_switch text-center mt-4">
-                                                        <router-link :to="{name: 'Login'}">Back to Login</router-link>
-                                                    </div>
-                                                </form>
-                                            </div>
+                                                </div>
+                                            </form>
+
                                         </div>
                                     </div>
                                 </div>
@@ -44,14 +42,15 @@
                 </div>
             </div>
         </div>
-        <!-- End Home Banner Content -->
-
     </div>
+
+
 </template>
 <script>
-
+import Forgot_banner from "./widgets/forgot_banner.vue";
 export default {
     components: {
+        Forgot_banner
     },
     created() {
         window.scroll(0, 0);

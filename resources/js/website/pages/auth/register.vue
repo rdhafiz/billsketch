@@ -1,69 +1,69 @@
 <template>
-    <div class="page_banner">
+    <Register_banner></Register_banner>
 
-        <!-- Start Home Banner Video -->
-        <div class="img-bg">
-            <img class="w-100" :src="'/assets/images/banner/home-banner.jpg'" alt="" loading="lazy">
-        </div>
-        <!-- End Home Banner Video -->
-
-        <!-- Start Home Banner Content -->
-        <div class="auth_content">
-            <div class="w-100">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card shadow-lg">
-                                <div class="card-body px-3 px-sm-5 py-4">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-7 d-none d-lg-block">
-                                            <div class="auth_bg">
-                                                <img :src="'/assets/images/auth_bg.jpg'" alt="auth images">
-                                            </div>
+    <div class="floating-section w-100">
+        <div class="container-lg">
+            <div class="floating-section-content w-100">
+                <div class="row">
+                    <div class="col-xl-10 offset-xl-1">
+                        <div class="card shadow-lg border border-2 border-primary">
+                            <div class="card-body px-3 px-sm-5 py-5">
+                                <div class="row">
+                                    <div class="col-xl-7 d-none d-xl-block">
+                                        <div class="auth_bg">
+                                            <img :src="'/assets/images/auth_bg.jpg'" alt="auth images">
                                         </div>
-                                        <div class="col-lg-5">
-                                            <div class="login_form">
-                                                <div class="h2 text-center fw-bold mb-4">Sign Up</div>
-                                                <div class="login-options">
-                                                    <a href="" class="facebook mb-3">
-                                                        <i class="fa fa-facebook" aria-hidden="true"></i>
-                                                        <span>Sign Up with Facebook</span>
-                                                    </a>
-                                                    <a href="" class="google mb-4">
-                                                        <i class="fa fa-google-plus" aria-hidden="true"></i>
-                                                        <span>Sign Up with Google</span>
-                                                    </a>
-                                                </div>
-                                                <form action="">
-                                                   <div class="d-flex justify-content-between">
-                                                       <div class="form-group mb-3 w-48">
-                                                           <label for="first_name">First Name</label>
-                                                           <input type="text" class="form-control mt-2" id="first_name" name="first_name">
-                                                       </div>
-                                                       <div class="form-group mb-3 w-48">
-                                                           <label for="last_name">Last Name</label>
-                                                           <input type="text" class="form-control mt-2" id="last_name" name="last_name">
-                                                       </div>
-                                                   </div>
-                                                    <div class="form-group mb-3">
-                                                        <label for="email">Email</label>
-                                                        <input type="email" class="form-control mt-2" id="email" name="email">
-                                                    </div>
-                                                    <div class="form-group mb-3">
-                                                        <label for="phone">Phone</label>
-                                                        <input type="text" class="form-control mt-2" id="phone" name="phone">
-                                                    </div>
-                                                    <div class="form-group mb-4">
-                                                        <label for="text">Address</label>
-                                                        <input type="text" class="form-control mt-2" id="address" name="address">
-                                                    </div>
-                                                    <button class="btn btn-dark auth-btn w-100">Sign Up</button>
-                                                    <div class="page_switch text-center mt-4">
-                                                            Already have an account?
-                                                            <router-link :to="{name: 'Login'}">Sign In</router-link>
-                                                    </div>
-                                                </form>
+                                    </div>
+                                    <div class="col-xl-5">
+                                        <div class="w-100">
+
+
+                                            <div class="form-group mb-3">
+                                                <button class="btn btn-lg btn-primary w-100"><i class="fa fa-fw fa-facebook"></i> Sign Up with Facebook</button>
                                             </div>
+                                            <div class="form-group mb-3">
+                                                <button class="btn btn-lg btn-danger w-100"><i class="fa fa-fw fa-google-plus"></i> Sign Up with Google</button>
+                                            </div>
+                                            <div class="form-group my-4 text-center">
+                                                --- OR ---
+                                            </div>
+
+                                            <form class="w-100" action="">
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="first_name"><strong>First Name</strong></label>
+                                                    <input type="text" class="form-control form-control-lg" id="first_name" name="first_name" placeholder="First Name" required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="last_name"><strong>Last Name</strong></label>
+                                                    <input type="text" class="form-control form-control-lg" id="last_name" name="last_name" placeholder="Last Name" required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="email"><strong>Email</strong></label>
+                                                    <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Email" required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="password">
+                                                        <strong>Password</strong>
+                                                    </label>
+                                                    <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Password" required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="password_confirmation">
+                                                        <strong>Confirm Password</strong>
+                                                    </label>
+                                                    <input type="password" class="form-control form-control-lg" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <button class="btn btn-lg btn-success w-100"><i class="fa fa-fw fa-send"></i> Sign Up</button>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="w-100 text-center">
+                                                        Already have an account?
+                                                        <router-link :to="{name: 'Login'}">Sign In</router-link>
+                                                    </div>
+                                                </div>
+                                            </form>
+
                                         </div>
                                     </div>
                                 </div>
@@ -73,14 +73,15 @@
                 </div>
             </div>
         </div>
-        <!-- End Home Banner Content -->
-
     </div>
+
+
 </template>
 <script>
-
+import Register_banner from "./widgets/register_banner.vue";
 export default {
     components: {
+        Register_banner
     },
     created() {
         window.scroll(0, 0);
