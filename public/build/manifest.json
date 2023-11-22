@@ -27,12 +27,12 @@
     "css": [
       "assets/app-b16a6001.css"
     ],
-    "file": "assets/app-f8fb02b2.js",
+    "file": "assets/app-c015eef6.js",
     "isEntry": true,
     "src": "resources/js/website/app.js"
   },
   "resources/scss/website/app.scss": {
-    "file": "assets/app-c8a91aa4.css",
+    "file": "assets/app-a982525a.css",
     "isEntry": true,
     "src": "resources/scss/website/app.scss"
   }
