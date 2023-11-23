@@ -27,7 +27,7 @@ return new class extends Migration
             $table->integer('activation_code')->nullable();
             $table->integer('reset_code')->nullable();
             $table->string('social_provider')->nullable();
-            $table->integer('social_provider_id')->nullable();
+            $table->unsignedBigInteger('social_provider_id')->nullable();
             $table->integer('user_type')->comment('1 = individual, 2 = company');
             $table->timestamps();
             $table->softDeletes();
