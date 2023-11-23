@@ -7,15 +7,12 @@
 <script>
 import Home_banner from "./widgets/banner.vue";
 import Cta from "../layouts/cta.vue";
-import Dummy_section from "../layouts/dummy_section.vue";
-
 import AOS from 'aos';
 import How_it_works from "./widgets/how_it_works.vue";
 
 export default {
     components: {
         How_it_works,
-        Dummy_section,
         Home_banner,
         Cta
     },
