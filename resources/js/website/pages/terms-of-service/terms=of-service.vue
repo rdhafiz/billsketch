@@ -7,17 +7,13 @@
 </template>
 <script>
 import Home_banner from "./widgets/banner.vue";
-import Dummy_section from "../layouts/dummy_section.vue";
-
 import Cta from "../layouts/cta.vue";
-
 import AOS from 'aos';
 import Content from "../terms-of-service/widgets/content.vue";
 
 export default {
     components: {
         Content,
-        Dummy_section,
         Home_banner,
         Cta
     },

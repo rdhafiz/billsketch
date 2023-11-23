@@ -7,9 +7,7 @@
 </template>
 <script>
 import Home_banner from "./widgets/home_banner.vue";
-import Dummy_section from "../layouts/dummy_section.vue";
 import Cta from "../layouts/cta.vue";
-
 import AOS from 'aos';
 import Home_features from "./widgets/home_features.vue";
 import Home_works from "./widgets/home_works.vue";
@@ -20,7 +18,6 @@ export default {
         Home_testimonials,
         Home_works,
         Home_features,
-        Dummy_section,
         Home_banner,
         Cta
     },

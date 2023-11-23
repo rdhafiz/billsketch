@@ -5,7 +5,6 @@
 </template>
 <script>
 import Home_banner from "./widgets/banner.vue";
-import Dummy_section from "../layouts/dummy_section.vue";
 
 import AOS from 'aos';
 import Cta from "../layouts/cta.vue";
@@ -15,7 +14,6 @@ export default {
     components: {
         Contact_form,
         Cta,
-        Dummy_section,
         Home_banner
     },
     created() {

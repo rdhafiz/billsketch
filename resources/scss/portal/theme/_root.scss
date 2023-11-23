@@ -1,0 +1,42 @@
+/**
+ * =====================
+ * Theme root Config
+ * =====================
+ */
+
+:root {
+    --theme-color-black: #000000;
+    --theme-color-gray: #222629;
+    --theme-color: #8e44ad;
+    --theme-color-dark: #672085;
+    --theme-light: #F0F4F5;
+
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-paste: #f0f4f5;
+    --theme-font: 'Nunito Sans', sans-serif;
+    --color-sky: #3966b8;
+    --color-red: #ff5244;
+
+    --animate-duration: 1s;
+    --animate-delay: 1s;
+    --animate-repeat: 1;
+}
+
+body {
+    font-family: var(--theme-font);
+
+    a {
+        color: var(--theme-color);
+        @include transition(all 0.2s linear);
+
+        &:hover, &:active, &:focus {
+            color: var(--theme-color-dark);
+            @include transition(all 0.2s linear);
+        }
+    }
+}
+
+
+
+
