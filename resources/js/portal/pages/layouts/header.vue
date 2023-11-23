@@ -7,7 +7,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-3 shadow" style="width: 250px;">
                 <li><a href="/portal/profile" class="dropdown-item px-3 py-2 rounded-pill text-center">Profile</a></li>
-                <li><a class="btn btn-warning w-100 rounded-pill mt-2" href="/logout">Logout</a></li>
+                <li><a class="btn btn-danger w-100 rounded-pill mt-2" href="/logout">Logout</a></li>
             </ul>
         </div>
 
