@@ -22,10 +22,8 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('forgot/password', [AuthController::class, 'forgotPassword']);
     Route::post('reset/password', [AuthController::class, 'resetPassword']);
 });
-Route::group(['prefix' => 'auth', 'middleware' => ['auth:api']], function () {
-    Route::get('/logout', [AuthController::class, 'logout']);
-});
 Route::group(['prefix' => 'profile', 'middleware' => ['auth:api']], function () {
+    Route::get('logout', [AuthController::class, 'logout']);
     Route::get('get', [ProfileController::class, 'get']);
     Route::post('update', [ProfileController::class, 'update']);
     Route::post('update/password', [ProfileController::class, 'updatePassword']);
