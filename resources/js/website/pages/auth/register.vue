@@ -6,7 +6,7 @@
             <div class="floating-section-content w-100">
                 <div class="row">
                     <div class="col-xl-10 offset-xl-1">
-                        <div class="card shadow-lg border border-2 border-primary">
+                        <div class="card auth_content shadow-lg border border-2 border-primary">
                             <div class="card-body px-3 px-sm-5 py-5">
                                 <div class="row">
                                     <div class="col-xl-6 d-none d-xl-block">
@@ -42,6 +42,7 @@
                                                             <input type="text" class="form-control form-control-lg"
                                                                    id="first_name" name="first_name"
                                                                    placeholder="First Name" v-model="formData.first_name">
+                                                            <div class="error-report text-danger "></div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
@@ -61,66 +62,13 @@
                                                            name="email" placeholder="Email" v-model="formData.email">
                                                     <div class="error-report text-danger "></div>
                                                 </div>
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label" for="user_type"><strong>User Type</strong></label>
-                                                    <select name="user_type" id="user_type"
-                                                            class="form-control form-control-lg"
-                                                            v-model="formData.user_type">
-                                                        <option value="" disabled>Select</option>
-                                                        <option value="1">Individual</option>
-                                                        <option value="2">Company</option>
-                                                    </select>
-                                                    <div class="error-report text-danger "></div>
-                                                </div>
-                                                <template v-if="formData.user_type == 2">
-                                                    <div class="form-group mb-3">
-                                                        <label class="form-label" for="company_name"><strong>Company
-                                                            Name</strong></label>
-                                                        <input type="text" class="form-control form-control-lg"
-                                                               id="company_name" name="company_name"
-                                                               placeholder="Company Name" v-model="formData.company_name">
-                                                        <div class="error-report text-danger "></div>
-                                                    </div>
-                                                    <div class="form-group mb-3">
-                                                        <label class="form-label" for="company_size"><strong>Company
-                                                            Size</strong></label>
-                                                        <input type="text" class="form-control form-control-lg"
-                                                               id="company_size" name="company_size"
-                                                               placeholder="Company Size" v-model="formData.company_size" @keypress="checkNumber($event)">
-                                                        <div class="error-report text-danger "></div>
-                                                    </div>
-                                                    <div class="form-group mb-3">
-                                                        <label class="form-label" for="company_address"><strong>Company
-                                                            Address</strong></label>
-                                                        <input type="text" class="form-control form-control-lg"
-                                                               id="company_address" name="company_address"
-                                                               placeholder="Company Address" v-model="formData.company_address">
-                                                        <div class="error-report text-danger "></div>
-                                                    </div>
-                                                    <div class="form-group mb-3">
-                                                        <label class="form-label" for="company_city"><strong>Company
-                                                            City</strong></label>
-                                                        <input type="text" class="form-control form-control-lg"
-                                                               id="company_city" name="company_city"
-                                                               placeholder="Company City" v-model="formData.company_city">
-                                                        <div class="error-report text-danger "></div>
-                                                    </div>
-                                                    <div class="form-group mb-3">
-                                                        <label class="form-label" for="company_country"><strong>Company
-                                                            Country</strong></label>
-                                                        <input type="text" class="form-control form-control-lg"
-                                                               id="company_country" name="company_country"
-                                                               placeholder="Company Country" v-model="formData.company_country">
-                                                        <div class="error-report text-danger "></div>
-                                                    </div>
-                                                </template>
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="form-group mb-3">
                                                             <label class="form-label" for="password">
                                                                 <strong>Password</strong>
                                                             </label>
-                                                            <input type="password" class="form-control form-control-lg"
+                                                            <input type="password" autocomplete="new-password" class="form-control form-control-lg"
                                                                    id="password" name="password" placeholder="Password"
                                                                    v-model="formData.password">
                                                             <div class="error-report text-danger "></div>
@@ -139,6 +87,69 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="user_type"><strong>Join as</strong></label>
+                                                    <div class="w-100">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" id="inlineCheckbox1" value="1" @change="formData.user_type = 1" :checked="formData.user_type == 1">
+                                                            <label class="form-check-label" for="inlineCheckbox1">Individual</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" id="inlineCheckbox2" value="2" @change="formData.user_type = 2" :checked="formData.user_type == 2">
+                                                            <label class="form-check-label" for="inlineCheckbox2">Company</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="error-report text-danger "></div>
+                                                </div>
+                                                <template v-if="formData.user_type == 2">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group mb-3">
+<!--                                                                <label class="form-label" for="company_name"><strong>Company Name</strong></label>-->
+                                                                <input type="text" class="form-control form-control-lg"
+                                                                       id="company_name" name="company_name"
+                                                                       placeholder="Company Name" v-model="formData.company_name">
+                                                                <div class="error-report text-danger "></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group mb-3">
+<!--                                                                <label class="form-label" for="company_size"><strong>Company Size</strong></label>-->
+                                                                <input type="text" class="form-control form-control-lg"
+                                                                       id="company_size" name="company_size"
+                                                                       placeholder="Company Size" v-model="formData.company_size" @keypress="checkNumber($event)">
+                                                                <div class="error-report text-danger "></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group mb-3">
+<!--                                                                <label class="form-label" for="company_address"><strong>Company Address</strong></label>-->
+                                                                <input type="text" class="form-control form-control-lg"
+                                                                       id="company_address" name="company_address"
+                                                                       placeholder="Company Address" v-model="formData.company_address">
+                                                                <div class="error-report text-danger "></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group mb-3">
+<!--                                                                <label class="form-label" for="company_city"><strong>Company City</strong></label>-->
+                                                                <input type="text" class="form-control form-control-lg"
+                                                                       id="company_city" name="company_city"
+                                                                       placeholder="Company City" v-model="formData.company_city">
+                                                                <div class="error-report text-danger "></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group mb-3">
+<!--                                                                <label class="form-label" for="company_country"><strong>Company Country</strong></label>-->
+                                                                <input type="text" class="form-control form-control-lg"
+                                                                       id="company_country" name="company_country"
+                                                                       placeholder="Company Country" v-model="formData.company_country">
+                                                                <div class="error-report text-danger "></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </template>
                                                 <div class="form-group mb-3">
                                                     <button type="submit" class="btn btn-lg btn-success w-100" v-if="loading === false"><i
                                                         class="fa fa-fw fa-send"></i> Sign Up
@@ -186,7 +197,7 @@ export default {
                 company_address: '',
                 company_city: '',
                 company_country: '',
-                user_type: '',
+                user_type: 1,
                 password: '',
                 password_confirmation: ''
             },

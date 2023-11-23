@@ -1,5 +1,5 @@
 <template>
-    <div class="side_bar_content border">
+    <div class="side_bar_content border rounded-15">
 
         <div class="logo">
             <router-link :to="{name: 'Dashboard'}">

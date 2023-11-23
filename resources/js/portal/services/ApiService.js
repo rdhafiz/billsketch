@@ -1,10 +1,13 @@
 import axios from 'axios'
+import AuthService from "./AuthService";
 
 let headers = {
     'Content-Type': 'application/json; charset=utf-8',
+    'Authorization': ''
 };
 const ApiService = {
     POST: (url, param, callback) => {
+        headers['Authorization'] = AuthService.getAccessToken();
         axios.post(url, param, {headers: headers}).then((response) => {
             if (response.status === 200) {
                 callback(response.data);
@@ -16,6 +19,7 @@ const ApiService = {
         })
     },
     GET: (url, callback) => {
+        headers['Authorization'] = AuthService.getAccessToken();
         axios.get(url, {headers: headers}).then((response) => {
             if (response.status === 200) {
                 callback(response.data);

@@ -113,7 +113,11 @@ export default {
             ApiService.POST(ApiRoutes.Login, this.formData, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
-                    window.location.href = '/portal';
+                    ApiService.setAuthentication(res.access_token, res.user, (auth) => {
+                        if (auth) {
+                            window.location.href = '/portal';
+                        }
+                    })
                 } else if (res.status === 300) {
                     this.$router.push({name: 'Verify', state: {message: res.message, email: this.formData.email}})
                 } else {
