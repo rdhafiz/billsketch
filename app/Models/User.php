@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Constants\UserType;
+use App\Repositories\CompaniesRepository;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -30,7 +32,26 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'activation_code',
+        'reset_code',
+        'social_provider',
+        'social_provider_id',
     ];
+
+    protected $appends = [
+        'avatar_path'
+    ];
+
+    public function getAvatarPathAttribute()
+    {
+        if (!empty($this->avatar)) {
+            return asset('storage/uploads/'.$this->avatar);
+        }
+        return null;
+    }
 
     /**
      * @param User $userInfo

@@ -39,7 +39,9 @@ class Authenticate extends Middleware
             $isAuthenticated = $tokenExpireDate > $currentDate ? true : false;
             if ($isAuthenticated == true) {
                 $oauthUser = $this->repository->findForUser($token->id, $token->user_id);
+                $oauth_token = $token->loadMissing('client');
                 $user = User::find($oauthUser->user_id);
+                $request->request->add(['oauth_token' => $oauth_token]);
                 $request->request->add(['session_user' => $user]);
                 $request->query->add(['session_user' => $user]);
                 return $next($request);

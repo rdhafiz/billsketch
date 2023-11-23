@@ -9,4 +9,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Companies extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $appends = [
+        'logo_path'
+    ];
+
+    public function getLogoPathAttribute()
+    {
+        if (!empty($this->logo)) {
+            return asset('storage/uploads/'.$this->logo);
+        }
+        return null;
+    }
 }

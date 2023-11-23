@@ -9,10 +9,12 @@ use App\Repositories\AuthRepository;
 use App\Repositories\CompaniesRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Passport\TokenRepository;
 
 class AuthController extends Controller
 {
@@ -46,7 +48,7 @@ class AuthController extends Controller
             }
             return response()->json(['status' => 500, 'errors' => ['password' => ['Password is not correct! Please try again.']]], 200);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()],200);
         }
     }
 
@@ -108,7 +110,7 @@ class AuthController extends Controller
             $validator = Validator::make($requestData, [
                 'first_name' => 'required|string',
                 'last_name' => 'nullable|string',
-                'email' => 'required|email',
+                'email' => 'required|email|unique',
                 'password' => 'required|confirmed',
                 'user_type' => 'required|integer',
                 'company_name' =>'required_if:user_type,2',
@@ -259,5 +261,17 @@ class AuthController extends Controller
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function logout(Request $request): JsonResponse
+    {
+        $oauth_token = $request->get('oauth_token');
+        $token_repository = app(TokenRepository::class);
+        $token_repository->revokeAccessToken($oauth_token->id);
+        return response()->json(['status' => 200, 'message' => 'Logout Success'], 200);
     }
 }
