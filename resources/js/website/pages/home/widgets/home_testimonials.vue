@@ -15,7 +15,11 @@
                                 :modules="modules"
                                 :navigation="true"
                                 :loop="true"
-                                :speed="800">
+                                :speed="800"
+                                :autoplay="{
+                                    delay: 3000,
+                                    disableOnInteraction: false,
+                                }">
                             <swiper-slide>
                                 <div class="row justify-content-center">
                                     <div class="col-10 col-lg-6">
@@ -69,10 +73,10 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 
 // import required modules
-import { Pagination, Navigation, Autoplay } from 'swiper/modules';
+import { Navigation, Autoplay } from 'swiper/modules';
+
 export default {
     components: {
         Swiper,
