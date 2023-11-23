@@ -44,7 +44,7 @@ class AuthRepository
      */
     public static function sendVerificationEmail(User $userInfo): bool
     {
-        $userInfo['link'] = env('APP_URL').'/activate?code='.base64_encode($userInfo['activation_code']).'&email='.$userInfo['email'];
+        $userInfo['link'] = env('APP_URL').'/activate';
         Mail::send('email.verification', ['userInfo' => $userInfo], function ($message) use ($userInfo) {
             $message->to($userInfo['email'], $userInfo['first_name'].' '.$userInfo['last_name'] ?? '')->subject(env('APP_NAME') . ': Verification Link');
             $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));

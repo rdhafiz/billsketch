@@ -13,10 +13,9 @@
     Hello {{$userInfo['first_name'].' '.$userInfo['last_name'] ?? ''}},<br /><br />
 </p>
 <p>
-    Please visit this link to verify your account.
-    <br />
-    one-time link: <a href="{{$userInfo['link']}}">click here to verify your account...</a>
+    Here is your account activation code
 </p>
+<h1>{{$userInfo['activation_code']}}</h1>
 
 <br><br>
 Regards
