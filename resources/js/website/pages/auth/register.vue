@@ -17,8 +17,21 @@
                                     <div class="col-xl-6">
                                         <div class="w-100">
                                             <div class="form-group mb-3">
-                                                <button class="btn btn-lg btn-primary w-100"><i
+                                                <button class="btn btn-lg btn-primary w-100"  @click="initLogin" v-if="facebookLoading == false"><i
                                                     class="fa fa-fw fa-facebook"></i> Sign Up with Facebook
+                                                </button>
+                                                <button type="button" disabled v-if="facebookLoading === true" class="btn btn-lg btn-primary w-100">
+                                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2"
+                                                         fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1 la-spin">
+                                                        <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                        <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                        <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                    </svg>
                                                 </button>
                                             </div>
                                             <div class="form-group mb-3">
@@ -32,7 +45,7 @@
 
                                             <form class="w-100" @submit.prevent="Register">
                                                 <div class="row">
-                                                    <div class="col-6">
+                                                    <div class="col-lg-6">
                                                         <div class="form-group mb-3">
                                                             <label class="form-label" for="first_name"><strong>First
                                                                 Name</strong></label>
@@ -41,7 +54,7 @@
                                                                    placeholder="First Name" v-model="formData.first_name">
                                                         </div>
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col-lg-6">
                                                         <div class="form-group mb-3">
                                                             <label class="form-label" for="last_name"><strong>Last
                                                                 Name</strong></label>
@@ -83,7 +96,7 @@
                                                             Size</strong></label>
                                                         <input type="text" class="form-control form-control-lg"
                                                                id="company_size" name="company_size"
-                                                               placeholder="Company Size" v-model="formData.company_size">
+                                                               placeholder="Company Size" v-model="formData.company_size" @keypress="checkNumber($event)">
                                                         <div class="error-report text-danger "></div>
                                                     </div>
                                                     <div class="form-group mb-3">
@@ -112,7 +125,7 @@
                                                     </div>
                                                 </template>
                                                 <div class="row">
-                                                    <div class="col-6">
+                                                    <div class="col-lg-6">
                                                         <div class="form-group mb-3">
                                                             <label class="form-label" for="password">
                                                                 <strong>Password</strong>
@@ -123,7 +136,7 @@
                                                             <div class="error-report text-danger "></div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col-lg-6">
                                                         <div class="form-group mb-3">
                                                             <label class="form-label" for="password_confirmation">
                                                                 <strong>Confirm Password</strong>
@@ -178,7 +191,6 @@
 import Register_banner from "./widgets/register_banner.vue";
 import ApiService from "../../services/ApiService";
 import ApiRoutes from "../../services/ApiRoutes";
-
 export default {
     components: {
         Register_banner
@@ -198,7 +210,8 @@ export default {
                 password: '',
                 password_confirmation: ''
             },
-            loading: false
+            loading: false,
+            facebookLoading: false,
         }
     },
     methods: {
@@ -214,9 +227,84 @@ export default {
                 }
             })
         },
+
+        loginFacebook(facebookInfo){
+            ApiService.ClearErrorHandler()
+            this.loading = true;
+            ApiService.POST(ApiRoutes.LoginFacebook, facebookInfo, (res) => {
+                this.facebookLoading = false
+                this.loading = false;
+                if (parseInt(res.status) === 200) {
+                    this.formData.provider = res.provider;
+                    window.location.href = '/portal';
+                } else {
+                    ApiService.ErrorHandler(res.error)
+                }
+            })
+        },
+
+        initLogin: function() {
+            let _this = this;
+            this.facebookLoading = true
+            FB.init({
+                appId: '176091665574404',
+                xfbml: true,
+                version: 'v18.0',
+                autoLogAppEvents : true,
+            });
+            FB.login(function (response) {
+                if (response.authResponse) {
+                    FB.api('/me', {fields: 'id, first_name, last_name, name, email'}, function (response) {
+                        let param = {
+                            first_name: response.first_name,
+                            last_name: response.last_name,
+                            social_provider: 'facebook',
+                            social_provider_id: response.id
+                        }
+                        _this.loginFacebook(param)
+                    });
+                } else {
+                    _this.facebookLoading = false
+                    console.log('User cancelled login or did not fully authorize.');
+                }
+            });
+        },
+
+        /*number validation*/
+        checkNumber(evt) {
+            var theEvent = evt || window.event;
+
+            // Handle paste
+            if (theEvent.type === 'paste') {
+                // @ts-ignore
+                key = event.clipboardData.getData('text/plain');
+            } else {
+                // Handle key press
+                var key = theEvent.keyCode || theEvent.which;
+                key = String.fromCharCode(key);
+            }
+            var regex = /^\d*\.?\d*$/;
+            if (!regex.test(key)) {
+                theEvent.returnValue = false;
+                if (theEvent.preventDefault) theEvent.preventDefault();
+            }
+
+        },
     },
     created() {
         window.scroll(0, 0);
+
+        /*facebook login*/
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'))
     }
 }
 </script>

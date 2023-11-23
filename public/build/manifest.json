@@ -1,6 +1,6 @@
 {
-  "_vue-router-8c2de762.js": {
-    "file": "assets/vue-router-8c2de762.js"
+  "_vue-router-5040dadf.js": {
+    "file": "assets/vue-router-5040dadf.js"
   },
   "node_modules/fontawesome-4.7/fonts/fontawesome-webfont.eot": {
     "file": "assets/fontawesome-webfont-7bfcab6d.eot",
@@ -23,9 +23,9 @@
     "src": "node_modules/fontawesome-4.7/fonts/fontawesome-webfont.woff2"
   },
   "resources/js/portal/app.js": {
-    "file": "assets/app-3583dcb3.js",
+    "file": "assets/app-68b5fffb.js",
     "imports": [
-      "_vue-router-8c2de762.js"
+      "_vue-router-5040dadf.js"
     ],
     "isEntry": true,
     "src": "resources/js/portal/app.js"
@@ -38,9 +38,9 @@
     "css": [
       "assets/app-8942eb24.css"
     ],
-    "file": "assets/app-9cbf6215.js",
+    "file": "assets/app-d1561ea0.js",
     "imports": [
-      "_vue-router-8c2de762.js"
+      "_vue-router-5040dadf.js"
     ],
     "isEntry": true,
     "src": "resources/js/website/app.js"
@@ -51,7 +51,7 @@
     "src": "resources/scss/portal/app.scss"
   },
   "resources/scss/website/app.scss": {
-    "file": "assets/app-2ab8b550.css",
+    "file": "assets/app-9ec50579.css",
     "isEntry": true,
     "src": "resources/scss/website/app.scss"
   }
