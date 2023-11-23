@@ -16,74 +16,111 @@
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="w-100">
-
-
                                             <div class="form-group mb-3">
-                                                <button class="btn btn-lg btn-primary w-100"><i class="fa fa-fw fa-facebook"></i> Sign Up with Facebook</button>
+                                                <button class="btn btn-lg btn-primary w-100"><i
+                                                    class="fa fa-fw fa-facebook"></i> Sign Up with Facebook
+                                                </button>
                                             </div>
                                             <div class="form-group mb-3">
-                                                <button class="btn btn-lg btn-danger w-100"><i class="fa fa-fw fa-google-plus"></i> Sign Up with Google</button>
+                                                <button class="btn btn-lg btn-danger w-100"><i
+                                                    class="fa fa-fw fa-google-plus"></i> Sign Up with Google
+                                                </button>
                                             </div>
                                             <div class="form-group my-4 text-center">
                                                 --- OR ---
                                             </div>
 
-                                            <form class="w-100" action="">
+                                            <form class="w-100" @submit.prevent="Register">
                                                 <div class="row">
                                                     <div class="col-6">
                                                         <div class="form-group mb-3">
-                                                            <label class="form-label" for="first_name"><strong>First Name</strong></label>
-                                                            <input type="text" class="form-control form-control-lg" id="first_name" name="first_name" placeholder="First Name" required>
+                                                            <label class="form-label" for="first_name"><strong>First
+                                                                Name</strong></label>
+                                                            <input type="text" class="form-control form-control-lg"
+                                                                   id="first_name" name="first_name"
+                                                                   placeholder="First Name" v-model="formData.first_name">
                                                         </div>
                                                     </div>
                                                     <div class="col-6">
                                                         <div class="form-group mb-3">
-                                                            <label class="form-label" for="last_name"><strong>Last Name</strong></label>
-                                                            <input type="text" class="form-control form-control-lg" id="last_name" name="last_name" placeholder="Last Name" required>
+                                                            <label class="form-label" for="last_name"><strong>Last
+                                                                Name</strong></label>
+                                                            <input type="text" class="form-control form-control-lg"
+                                                                   id="last_name" name="last_name"
+                                                                   placeholder="Last Name" v-model="formData.last_name">
+                                                            <div class="error-report text-danger "></div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="email"><strong>Email</strong></label>
-                                                    <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Email" required>
+                                                    <input type="email" class="form-control form-control-lg" id="email"
+                                                           name="email" placeholder="Email" v-model="formData.email">
+                                                    <div class="error-report text-danger "></div>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="user_type"><strong>User Type</strong></label>
-                                                    <select name="user_type" id="user_type" class="form-control form-control-lg" v-model="formData.user_type">
+                                                    <select name="user_type" id="user_type"
+                                                            class="form-control form-control-lg"
+                                                            v-model="formData.user_type">
                                                         <option value="" disabled>Select</option>
                                                         <option value="1">Individual</option>
                                                         <option value="2">Company</option>
                                                     </select>
+                                                    <div class="error-report text-danger "></div>
                                                 </div>
-                                               <template v-if="formData.user_type == 2">
-                                                   <div class="form-group mb-3">
-                                                       <label class="form-label" for="company_name"><strong>Company Name</strong></label>
-                                                       <input type="text" class="form-control form-control-lg" id="company_name" name="company_name" placeholder="Company Name" required>
-                                                   </div>
-                                                   <div class="form-group mb-3">
-                                                       <label class="form-label" for="company_size"><strong>Company Size</strong></label>
-                                                       <input type="text" class="form-control form-control-lg" id="company_size" name="company_size" placeholder="Company Size" required>
-                                                   </div>
-                                                   <div class="form-group mb-3">
-                                                       <label class="form-label" for="company_address"><strong>Company Address</strong></label>
-                                                       <input type="text" class="form-control form-control-lg" id="company_address" name="company_address" placeholder="Company Address" required>
-                                                   </div>
-                                                   <div class="form-group mb-3">
-                                                       <label class="form-label" for="company_city"><strong>Company City</strong></label>
-                                                       <input type="text" class="form-control form-control-lg" id="company_city" name="company_city" placeholder="Company City" required>
-                                                   </div>
-                                                   <div class="form-group mb-3">
-                                                       <label class="form-label" for="company_country"><strong>Company Country</strong></label>
-                                                       <input type="text" class="form-control form-control-lg" id="company_country" name="company_country" placeholder="Company Country" required>
-                                                   </div>
-                                               </template>
+                                                <template v-if="formData.user_type == 2">
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label" for="company_name"><strong>Company
+                                                            Name</strong></label>
+                                                        <input type="text" class="form-control form-control-lg"
+                                                               id="company_name" name="company_name"
+                                                               placeholder="Company Name" v-model="formData.company_name">
+                                                        <div class="error-report text-danger "></div>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label" for="company_size"><strong>Company
+                                                            Size</strong></label>
+                                                        <input type="text" class="form-control form-control-lg"
+                                                               id="company_size" name="company_size"
+                                                               placeholder="Company Size" v-model="formData.company_size">
+                                                        <div class="error-report text-danger "></div>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label" for="company_address"><strong>Company
+                                                            Address</strong></label>
+                                                        <input type="text" class="form-control form-control-lg"
+                                                               id="company_address" name="company_address"
+                                                               placeholder="Company Address" v-model="formData.company_address">
+                                                        <div class="error-report text-danger "></div>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label" for="company_city"><strong>Company
+                                                            City</strong></label>
+                                                        <input type="text" class="form-control form-control-lg"
+                                                               id="company_city" name="company_city"
+                                                               placeholder="Company City" v-model="formData.company_city">
+                                                        <div class="error-report text-danger "></div>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label" for="company_country"><strong>Company
+                                                            Country</strong></label>
+                                                        <input type="text" class="form-control form-control-lg"
+                                                               id="company_country" name="company_country"
+                                                               placeholder="Company Country" v-model="formData.company_country">
+                                                        <div class="error-report text-danger "></div>
+                                                    </div>
+                                                </template>
                                                 <div class="row">
                                                     <div class="col-6">
                                                         <div class="form-group mb-3">
                                                             <label class="form-label" for="password">
                                                                 <strong>Password</strong>
                                                             </label>
-                                                            <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Password" required>
+                                                            <input type="password" class="form-control form-control-lg"
+                                                                   id="password" name="password" placeholder="Password"
+                                                                   v-model="formData.password">
+                                                            <div class="error-report text-danger "></div>
                                                         </div>
                                                     </div>
                                                     <div class="col-6">
@@ -91,12 +128,31 @@
                                                             <label class="form-label" for="password_confirmation">
                                                                 <strong>Confirm Password</strong>
                                                             </label>
-                                                            <input type="password" class="form-control form-control-lg" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
+                                                            <input type="password" class="form-control form-control-lg"
+                                                                   id="password_confirmation"
+                                                                   name="password_confirmation"
+                                                                   placeholder="Confirm Password" v-model="formData.password_confirmation">
+                                                            <div class="error-report text-danger "></div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group mb-3">
-                                                    <button class="btn btn-lg btn-success w-100"><i class="fa fa-fw fa-send"></i> Sign Up</button>
+                                                    <button type="submit" class="btn btn-lg btn-success w-100" v-if="loading === false"><i
+                                                        class="fa fa-fw fa-send"></i> Sign Up
+                                                    </button>
+                                                    <button type="button" disabled v-if="loading === true" class="btn btn-lg btn-success w-100">
+                                                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2"
+                                                             fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1 la-spin">
+                                                            <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                            <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                            <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                            <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                        </svg>
+                                                    </button>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="w-100 text-center">
@@ -120,17 +176,44 @@
 </template>
 <script>
 import Register_banner from "./widgets/register_banner.vue";
+import ApiService from "../../services/ApiService";
+import ApiRoutes from "../../services/ApiRoutes";
+
 export default {
     components: {
         Register_banner
     },
-    data(){
+    data() {
         return {
-            formData : {
+            formData: {
                 first_name: '',
-                user_type: ''
-            }
+                last_name: '',
+                email: '',
+                company_name: '',
+                company_size: '',
+                company_address: '',
+                company_city: '',
+                company_country: '',
+                user_type: '',
+                password: '',
+                password_confirmation: ''
+            },
+            loading: false
         }
+    },
+    methods: {
+        Register() {
+            ApiService.ClearErrorHandler();
+            this.loading = true;
+            ApiService.POST(ApiRoutes.Register, this.formData, (res) => {
+                this.loading = false;
+                if (res.status === 200) {
+                    this.$router.push({name: 'Verify', params: { id: 1, email: this.formData.email }})
+                } else {
+                    ApiService.ErrorHandler(res.errors)
+                }
+            })
+        },
     },
     created() {
         window.scroll(0, 0);
