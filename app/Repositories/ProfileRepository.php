@@ -7,6 +7,20 @@ use App\Models\User;
 class ProfileRepository
 {
     /**
+     * @param integer $userId
+     * @return array|User
+     */
+    public static function get(int $userId): array|User
+    {
+        $userData = User::select('id', 'company_id', 'first_name', 'last_name', 'email', 'phone', 'gender', 'avatar', 'user_type', 'address', 'city', 'country')
+            ->where('id', $userId)
+            ->first();
+        if (!$userData instanceof User) {
+            return ['message' => 'Cannot find user'];
+        }
+        return $userData;
+    }
+    /**
      * @param User $user
      * @param array $userData
      * @return array|User

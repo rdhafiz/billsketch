@@ -24,9 +24,12 @@ class ProfileController extends Controller
         try {
             $requestData = $request->all();
             $sessionUser = $requestData['session_user'];
-            $userData = User::find($sessionUser['id']);
-            if ($sessionUser['user_type'] == UserType::Company) {
-                $companyData = CompaniesRepository::get($sessionUser['company_id']);
+            $userData = ProfileRepository::get($sessionUser['id']);
+            if (!$userData instanceof User) {
+                return response()->json(['status' => 500, 'message' => 'Cannot find user'], 200);
+            }
+            if ($userData['user_type'] == UserType::Company) {
+                $companyData = CompaniesRepository::get($userData['company_id']);
                 if (!$companyData instanceof Companies) {
                     return response()->json(['status' => 500, 'message' => 'Cannot find company'], 200);
                 }

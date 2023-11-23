@@ -71,7 +71,6 @@ class User extends Authenticatable
             'address' => $userInfo['address'],
             'city' => $userInfo['city'],
             'country' => $userInfo['country'],
-            'logo_path' => $userInfo['country'],
         ];
     }
 }
