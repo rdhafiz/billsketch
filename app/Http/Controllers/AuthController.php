@@ -57,7 +57,7 @@ class AuthController extends Controller
             'last_name' => 'nullable|string',
             'social_provider' => 'required|string',
             'social_provider_id' => 'required|integer',
-            'email' => 'required|email',
+            'email' => 'nullable|email',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => 500, 'errors' => $validator->errors()]);
@@ -69,12 +69,13 @@ class AuthController extends Controller
 
         if (!$userInfo instanceof User) {
             $password = rand(10000, 999999);
+            $email = $requestData['email'] ?? $requestData['social_provider_id'].'@'.$requestData['social_provider'].'.com';
             $userData = [
                 'first_name' => $requestData['first_name'],
                 'last_name' => $requestData['last_name'] ?? null,
                 'social_provider' => $requestData['social_provider'],
                 'social_provider_id' => $requestData['social_provider_id'],
-                'email' => $requestData['email'],
+                'email' => $email,
                 'password' => bcrypt($password),
             ];
             $userInfo = AuthRepository::save($userData);
