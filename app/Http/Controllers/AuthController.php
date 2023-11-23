@@ -109,15 +109,20 @@ class AuthController extends Controller
             $requestData = $request->all();
             $validator = Validator::make($requestData, [
                 'first_name' => 'required|string',
-                'last_name' => 'nullable|string',
-                'email' => 'required|email|unique',
+                'last_name' => 'required|string',
+                'email' => 'required|email|unique:users,email',
                 'password' => 'required|confirmed',
                 'user_type' => 'required|integer',
                 'company_name' =>'required_if:user_type,2',
-                'company_size' =>'required_if:user_type,2',
+                'company_size' =>'nullable',
                 'company_address' =>'required_if:user_type,2',
                 'company_city' =>'required_if:user_type,2',
                 'company_country' =>'required_if:user_type,2',
+            ],[
+                'company_name' => 'Company name is required',
+                'company_address' => 'Address is required',
+                'company_city' => 'City is required',
+                'company_country' => 'Country is required',
             ]);
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
@@ -125,7 +130,7 @@ class AuthController extends Controller
             $activationCode = rand(100000, 999999);
             $userData = [
                 'first_name' => $requestData['first_name'],
-                'last_name' => $requestData['last_name'] ?? null,
+                'last_name' => $requestData['last_name'],
                 'email' => $requestData['email'],
                 'password' => bcrypt($requestData['password']),
                 'phone' => $requestData['phone'] ?? null,
@@ -143,7 +148,7 @@ class AuthController extends Controller
             if ($userInfo['user_type'] == UserType::Company) {
                 $companyData = [
                     'company_name' => $requestData['company_name'],
-                    'company_size' => $requestData['company_size'],
+                    'company_size' => $requestData['company_size'] ?? 0,
                     'company_address' => $requestData['company_address'],
                     'company_city' => $requestData['company_city'],
                     'company_country' => $requestData['company_country'],

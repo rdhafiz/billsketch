@@ -29,17 +29,17 @@ const routes = [
         path: ROOT_URL, name: 'Layout', component: Layout,
         children: [
             {path: ROOT_URL + '', name: 'Home', component: Home},
-            {path: ROOT_URL + '/how-it-works', name:'HowItWorks', component: HowItWorks  },
-            {path: ROOT_URL + '/contact-us', name:'ContactUs', component: ContactUs  },
-            {path: ROOT_URL + '/privacy-policy', name:'PrivacyPolicy', component: PrivacyPolicy  },
-            {path: ROOT_URL + '/terms-of-service', name:'TermsOfService', component: TermsOfService  },
-            {path: ROOT_URL + '/faq', name:'Faq', component: Faq  },
+            {path: ROOT_URL + '/how-it-works', name: 'HowItWorks', component: HowItWorks},
+            {path: ROOT_URL + '/contact-us', name: 'ContactUs', component: ContactUs},
+            {path: ROOT_URL + '/privacy-policy', name: 'PrivacyPolicy', component: PrivacyPolicy},
+            {path: ROOT_URL + '/terms-of-service', name: 'TermsOfService', component: TermsOfService},
+            {path: ROOT_URL + '/faq', name: 'Faq', component: Faq},
 
-            {path: ROOT_URL + '/login', name:'Login', component: Login  },
-            {path: ROOT_URL + '/register', name:'Register', component: Register  },
-            {path: ROOT_URL + '/forgot', name:'Forgot', component: Forgot  },
-            {path: ROOT_URL + '/reset', name:'Reset', component: Reset  },
-            {path: ROOT_URL + '/verify-account', name:'Verify', component: Verify  },
+            {path: ROOT_URL + '/login', name: 'Login', component: Login, meta: {AuthCheck: true}},
+            {path: ROOT_URL + '/register', name: 'Register', component: Register, meta: {AuthCheck: true}},
+            {path: ROOT_URL + '/forgot', name: 'Forgot', component: Forgot, meta: {AuthCheck: true}},
+            {path: ROOT_URL + '/reset', name: 'Reset', component: Reset, meta: {AuthCheck: true}},
+            {path: ROOT_URL + '/verify-account', name: 'Verify', component: Verify, meta: {AuthCheck: true}},
         ],
     },
 ];
@@ -47,6 +47,26 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.meta.AuthCheck) {
+        let BilifyAccessToken = null;
+        let cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let c = cookies[i].trim();
+            if (c.includes('BilifyAccessToken')) {
+                BilifyAccessToken = c.replace('BilifyAccessToken=', '');
+            }
+        }
+        if (BilifyAccessToken !== null) {
+            window.location.href = '/portal';
+        } else {
+            next()
+        }
+    } else {
+        next()
+    }
 })
 
 export default router;

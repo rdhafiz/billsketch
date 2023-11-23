@@ -17,5 +17,17 @@
                 max-width: 70%;
             }
         }
+
+        .auth_content{
+            .form-check-input{
+                width: 30px;
+                height: 30px;
+                appearance: auto;
+            }
+            .form-check-label{
+                padding-left: 10px;
+                line-height: 40px;
+            }
+        }
     }
 }

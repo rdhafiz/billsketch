@@ -17,7 +17,7 @@
                                     <div class="col-xl-5">
                                         <div class="w-100">
                                             <form class="w-100" @submit.prevent="Verify">
-                                                <div v-if="message" class="mb-3 text-danger">{{message}}</div>
+                                                <div v-if="message" class="alert alert-success">{{message}}</div>
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="code">Code</label>
                                                     <input type="text" class="form-control form-control-lg" id="code" name="code" placeholder="Code"  v-model="formData.code">
@@ -75,7 +75,11 @@ export default {
             ApiService.POST(ApiRoutes.Verify, this.formData, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
-                    this.$router.push({name: 'Login'})
+                    ApiService.setAuthentication(res.access_token, res.user, (auth) => {
+                        if (auth) {
+                            window.location.href = '/portal';
+                        }
+                    })
                 } else {
                     ApiService.ErrorHandler(res.errors)
                 }

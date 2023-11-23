@@ -42,6 +42,16 @@ const ApiService = {
     ClearErrorHandler() {
         $('.is-invalid').removeClass('is-invalid');
         $('.error-report').html('');
+    },
+    setAuthentication: (access_token, user, callback) => {
+        let date = new Date();
+        date.setTime(date.getTime() + (2*24*60*60*1000));
+        const token = "BilifyAccessToken=" + access_token;
+        const info = "BilifyUserInfo=" + JSON.stringify(user);
+        const expires = "; expires=" + date.toUTCString();
+        document.cookie = token + expires + "; path=/";
+        document.cookie = info + expires + "; path=/";
+        callback(true);
     }
 }
 export default ApiService;
