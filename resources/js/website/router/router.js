@@ -16,6 +16,7 @@ import Login from "../pages/auth/login.vue";
 import Register from "../pages/auth/register.vue";
 import Forgot from "../pages/auth/forgot.vue";
 import Reset from "../pages/auth/reset.vue";
+import Verify from "../pages/auth/verify.vue";
 
 //=====================
 // Routes
@@ -38,6 +39,7 @@ const routes = [
             {path: ROOT_URL + '/register', name:'Register', component: Register  },
             {path: ROOT_URL + '/forgot', name:'Forgot', component: Forgot  },
             {path: ROOT_URL + '/reset', name:'Reset', component: Reset  },
+            {path: ROOT_URL + '/verify-account', name:'Verify', component: Verify  },
         ],
     },
 ];

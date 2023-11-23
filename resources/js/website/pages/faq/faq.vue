@@ -8,7 +8,6 @@
 </template>
 <script>
 import Home_banner from "./widgets/banner.vue";
-import Dummy_section from "../layouts/dummy_section.vue";
 
 import Faq from './widgets/content.vue';
 
@@ -18,7 +17,6 @@ import AOS from 'aos';
 
 export default {
     components: {
-        Dummy_section,
         Home_banner,
         Cta,
         Faq

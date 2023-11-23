@@ -11,4 +11,12 @@ class WebsiteController extends Controller
     {
         return view('website.spa');
     }
+
+    /**
+     * Main Portal Controller
+     */
+    public function portal()
+    {
+        return view('portal.spa');
+    }
 }

@@ -58,12 +58,11 @@
                 </div>
                 <div class="col-lg-3 our_partners certifications">
                     <div class="w-100 short-links mb-3">
-                        <h4 class="mb-3 text-start"><strong>Social Media</strong></h4>
                         <div class="app_store">
-                            <a href="" class="mb-3">
+                            <a href="" class="mb-3 text-end">
                                 <img :src="'/assets/images/play_store.png'" alt="google app store">
                             </a>
-                            <a href="">
+                            <a href="" class="text-end">
                                 <img :src="'/assets/images/app_store.png'" alt="apple app store">
                             </a>
                         </div>

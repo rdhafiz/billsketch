@@ -15,4 +15,6 @@ use App\Http\Controllers\WebsiteController;
 */
 
 
+Route::get('portal', [WebsiteController::class, 'portal'])->where('any', '.*')->name('bilify.portal');
+Route::get('portal/{any}', [WebsiteController::class, 'portal'])->where('any', '.*')->name('bilify.portal');
 Route::get('/{any}', [WebsiteController::class, 'index'])->where('any', '.*')->name('bilify.landing');

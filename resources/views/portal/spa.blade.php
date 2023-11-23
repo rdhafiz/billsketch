@@ -25,13 +25,13 @@
     <!-- Google Fonts (Nunito+Sans) -->
 
     <!-- MOT4AI Stylesheet -->
-    @vite('resources/scss/website/app.scss')
+    @vite('resources/scss/portal/app.scss')
     <!-- MOT4AI Stylesheet -->
 </head>
 <body>
 <div id="app">
     <app></app>
 </div>
-@vite('resources/js/website/app.js')
+@vite('resources/js/portal/app.js')
 </body>
 </html>
