@@ -17,18 +17,17 @@
                                     <div class="col-xl-5">
                                         <div class="w-100">
                                             <form class="w-100" @submit.prevent="Verify">
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label" for="email"><strong>Email</strong></label>
-                                                    <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Email" v-model="formData.email">
-                                                    <div class="error-report text-danger "></div>
-                                                </div>
+                                                <div v-if="message" class="mb-3 text-danger">{{message}}</div>
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="code">Code</label>
                                                     <input type="text" class="form-control form-control-lg" id="code" name="code" placeholder="Code"  v-model="formData.code">
                                                     <div class="error-report text-danger "></div>
                                                 </div>
                                                 <div class="form-group mb-3">
-                                                    <button class="btn btn-lg btn-success w-100"><i class="fa fa-fw fa-send"></i> Submit</button>
+                                                    <button class="btn btn-lg btn-success w-100"  v-if="loading === false" ><i class="fa fa-fw fa-send"></i> Submit</button>
+                                                    <button type="button" disabled v-if="loading === true" class="btn btn-lg btn-success w-100">
+                                                        <i class="fa fa-spinner spin" aria-hidden="true"></i>
+                                                    </button>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="w-100 text-center">
@@ -64,7 +63,9 @@ export default {
           formData: {
               email: '',
               code: ''
-          }
+          },
+          message: '',
+          loading: false
       }
     },
     methods: {
@@ -82,10 +83,10 @@ export default {
         },
     },
     mounted() {
-        console.log(this.$route);
-        setTimeout(()=> {
-            console.log(this.$route.params);
-        }, 1000)
+        if(window.history.state){
+            this.message = window.history.state.message;
+            this.formData.email = window.history.state.email;
+        }
     },
     created() {
         window.scroll(0, 0);
