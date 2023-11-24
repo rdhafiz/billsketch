@@ -3,10 +3,10 @@
 
         <div class="dropdown float-end" v-if="UserInfo !== null">
             <a class="btn btn-theme rounded-10 shadow-none px-3 py-2" data-bs-toggle="dropdown" aria-expanded="false">
-                {{ UserInfo.first_name+' '+UserInfo.last_name }} <i class="fa fa-fw fa-chevron-down"></i>
+                <span id="user_name">{{ UserInfo.first_name+' '+UserInfo.last_name }}</span> <i class="fa fa-fw fa-chevron-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-3 shadow rounded-10" style="width: 250px;">
-                <li><a href="#" class="dropdown-item px-3 py-2 rounded-10 text-center">Profile</a></li>
+                <li><router-link :to="{name: 'Profile'}" class="dropdown-item px-3 py-2 rounded-10 text-center">Profile</router-link></li>
                 <li><a class="btn btn-danger w-100 rounded-10 mt-2" @click="logout">Logout</a></li>
             </ul>
         </div>
