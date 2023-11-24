@@ -10,6 +10,9 @@ import Clients from "../pages/clients/clients.vue";
 import Employees from "../pages/employees/employees.vue";
 import Invoices from "../pages/invoices/invoices.vue";
 import RecurringInvoices from "../pages/recurring-invoices/recurring-invoices.vue";
+import Profile from "../pages/profile/Profile.vue";
+import UpdateProfile from "../pages/profile/UpdateProfile.vue";
+import ChangePassword from "../pages/profile/ChangePassword.vue";
 
 //=====================
 // Routes
@@ -27,6 +30,11 @@ const routes = [
             {path: ROOT_URL + '/employees', name: 'Employees', component: Employees},
             {path: ROOT_URL + '/invoices', name: 'Invoices', component: Invoices},
             {path: ROOT_URL + '/recurring-invoices', name: 'RecurringInvoices', component: RecurringInvoices},
+
+            /* profile routes */
+            {path: ROOT_URL + '/profile', name: 'Profile', component: Profile},
+            {path: ROOT_URL + '/profile/edit', name: 'UpdateProfile', component: UpdateProfile},
+            {path: ROOT_URL + '/profile/change-password', name: 'ChangePassword', component: ChangePassword},
         ],
     },
 ];
