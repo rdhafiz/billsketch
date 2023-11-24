@@ -16,8 +16,8 @@
                                     </div>
                                     <div class="col-xl-5">
                                         <div class="w-100 h-100 d-flex align-items-center">
-
                                             <form class="w-100" @submit.prevent="Reset">
+                                                <div v-if="message" class="alert alert-success">{{message}}</div>
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="email">
                                                         <strong>Email</strong>
@@ -61,8 +61,8 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="w-100 text-center">
-                                                        Back to Login?
-                                                        <router-link :to="{name: 'Login'}">Sign In</router-link>
+                                                        Back to Forgot?
+                                                        <router-link :to="{name: 'Forgot'}">Forgot</router-link>
                                                     </div>
                                                 </div>
                                             </form>
@@ -96,7 +96,8 @@ export default {
                 password: '',
                 password_confirmation: ''
             },
-            loading: false
+            loading: false,
+            message: ''
         }
     },
     methods: {
@@ -106,12 +107,7 @@ export default {
             ApiService.POST(ApiRoutes.Reset, this.formData, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
-                    this.formData = {
-                        email: '',
-                        reset_code: '',
-                        password: '',
-                        password_confirmation: ''
-                    }
+                    this.$router.push({name: 'Login', state: {message: res.message}})
                 } else {
                     ApiService.ErrorHandler(res.errors)
                 }
@@ -120,6 +116,10 @@ export default {
     },
     created() {
         window.scroll(0, 0);
+        if(window.history.state){
+            this.message = window.history.state.message;
+            this.formData.email = window.history.state.email;
+        }
     }
 }
 </script>

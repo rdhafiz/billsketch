@@ -116,7 +116,7 @@
                                                             <div class="form-group mb-3">
 <!--                                                                <label class="form-label" for="company_size"><strong>Company Size</strong></label>-->
                                                                 <input type="text" class="form-control form-control-lg"
-                                                                       id="company_size" name="company_size"
+                                                                       id="company_size" name="company_size" autocomplete="new-company-size"
                                                                        placeholder="Company Size" v-model="formData.company_size" @keypress="checkNumber($event)">
                                                                 <div class="error-report text-danger "></div>
                                                             </div>
@@ -226,8 +226,11 @@ export default {
                 this.facebookLoading = false
                 this.loading = false;
                 if (parseInt(res.status) === 200) {
-                    this.formData.provider = res.provider;
-                    window.location.href = '/portal';
+                    ApiService.setAuthentication(res.access_token, res.user, (auth) => {
+                        if (auth) {
+                            window.location.href = '/portal';
+                        }
+                    })
                 } else {
                     ApiService.ErrorHandler(res.error)
                 }
