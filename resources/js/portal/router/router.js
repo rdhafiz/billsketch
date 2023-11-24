@@ -15,6 +15,11 @@ import UpdateProfile from "../pages/profile/UpdateProfile.vue";
 import ChangePassword from "../pages/profile/ChangePassword.vue";
 import ClientEdit from "../pages/clients/clientEdit.vue";
 import ClientCreate from "../pages/clients/clientCreate.vue";
+import EmployeeCreate from "../pages/employees/employeeCreate.vue";
+import EmployeeEdit from "../pages/employees/employeeEdit.vue";
+import Categories from "../pages/category/categories.vue";
+import CategoryCreate from "../pages/category/categoryCreate.vue";
+import CategoryEdit from "../pages/category/categoryEdit.vue";
 
 //=====================
 // Routes
@@ -34,7 +39,17 @@ const routes = [
             {path: ROOT_URL + '/clients/create', name: 'ClientCreate', component: ClientCreate},
             {path: ROOT_URL + '/clients/edit', name: 'ClientEdit', component: ClientEdit},
 
+            /*employee routes*/
             {path: ROOT_URL + '/employees', name: 'Employees', component: Employees},
+            {path: ROOT_URL + '/employees/create', name: 'EmployeeCreate', component: EmployeeCreate},
+            {path: ROOT_URL + '/employees/edit', name: 'EmployeeEdit', component: EmployeeEdit},
+
+            /*category routes*/
+            {path: ROOT_URL + '/categories', name: 'Categories', component: Categories},
+            {path: ROOT_URL + '/categories/create', name: 'CategoryCreate', component: CategoryCreate},
+            {path: ROOT_URL + '/categories/edit', name: 'CategoryEdit', component: CategoryEdit},
+
+
             {path: ROOT_URL + '/invoices', name: 'Invoices', component: Invoices},
             {path: ROOT_URL + '/recurring-invoices', name: 'RecurringInvoices', component: RecurringInvoices},
 
