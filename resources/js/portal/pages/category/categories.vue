@@ -1,9 +1,9 @@
 <template>
-    <h1>Employees</h1>
+    <h1>Categories</h1>
     <div class="card">
         <div class="card-body">
             <div class="text-end mb-3">
-                <router-link :to="{name: 'EmployeeCreate'}" class="btn btn-theme" style="width: 120px;">Create</router-link>
+                <router-link :to="{name: 'CategoryCreate'}" class="btn btn-theme" style="width: 120px;">Create</router-link>
             </div>
             <div class="table-data table-responsive">
                 <table class="table table-hover">
@@ -11,8 +11,7 @@
                     <tr>
                         <th>Logo</th>
                         <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
+                        <th>Color</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -23,12 +22,11 @@
                                 <img :src="'/assets/images/profile.png'" height="40" width="40" class="rounded-circle" alt="avatar">
                             </div>
                         </td>
-                        <td>Noyon Ahammed</td>
-                        <td>noyon@gmail.com</td>
-                        <td>01700000000</td>
+                        <td>Laptop</td>
+                        <td>#000000</td>
                         <td>
                             <div class="action text-end">
-                                <router-link :to="{name: 'EmployeeEdit'}" class="btn btn-theme">
+                                <router-link :to="{name: 'CategoryEdit'}" class="btn btn-theme">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                 </router-link>
                                 <button class="btn btn-danger ms-2" @click="deleteClient">
@@ -53,14 +51,14 @@ export default {
         deleteClient(){
             swal({
                 title: "Are you sure?",
-                text: "Are you sure that you want to delete this employee?",
+                text: "Are you sure that you want to delete this category?",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
             })
                 .then(willDelete => {
                     if (willDelete) {
-                        swal("Deleted!", "Employee has been deleted!", "success");
+                        swal("Deleted!", "Category has been deleted!", "success");
                     }
                 });
         }
