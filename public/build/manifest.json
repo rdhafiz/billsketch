@@ -23,7 +23,11 @@
     "src": "node_modules/fontawesome-4.7/fonts/fontawesome-webfont.woff2"
   },
   "resources/js/portal/app.js": {
+<<<<<<< HEAD
     "file": "assets/app-d106505c.js",
+=======
+    "file": "assets/app-8ad97d25.js",
+>>>>>>> 69948ce (clients ui updated)
     "imports": [
       "_vue-router-82dd5b58.js"
     ],
@@ -46,7 +50,11 @@
     "src": "resources/js/website/app.js"
   },
   "resources/scss/portal/app.scss": {
+<<<<<<< HEAD
     "file": "assets/app-e8f374f7.css",
+=======
+    "file": "assets/app-712fce59.css",
+>>>>>>> 69948ce (clients ui updated)
     "isEntry": true,
     "src": "resources/scss/portal/app.scss"
   },

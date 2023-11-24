@@ -13,6 +13,8 @@ import RecurringInvoices from "../pages/recurring-invoices/recurring-invoices.vu
 import Profile from "../pages/profile/Profile.vue";
 import UpdateProfile from "../pages/profile/UpdateProfile.vue";
 import ChangePassword from "../pages/profile/ChangePassword.vue";
+import ClientEdit from "../pages/clients/clientEdit.vue";
+import ClientCreate from "../pages/clients/clientCreate.vue";
 
 //=====================
 // Routes
@@ -26,7 +28,12 @@ const routes = [
         children: [
             {path: ROOT_URL + '/', redirect: {name: 'Dashboard'}},
             {path: ROOT_URL + '/dashboard', name: 'Dashboard', component: Dashboard},
+
+            /*client routes*/
             {path: ROOT_URL + '/clients', name: 'Clients', component: Clients},
+            {path: ROOT_URL + '/clients/create', name: 'ClientCreate', component: ClientCreate},
+            {path: ROOT_URL + '/clients/edit', name: 'ClientEdit', component: ClientEdit},
+
             {path: ROOT_URL + '/employees', name: 'Employees', component: Employees},
             {path: ROOT_URL + '/invoices', name: 'Invoices', component: Invoices},
             {path: ROOT_URL + '/recurring-invoices', name: 'RecurringInvoices', component: RecurringInvoices},

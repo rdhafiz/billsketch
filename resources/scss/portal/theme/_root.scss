@@ -35,6 +35,10 @@ body {
             @include transition(all 0.2s linear);
         }
     }
+
+    th, td{
+        vertical-align: middle;
+    }
 }
 
 
