@@ -171,8 +171,9 @@ export default {
                             company_size: res.data.company_info.size,
                             company_address: res.data.company_info.address,
                             company_city: res.data.company_info.city,
-                            company_country: res.data.company_info.company_country,
+                            company_country: res.data.company_info.country,
                         };
+                        console.log(this.formData)
                     } else{
                       this.formData = res.data;
                     }
