@@ -173,7 +173,6 @@ export default {
                             company_city: res.data.company_info.city,
                             company_country: res.data.company_info.country,
                         };
-                        console.log(this.formData)
                     } else{
                       this.formData = res.data;
                     }

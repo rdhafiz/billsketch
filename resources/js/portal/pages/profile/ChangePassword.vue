@@ -16,9 +16,9 @@
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="form-group mb-3">
-                                    <label class="form-label" for="old_password">Current Password</label>
+                                    <label class="form-label" for="old_password">Old Password</label>
                                     <input type="password" class="form-control form-control-lg"
-                                           id="old_password" name="old_password" placeholder="Current Password"
+                                           id="old_password" name="old_password" placeholder="Old Password"
                                            v-model="formData.old_password">
                                     <div class="error-report text-danger "></div>
                                 </div>
@@ -44,7 +44,7 @@
                                 <div class="form-group mb-3">
                                     <label class="form-label" for="password_confirmation">Confirm Password</label>
                                     <input type="password" class="form-control form-control-lg"
-                                           id="password_confirmation" name="password_confirmation" placeholder="Current Password"
+                                           id="password_confirmation" name="password_confirmation" placeholder="Confirm Password"
                                            v-model="formData.password_confirmation">
                                     <div class="error-report text-danger "></div>
                                 </div>
@@ -93,7 +93,7 @@ export default {
                 this.loading = false;
                 if (res.status === 200) {
                     this.formData = {
-                        current_password: '',
+                        old_password: '',
                         new_password: '',
                         password_confirmation: '',
                     }
@@ -107,9 +107,7 @@ export default {
             })
         }
     },
-    mounted() {
-        console.log(2)
-    },
+    mounted() {},
     created() {
         window.scroll(0, 0);
     }
