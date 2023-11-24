@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\UserLogType;
 use App\Constants\UserType;
 use App\Helpers\Helpers;
 use App\Models\Companies;
@@ -109,6 +110,7 @@ class ProfileController extends Controller
                     return response()->json(['status' => 500, 'message' => 'Cannot update company'], 200);
                 }
             }
+            Helpers::saveUserActivity($userInfo['id'],UserLogType::Update_profile);
             return response()->json(['status' => 200, 'message' => 'Profile updated successfully']);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
@@ -141,6 +143,7 @@ class ProfileController extends Controller
             if (!$user->save()) {
                 return response()->json(['status' => 500, 'message' => 'Cannot update password'], 200);
             }
+            Helpers::saveUserActivity($user['id'],UserLogType::Change_password);
             return response()->json(['status' => 200, 'message' => 'Password updated successfully']);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);

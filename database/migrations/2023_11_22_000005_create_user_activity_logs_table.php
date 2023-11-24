@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('ip_address');
             $table->string('device')->nullable();
             $table->string('os')->nullable();
-            $table->string('status');
+            $table->string('status')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
