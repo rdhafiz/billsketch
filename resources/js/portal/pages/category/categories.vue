@@ -23,7 +23,6 @@
                             </div>
                         </td>
                         <td>Laptop</td>
-                        <td>noyon@gmail.com</td>
                         <td>#000000</td>
                         <td>
                             <div class="action text-end">

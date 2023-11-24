@@ -108,7 +108,7 @@
                     </div>
                     <div class="col-lg-12">
                         <div class="text-end">
-                            <router-link :to="{name: 'Employees', params: {id: 1}}" class="btn btn-danger w-25 me-3">Cancel</router-link>
+                            <router-link :to="{name: 'Employees'}" class="btn btn-danger w-25 me-3">Cancel</router-link>
                             <button type="submit" class="btn btn-theme w-25" v-if="loading === false">Update</button>
                             <button type="button" disabled v-if="loading === true"
                                     class="btn btn-theme w-25">
