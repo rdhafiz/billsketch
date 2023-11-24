@@ -16,8 +16,6 @@
                                     </div>
                                     <div class="col-xl-5">
                                         <div class="w-100">
-
-
                                             <div class="form-group mb-3">
                                                 <button class="btn btn-lg btn-primary w-100" @click="initLogin"
                                                         v-if="facebookLoading == false"><i
@@ -38,6 +36,7 @@
                                             </div>
 
                                             <form class="w-100" @submit.prevent="Login">
+                                                <div v-if="message" class="alert alert-success">{{message}}</div>
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="email"><strong>Email</strong></label>
                                                     <input type="email" class="form-control form-control-lg" id="email"
@@ -104,6 +103,7 @@ export default {
             },
             loading: false,
             facebookLoading: false,
+            message: ''
         }
     },
     methods: {
@@ -133,8 +133,11 @@ export default {
                 this.facebookLoading = false
                 this.loading = false;
                 if (parseInt(res.status) === 200) {
-                    this.formData.provider = res.provider;
-                    window.location.href = '/portal';
+                    ApiService.setAuthentication(res.access_token, res.user, (auth) => {
+                        if (auth) {
+                            window.location.href = '/portal';
+                        }
+                    })
                 } else {
                     ApiService.ErrorHandler(res.error)
                 }
@@ -168,6 +171,13 @@ export default {
             });
         }
     },
+
+    mounted() {
+        if(window.history.state){
+            this.message = window.history.state.message;
+        }
+    },
+
     created() {
         window.scroll(0, 0);
 

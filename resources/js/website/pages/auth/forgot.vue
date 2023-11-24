@@ -71,7 +71,7 @@ export default {
             ApiService.POST(ApiRoutes.Forgot, this.formData, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
-                    this.$router.push({name: 'Reset'})
+                    this.$router.push({name: 'Reset', state: {message: res.message, email: this.formData.email}})
                 } else {
                     ApiService.ErrorHandler(res.errors)
                 }
