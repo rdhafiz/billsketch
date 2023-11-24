@@ -135,7 +135,7 @@ class ProfileController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot find user'], 200);
             }
             if (!Hash::check($requestData['old_password'], $user->password)) {
-                return response()->json(['status' => 500, 'message' => 'Old password did not match'], 200);
+                return response()->json(['status' => 500, 'errors' => ['old_password' => ['Current password does not match']]], 200);
             }
             $user->password = bcrypt($requestData['password']);
             if (!$user->save()) {
