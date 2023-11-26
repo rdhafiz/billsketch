@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\UserLogType;
 use App\Constants\UserType;
+use App\Helpers\Helpers;
 use App\Models\Companies;
 use App\Models\User;
 use App\Repositories\AuthRepository;
@@ -43,6 +45,7 @@ class AuthController extends Controller
             } else {
                 if (Hash::check($requestData['password'], $userInfo->password)) {
                     $access_token = $userInfo->createToken('authToken')->accessToken;
+                    Helpers::saveUserActivity($userInfo['id'],UserLogType::Login);
                     return response()->json(['status' => 200, 'access_token' => $access_token, 'user' => User::parseData($userInfo)]);
                 }
             }
@@ -92,6 +95,11 @@ class AuthController extends Controller
                 }
             }
             $access_token = $userInfo->createToken('authToken')->accessToken;
+            if($requestData['social_provider'] == 'facebook'){
+                Helpers::saveUserActivity($userInfo['id'],UserLogType::SocialLoginFb);
+            } elseif ($requestData['social_provider'] == 'google'){
+                Helpers::saveUserActivity($userInfo['id'],UserLogType::SocialLoginGl);
+            }
             return response()->json(['status' => 200, 'access_token' => $access_token, 'user' => User::parseData($userInfo)]);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
@@ -167,6 +175,7 @@ class AuthController extends Controller
             }
             AuthRepository::sendVerificationEmail($userInfo);
             DB::commit();
+            Helpers::saveUserActivity($userInfo['id'],UserLogType::Register);
             return response()->json(['status' => 200, 'message' => 'A verification mail has been sent to your email, Please verify the email to login'], 200);
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -198,6 +207,7 @@ class AuthController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot verify user, Please try again'], 200);
             }
             $access_token = $userInfo->createToken('authToken')->accessToken;
+            Helpers::saveUserActivity($userInfo['id'],UserLogType::Account_Activation);
             return response()->json(['status' => 200, 'access_token' => $access_token, 'user' => User::parseData($userInfo)]);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
@@ -262,6 +272,7 @@ class AuthController extends Controller
             if (!$userInfo->save()) {
                 return response()->json(['status' => 500, 'message' => 'Cannot reset password'], 200);
             }
+            Helpers::saveUserActivity($userInfo['id'],UserLogType::Reset_password);
             return response()->json(['status'=> 200, 'message' => 'Password reset successful']);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
@@ -277,6 +288,7 @@ class AuthController extends Controller
         $oauth_token = $request->get('oauth_token');
         $token_repository = app(TokenRepository::class);
         $token_repository->revokeAccessToken($oauth_token->id);
+        Helpers::saveUserActivity($request->session_user->id,UserLogType::Logout);
         return response()->json(['status' => 200, 'message' => 'Logout Success'], 200);
     }
 }
