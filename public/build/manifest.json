@@ -23,7 +23,7 @@
     "src": "node_modules/fontawesome-4.7/fonts/fontawesome-webfont.woff2"
   },
   "resources/js/portal/app.js": {
-    "file": "assets/app-b0157de3.js",
+    "file": "assets/app-72bd8e18.js",
     "imports": [
       "_vue-router-82dd5b58.js"
     ],
