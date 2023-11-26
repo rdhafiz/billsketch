@@ -19,7 +19,7 @@ class UserActivityLogRepository
        $logModel->ip_address = $userLog['ip_address'];
        $logModel->device = $userLog['device'];
        $logModel->os = $userLog['os'];
-       $logModel->status = $userLog['status'];
+       $logModel->browser = $userLog['browser'];
        return $logModel->save();
    }
 }

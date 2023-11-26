@@ -95,7 +95,11 @@ class AuthController extends Controller
                 }
             }
             $access_token = $userInfo->createToken('authToken')->accessToken;
-            Helpers::saveUserActivity($userInfo['id'],UserLogType::Login);
+            if($requestData['social_provider'] == 'facebook'){
+                Helpers::saveUserActivity($userInfo['id'],UserLogType::SocialLoginFb);
+            } elseif ($requestData['social_provider'] == 'google'){
+                Helpers::saveUserActivity($userInfo['id'],UserLogType::SocialLoginGl);
+            }
             return response()->json(['status' => 200, 'access_token' => $access_token, 'user' => User::parseData($userInfo)]);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
@@ -203,6 +207,7 @@ class AuthController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot verify user, Please try again'], 200);
             }
             $access_token = $userInfo->createToken('authToken')->accessToken;
+            Helpers::saveUserActivity($userInfo['id'],UserLogType::Account_Activation);
             return response()->json(['status' => 200, 'access_token' => $access_token, 'user' => User::parseData($userInfo)]);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
@@ -267,7 +272,7 @@ class AuthController extends Controller
             if (!$userInfo->save()) {
                 return response()->json(['status' => 500, 'message' => 'Cannot reset password'], 200);
             }
-            Helpers::saveUserActivity($userInfo['id'],UserLogType::Change_password);
+            Helpers::saveUserActivity($userInfo['id'],UserLogType::Reset_password);
             return response()->json(['status'=> 200, 'message' => 'Password reset successful']);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);

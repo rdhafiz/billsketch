@@ -52,10 +52,12 @@ class Helpers
             } elseif ($agent->isMobile()) {
                 return 'mobile';
             } else {
-                return null;
+                return 'robot';
             }
         } else if ($type == 'os') {
-            return $agent->platform() ? $agent->platform() : null;
+            return $agent->platform() ? $agent->platform().' - '.$agent->version($agent->platform()) : null;
+        } else if ($type == 'browser') {
+            return $agent->browser() ? $agent->browser().' - '.$agent->version($agent->browser()) : null;
         } else {
             return null;
         }
@@ -73,7 +75,7 @@ class Helpers
                 'ip_address' => self::getIp(),
                 'device' => self::getAgent('device'),
                 'os' => self::getAgent('os'),
-                'status' => 1
+                'browser' => self::getAgent('browser')
             ];
             UserActivityLogRepository::save($userLog);
         } catch (\Exception $exception) {

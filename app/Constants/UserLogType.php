@@ -7,8 +7,11 @@ class UserLogType
     const Register = 'Register';
     const Account_Activation = 'Account Activation';
     const Login = 'Login';
+    const SocialLoginFb = 'Social Login Facebook';
+    const SocialLoginGl = 'Social Login Google';
     const Logout = 'Logout';
     const Update_profile = 'Update profile';
+    const Reset_password = 'Reset password';
     const Change_password = 'Change password';
     const Client_create = 'Client create';
     const Client_view = 'Client view';
