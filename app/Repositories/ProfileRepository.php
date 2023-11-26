@@ -32,7 +32,9 @@ class ProfileRepository
         $user->email = $userData['email'];
         $user->phone = $userData['phone'] ?? null;
         $user->gender = $userData['gender'] ?? null;
-        $user->avatar = $userData['avatar'] ?? null;
+        if (!empty($userData['avatar'])) {
+            $user->avatar = $userData['avatar'];
+        }
         $user->address = $userData['address'] ?? null;
         $user->city = $userData['city'] ?? null;
         $user->country = $userData['country'] ?? null;

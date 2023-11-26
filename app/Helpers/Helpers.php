@@ -20,6 +20,17 @@ class Helpers
     }
 
     /**
+     * @param $model
+     * @param $field
+     */
+    public static function fileRemove($model, $field): void
+    {
+        if (!empty($model[$field]) && file_exists(public_path('storage/uploads/'.$model[$field]))) {
+            unlink(public_path('storage/uploads/'.$model[$field]));
+        }
+    }
+
+    /**
      * @return string|null
      */
     public static function getIp(): ?string

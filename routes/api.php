@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ClientsController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,5 +28,12 @@ Route::group(['prefix' => 'profile', 'middleware' => ['auth:api']], function () 
     Route::get('get', [ProfileController::class, 'get']);
     Route::post('update', [ProfileController::class, 'update']);
     Route::post('update/password', [ProfileController::class, 'updatePassword']);
+});
+Route::group(['prefix' => 'client', 'middleware' => ['auth:api']], function () {
+    Route::post('save', [ClientsController::class, 'save']);
+    Route::post('update', [ClientsController::class, 'update']);
+    Route::get('single', [ClientsController::class, 'single']);
+    Route::delete('delete', [ClientsController::class, 'delete']);
+    Route::post('list', [ClientsController::class, 'list']);
 });
 
