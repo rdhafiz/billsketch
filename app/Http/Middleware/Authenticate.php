@@ -23,6 +23,11 @@ class Authenticate extends Middleware
 
     public function handle($request, Closure $next, ...$guards)
     {
+        $authorization = $request->hasHeader('Authorization');
+        if(!$authorization){
+            $xAuthorization = $request->header('X-Authorization');
+            $request->headers->set('Authorization', $xAuthorization);
+        }
         $psr = (new PsrHttpFactory(
             new Psr17Factory,
             new Psr17Factory,
