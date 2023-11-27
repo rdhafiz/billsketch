@@ -1,21 +1,19 @@
 <template>
 
-    <div class="row justify-content-center">
-        <div class="col-lg-6">
+    <div class="row justify-content-center res">
+        <div class="col-xxl-8">
             <form @submit.prevent="UpdateProfile">
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class="cl col-lg-12">
                         <div v-if="message" class="alert alert-success text-center">{{message}}</div>
                     </div>
-                    <div class="col-lg-12">
-                        <div class="d-flex align-items-center mb-4">
-                            <div class="avatar">
+                    <div class="cl col-lg-12">
+                        <div class="d-flex align-items-center mb-4 avatar">
                                 <img :src="'/assets/images/profile.png'" height="80" width="80" alt="avatar">
-                            </div>
-                            <button type="button" class="btn btn-theme ms-4 w-25">Upload Photo</button>
+                            <button type="button" class="btn btn-theme ms-4 w-160">Upload Photo</button>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="cl col-lg-6">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="form-group mb-3">
@@ -28,7 +26,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="cl col-lg-6">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="form-group mb-3">
@@ -41,7 +39,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-12">
+                    <div class="cl col-lg-12">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="form-group mb-3">
@@ -55,7 +53,7 @@
                         </div>
                     </div>
                     <template v-if="formData.company_info">
-                        <div class="col-lg-6">
+                        <div class="cl col-lg-6">
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <div class="form-group mb-3">
@@ -68,7 +66,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="cl col-lg-6">
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <div class="form-group mb-3">
@@ -81,7 +79,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        <div class="cl col-lg-12">
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <div class="form-group mb-3">
@@ -94,7 +92,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="cl col-lg-6">
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <div class="form-group mb-3">
@@ -107,7 +105,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="cl col-lg-6">
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <div class="form-group mb-3">
@@ -121,12 +119,12 @@
                             </div>
                         </div>
                     </template>
-                    <div class="col-lg-12">
+                    <div class="cl col-lg-12">
                         <div class="text-end">
-                            <router-link :to="{name: 'Profile'}" class="btn btn-danger w-25 me-3">Cancel</router-link>
-                            <button type="submit" class="btn btn-theme w-25" v-if="loading === false">Update</button>
+                            <router-link :to="{name: 'Profile'}" class="btn btn-danger w-160 me-3">Cancel</router-link>
+                            <button type="submit" class="btn btn-theme w-160" v-if="loading === false">Update</button>
                             <button type="button" disabled v-if="loading === true"
-                                    class="btn btn-theme w-25">
+                                    class="btn btn-theme w-160">
                                 <i class="fa fa-spinner spin" aria-hidden="true"></i>
                             </button>
                         </div>

@@ -1,0 +1,42 @@
+ /**********************
+ Responsive
+ **********************/
+
+.res{
+    @media screen and (max-width: 991px) {
+        margin: 0!important;
+    }
+
+    .cl{
+        @media screen and (max-width: 767px) {
+            padding: 0 5px 0 0!important;
+        }
+    }
+    .avatar{
+        @media screen and (max-width: 500px) {
+            flex-direction: column;
+            .w-160{
+                margin: 10px 0 0!important;
+            }
+        }
+    }
+    .profile-buttons{
+        @media screen and (max-width: 500px) {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+    }
+    .btn{
+        &.w-160{
+            width: 160px!important;
+            @media screen and (max-width: 500px) {
+                width: 100%!important;
+                &:first-child{
+                    margin: 0 0 10px!important;
+                }
+            }
+        }
+    }
+}

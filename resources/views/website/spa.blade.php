@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="{{asset('assets/images/icon.png')}}">
 
-    <title>{{config('app.APP_NAME')}}</title>
+    <title>Bilify</title>
     <meta name="title" content="{{config('app.APP_NAME')}}">
     <meta name="description" content="">
     <meta name="keywords" content="">
