@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\EmployeesController;
+use App\Http\Controllers\CategoriesController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -38,4 +40,17 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:api']], function () {
     Route::post('update/status', [ClientsController::class, 'archiveOrRestore']);
     Route::post('restore', [ClientsController::class, 'restore']);
 });
-
+Route::group(['prefix' => 'employee', 'middleware' => ['auth:api']], function () {
+    Route::post('save', [EmployeesController::class, 'save']);
+    Route::post('update', [EmployeesController::class, 'update']);
+    Route::post('single', [EmployeesController::class, 'single']);
+    Route::post('delete', [EmployeesController::class, 'delete']);
+    Route::post('list', [EmployeesController::class, 'list']);
+});
+Route::group(['prefix' => 'category', 'middleware' => ['auth:api']], function () {
+    Route::post('save', [CategoriesController::class, 'save']);
+    Route::post('update', [CategoriesController::class, 'update']);
+    Route::post('single', [CategoriesController::class, 'single']);
+    Route::post('delete', [CategoriesController::class, 'delete']);
+    Route::post('list', [CategoriesController::class, 'list']);
+});

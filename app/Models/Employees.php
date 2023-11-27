@@ -9,4 +9,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Employees extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $appends = [
+        'avatar_path'
+    ];
+
+    public function getAvatarPathAttribute()
+    {
+        if (!empty($this->avatar)) {
+            return asset('storage/uploads/'.$this->avatar);
+        }
+        return null;
+    }
 }
