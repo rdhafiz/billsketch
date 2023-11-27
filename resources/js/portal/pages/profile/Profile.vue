@@ -1,18 +1,20 @@
 <template>
 
-    <div class="row justify-content-center" v-if="UserInfo">
-        <div class="col-lg-6">
+    <div class="row justify-content-center res" v-if="UserInfo">
+        <div class="col-xxl-8">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="d-flex align-items-center mb-4">
+                    <div class="d-flex align-items-center flex-column flex-sm-row mb-4">
                         <div class="avatar">
                             <img :src="'/assets/images/profile.png'" height="80" width="80" alt="avatar">
                         </div>
-                        <router-link :to="{name: 'UpdateProfile'}" class="btn btn-theme mx-4 w-25">Edit Profile</router-link>
-                        <router-link :to="{name: 'ChangePassword'}" class="btn btn-theme w-25">Change Password</router-link>
+                        <div class="profile-buttons mt-3 mt-sm-0">
+                            <router-link :to="{name: 'UpdateProfile'}" class="btn btn-theme mx-2 mx-lg-4 w-160">Edit Profile</router-link>
+                            <router-link :to="{name: 'ChangePassword'}" class="btn btn-theme w-160">Change Password</router-link>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="cl col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="mb-2">First Name</div>
@@ -22,7 +24,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="cl col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="mb-2">Last Name</div>
@@ -32,7 +34,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-12">
+                <div class="cl col-lg-12">
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="mb-2">Email</div>
@@ -43,7 +45,7 @@
                     </div>
                 </div>
                 <template v-if="UserInfo.company_info">
-                    <div class="col-lg-6">
+                    <div class="cl col-lg-6">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="mb-2">Company Name</div>
@@ -53,7 +55,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="cl col-lg-6">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="mb-2">Company Size</div>
@@ -63,7 +65,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-12">
+                    <div class="cl col-lg-12">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="mb-2">Address</div>
@@ -73,7 +75,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="cl col-lg-6">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="mb-2">City</div>
@@ -83,7 +85,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="cl col-lg-6">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="mb-2">Country</div>
