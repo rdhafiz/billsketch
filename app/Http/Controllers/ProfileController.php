@@ -39,7 +39,7 @@ class ProfileController extends Controller
             }
             return response()->json(['status' => 200, 'data' => $userData]);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
 
@@ -117,7 +117,7 @@ class ProfileController extends Controller
             Helpers::saveUserActivity($userInfo['id'],UserLogType::Update_profile);
             return response()->json(['status' => 200, 'message' => 'Profile updated successfully']);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
 
@@ -150,7 +150,7 @@ class ProfileController extends Controller
             Helpers::saveUserActivity($user['id'],UserLogType::Change_password);
             return response()->json(['status' => 200, 'message' => 'Password updated successfully']);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
 }

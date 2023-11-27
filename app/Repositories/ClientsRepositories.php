@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Clients;
+use App\Models\User;
 
 class ClientsRepositories
 {
@@ -60,8 +61,26 @@ class ClientsRepositories
         }
         return $client;
     }
-    public static function list()
-    {
 
+    /**
+     * @param array $filter
+     * @param array $pagination
+     * @param User $user
+     * @return mixed
+     */
+    public static function list(array $filter, array $pagination, User $user): mixed
+    {
+        $result = Clients::select('name', 'email', 'phone', 'address', 'city', 'country')
+            ->where('user_id', $user['id']);
+        if (!empty($filter['keyword'])) {
+            $result->where(function($q) use ($filter) {
+                $q->where('name', 'LIKE', '%'.$filter['keyword'].'%');
+                $q->orWhere('email', 'LIKE', '%'.$filter['keyword'].'%');
+                $q->orWhere('phone', 'LIKE', '%'.$filter['keyword'].'%');
+                $q->orWhere('city', 'LIKE', '%'.$filter['keyword'].'%');
+                $q->orWhere('country', 'LIKE', '%'.$filter['keyword'].'%');
+            });
+        }
+        return $result->orderBy($pagination['order_by'], $pagination['order_mode'])->paginate($pagination['limit']);
     }
 }

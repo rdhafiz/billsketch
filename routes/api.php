@@ -32,8 +32,8 @@ Route::group(['prefix' => 'profile', 'middleware' => ['auth:api']], function () 
 Route::group(['prefix' => 'client', 'middleware' => ['auth:api']], function () {
     Route::post('save', [ClientsController::class, 'save']);
     Route::post('update', [ClientsController::class, 'update']);
-    Route::get('single', [ClientsController::class, 'single']);
-    Route::delete('delete', [ClientsController::class, 'delete']);
+    Route::post('single', [ClientsController::class, 'single']);
+    Route::post('delete', [ClientsController::class, 'delete']);
     Route::post('list', [ClientsController::class, 'list']);
 });
 

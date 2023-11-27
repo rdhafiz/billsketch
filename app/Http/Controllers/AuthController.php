@@ -102,7 +102,7 @@ class AuthController extends Controller
             }
             return response()->json(['status' => 200, 'access_token' => $access_token, 'user' => User::parseData($userInfo)]);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
 
@@ -179,7 +179,7 @@ class AuthController extends Controller
             return response()->json(['status' => 200, 'message' => 'A verification mail has been sent to your email, Please verify the email to login'], 200);
         } catch (\Exception $exception) {
             DB::rollBack();
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
 
@@ -210,7 +210,7 @@ class AuthController extends Controller
             Helpers::saveUserActivity($userInfo['id'],UserLogType::Account_Activation);
             return response()->json(['status' => 200, 'access_token' => $access_token, 'user' => User::parseData($userInfo)]);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
 
@@ -243,7 +243,7 @@ class AuthController extends Controller
             });
             return response()->json(['status' => 200, 'message' => 'A reset code has been sent to your email'], 200);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
 
@@ -275,7 +275,7 @@ class AuthController extends Controller
             Helpers::saveUserActivity($userInfo['id'],UserLogType::Reset_password);
             return response()->json(['status'=> 200, 'message' => 'Password reset successful']);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
 

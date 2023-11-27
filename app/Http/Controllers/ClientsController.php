@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\UserLogType;
 use App\Helpers\Helpers;
 use App\Models\Clients;
 use App\Repositories\ClientsRepositories;
@@ -21,7 +22,7 @@ class ClientsController extends Controller
             $requestData = $request->all();
             $validator = Validator::make($requestData, [
                 'name' => 'required|string',
-                'email' => 'required|unique',
+                'email' => 'required|email|unique:clients,email',
                 'phone' => 'required|string',
                 'address' => 'required|string',
                 'city' => 'required|string',
@@ -46,9 +47,10 @@ class ClientsController extends Controller
             if (!$clientInfo instanceof Clients) {
                 return response()->json(['status' => 500, 'message' => 'Cannot save client'], 200);
             }
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_create);
             return response()->json(['status' => 200, 'message' => 'Client has been created successfully'], 200);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
 
@@ -63,7 +65,7 @@ class ClientsController extends Controller
             $validator = Validator::make($requestData, [
                 'id' => 'required|integer',
                 'name' => 'required|string',
-                'email' => 'required|unique',
+                'email' => 'required|email',
                 'phone' => 'required|string',
                 'address' => 'required|string',
                 'city' => 'required|string',
@@ -71,6 +73,11 @@ class ClientsController extends Controller
             ]);
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
+            }
+            //check if email already has been taken
+            $client = Clients::where('email', $requestData['email'])->where('id', '!=', $requestData['id'])->first();
+            if ($client instanceof Clients) {
+                return response()->json(['status' => 500, 'errors' => ['email' => ['Email already has been taken']]]);
             }
             $client = Clients::find($requestData['id']);
             if (!$client instanceof Clients) {
@@ -93,9 +100,10 @@ class ClientsController extends Controller
             if (!$clientInfo instanceof Clients) {
                 return response()->json(['status' => 500, 'message' => 'Cannot update client'], 200);
             }
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_update);
             return response()->json(['status' => 200, 'message' => 'Client has been updated successfully'], 200);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
     /**
@@ -116,9 +124,10 @@ class ClientsController extends Controller
             if (!$client instanceof Clients) {
                 return response()->json(['status' => 500, 'message' => 'Cannot find client'], 200);
             }
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_view);
             return response()->json(['status' => 200, 'data' => $client], 200);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
     /**
@@ -143,13 +152,33 @@ class ClientsController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot delete client'], 200);
             }
             Helpers::fileRemove($client, 'logo');
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_delete);
             return response()->json(['status' => 200, 'message' => 'Client deleted successfully '], 200);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
-    public function list()
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function list(Request $request): JsonResponse
     {
-
+        try {
+            $requestData = $request->all();
+            $filter = [
+                'keyword' => $requestData['keyword'] ?? '',
+            ];
+            $paginatedData = [
+                'limit' => $requestData['limit'] ?? 15,
+                'order_by' => $requestData['order_by'] ?? 'id',
+                'order_mode' => $requestData['order_mode'] ?? 'DESC',
+            ];
+            $user = $requestData['session_user'];
+            $result = ClientsRepositories::list($filter, $paginatedData, $user);
+            return response()->json(['status' => 200, 'data' => $result]);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
+        }
     }
 }
