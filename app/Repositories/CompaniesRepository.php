@@ -38,7 +38,9 @@ class CompaniesRepository
         $company->address = $data['company_address'];
         $company->city = $data['company_city'];
         $company->country = $data['company_country'];
-        $company->logo = $data['company_logo'] ?? null;
+        if (!empty($data['company_logo'])) {
+            $company->logo = $data['company_logo'];
+        }
         if (!$company->save()) {
             return ['message' => 'Cannot update company'];
         }

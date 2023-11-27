@@ -39,7 +39,7 @@ class ProfileController extends Controller
             }
             return response()->json(['status' => 200, 'data' => $userData]);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
 
@@ -65,9 +65,14 @@ class ProfileController extends Controller
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
             }
+            //check if email already has been taken
             $user = User::where('email', $requestData['email'])->where('id', '!=', $requestData['session_user']['id'])->first();
             if ($user instanceof User) {
                 return response()->json(['status' => 500, 'errors' => ['email' => ['Email already has been taken']]]);
+            }
+            $user = User::find($requestData['session_user']['id']);
+            if (!$user instanceof User) {
+                return response()->json(['status' => 500, 'message' => 'Cannot find user'], 200);
             }
             $userData = [
                 'first_name' => $requestData['first_name'],
@@ -81,17 +86,18 @@ class ProfileController extends Controller
                 'user_type' => $requestData['user_type'],
             ];
             if ($request->file('avatar')) {
+                Helpers::fileRemove($user, 'avatar');
                 $userData['avatar'] = Helpers::fileUpload($request->file('avatar'));
-            }
-            $user = User::find($requestData['session_user']['id']);
-            if (!$user instanceof User) {
-                return response()->json(['status' => 500, 'message' => 'Cannot find user'], 200);
             }
             $userInfo = ProfileRepository::update($user, $userData);
             if (!$userInfo instanceof User) {
                 return response()->json(['status' => 500, 'message' => 'Cannot update profile'], 200);
             }
             if ($userInfo['user_type'] == UserType::Company) {
+                $company = Companies::find($userInfo['company_id']);
+                if (!$company instanceof Companies) {
+                    return response()->json(['status' => 500, 'message' => 'Cannot find company'], 200);
+                }
                 $companyData = [
                     'company_name' => $requestData['company_name'],
                     'company_size' => $requestData['company_size'],
@@ -100,11 +106,8 @@ class ProfileController extends Controller
                     'company_country' => $requestData['company_country'],
                 ];
                 if ($request->file('company_logo')) {
+                    Helpers::fileRemove($company, 'logo');
                     $companyData['company_logo'] = Helpers::fileUpload($request->file('company_logo'));
-                }
-                $company = Companies::find($userInfo['company_id']);
-                if (!$company instanceof Companies) {
-                    return response()->json(['status' => 500, 'message' => 'Cannot find company'], 200);
                 }
                 $companyInfo = CompaniesRepository::update($company, $companyData);
                 if (!$companyInfo instanceof Companies) {
@@ -114,7 +117,7 @@ class ProfileController extends Controller
             Helpers::saveUserActivity($userInfo['id'],UserLogType::Update_profile);
             return response()->json(['status' => 200, 'message' => 'Profile updated successfully']);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
 
@@ -147,7 +150,7 @@ class ProfileController extends Controller
             Helpers::saveUserActivity($user['id'],UserLogType::Change_password);
             return response()->json(['status' => 200, 'message' => 'Password updated successfully']);
         } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode()], 200);
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
 }
