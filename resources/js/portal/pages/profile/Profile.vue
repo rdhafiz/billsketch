@@ -6,7 +6,7 @@
                 <div class="col-lg-12">
                     <div class="d-flex align-items-center flex-column flex-sm-row mb-4">
                         <div class="avatar">
-                            <img :src="'/assets/images/profile.png'" height="80" width="80" alt="avatar">
+                            <img :src="avatar" height="80" width="80" alt="avatar" class="rounded-circle">
                         </div>
                         <div class="profile-buttons mt-3 mt-sm-0">
                             <router-link :to="{name: 'UpdateProfile'}" class="btn btn-theme mx-2 mx-lg-4 w-160">Edit Profile</router-link>
@@ -110,7 +110,8 @@ export default {
     components: {},
     data() {
         return {
-            UserInfo: null
+            UserInfo: null,
+            avatar: '/assets/images/profile.png',
         }
     },
     methods: {
@@ -118,6 +119,7 @@ export default {
             apiService.GET(apiRoutes.profile, (res) => {
                 if(res.status === 200){
                     this.UserInfo = res.data;
+                    this.avatar = res.data.avatar_path
                 }
             })
         },

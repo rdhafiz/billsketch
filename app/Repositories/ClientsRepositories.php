@@ -70,8 +70,13 @@ class ClientsRepositories
      */
     public static function list(array $filter, array $pagination, User $user): mixed
     {
-        $result = Clients::select('name', 'email', 'phone', 'address', 'city', 'country')
+        $result = Clients::select('id', 'name', 'email', 'phone', 'address', 'city', 'country', 'logo')
             ->where('user_id', $user['id']);
+        if (!empty($filter['list_type']) && $filter['list_type'] == 'archive') {
+            $result->where('is_active', 0);
+        } else {
+            $result->where('is_active', 1);
+        }
         if (!empty($filter['keyword'])) {
             $result->where(function($q) use ($filter) {
                 $q->where('name', 'LIKE', '%'.$filter['keyword'].'%');

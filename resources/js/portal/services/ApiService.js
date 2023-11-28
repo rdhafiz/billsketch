@@ -21,6 +21,22 @@ const ApiService = {
             }
         })
     },
+    POST_FORMDATA: (url, param, callback) => {
+        headers['Content-Type'] = 'multipart/form-data';
+        headers['X-Authorization'] = AuthService.getAccessToken();
+        axios.post(url, param, {headers: headers}).then((response) => {
+            if (response.status === 200) {
+                callback(response.data);
+            }
+        }).catch(err => {
+            const error_code = parseInt(err.toLocaleString().replace(/\D/g, ""));
+            if (error_code === 401) {
+                AuthService.logout(() => {
+
+                })
+            }
+        })
+    },
     GET: (url, callback) => {
         headers['X-Authorization'] = AuthService.getAccessToken();
         axios.get(url, {headers: headers}).then((response) => {

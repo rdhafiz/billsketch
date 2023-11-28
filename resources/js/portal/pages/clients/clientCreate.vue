@@ -1,18 +1,17 @@
 <template>
     <div class="row justify-content-center res">
         <div class="col-xxl-8">
-            <form>
+            <form @submit.prevent="clientCreate" id="clientCreate" enctype="multipart/form-data">
                 <div class="row">
                     <div class="cl col-lg-12">
-                        <div v-if="message" class="alert alert-success text-center">{{message}}</div>
-                    </div>
-                    <div class="cl col-lg-12">
                         <div class="d-flex align-items-center mb-4 avatar">
-                            <img :src="'/assets/images/profile.png'" height="80" width="80" alt="avatar">
-                            <button type="button" class="btn btn-theme ms-4 w-160">Upload Photo</button>
+                            <img :src="avatar" height="80" width="80" alt="avatar" class="rounded-circle">
+                            <input type="file" id="uploadAvatar" class="form-control-custom d-none" name="logo"
+                                   @change="AttachFile($event)" accept="image/*"
+                                   autocomplete="new-file_path">
+                            <label for="uploadAvatar" class="btn btn-theme ms-4 w-160">Upload Photo</label>
                         </div>
                     </div>
-
                     <div class="cl col-lg-12">
                         <div class="card">
                             <div class="card-body">
@@ -21,24 +20,10 @@
                                         <div class="card mb-4">
                                             <div class="card-body">
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label" for="first_name">First Name</label>
+                                                    <label class="form-label" for="name">Name</label>
                                                     <input type="text" class="form-control form-control-lg"
-                                                           id="first_name" name="first_name" placeholder="First Name"
-                                                           v-model="formData.first_name">
-                                                    <div class="error-report text-danger "></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="card mb-4">
-                                            <div class="card-body">
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label" for="last_name">Last Name</label>
-                                                    <input type="text" class="form-control form-control-lg"
-                                                           id="last_name" name="last_name" placeholder="Last Name"
-                                                           v-model="formData.last_name">
-                                                    <div class="error-report text-danger "></div>
+                                                           id="name" name="name" placeholder="Name">
+                                                    <div class="error-report text-danger"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -49,8 +34,7 @@
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="email">Email</label>
                                                     <input type="email" class="form-control form-control-lg"
-                                                           id="email" name="email" placeholder="Email"
-                                                           v-model="formData.email">
+                                                           id="email" name="email" placeholder="Email">
                                                     <div class="error-report text-danger "></div>
                                                 </div>
                                             </div>
@@ -63,20 +47,19 @@
                                                     <label class="form-label" for="email">Phone</label>
                                                     <input type="text" class="form-control form-control-lg"
                                                            id="phone" name="phone" placeholder="Phone"
-                                                           v-model="formData.phone">
+                                                           autocomplete="new-phone" @keypress="checkNumber($event)">
                                                     <div class="error-report text-danger "></div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-6">
                                         <div class="card mb-4">
                                             <div class="card-body">
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="email">Address</label>
                                                     <input type="text" class="form-control form-control-lg"
-                                                           id="address" name="address" placeholder="Address"
-                                                           v-model="formData.address">
+                                                           id="address" name="address" placeholder="Address">
                                                     <div class="error-report text-danger "></div>
                                                 </div>
                                             </div>
@@ -88,8 +71,7 @@
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="email">City</label>
                                                     <input type="text" class="form-control form-control-lg"
-                                                           id="city" name="city" placeholder="city"
-                                                           v-model="formData.city">
+                                                           id="city" name="city" placeholder="city">
                                                     <div class="error-report text-danger "></div>
                                                 </div>
                                             </div>
@@ -101,8 +83,7 @@
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="email">Country</label>
                                                     <input type="text" class="form-control form-control-lg"
-                                                           id="country" name="country" placeholder="Country"
-                                                           v-model="formData.country">
+                                                           id="country" name="country" placeholder="Country">
                                                     <div class="error-report text-danger "></div>
                                                 </div>
                                             </div>
@@ -130,24 +111,67 @@
 </template>
 <script>
 
+
+import apiService from "../../services/ApiService";
+import apiRoutes from "../../services/ApiRoutes";
+
+import {createToaster} from "@meforma/vue-toaster";
+
+const toaster = createToaster({
+    position: 'top-right'
+});
+
 export default {
-    components: {},
+    components: {createToaster},
     data() {
         return {
-            formData: {
-                first_name: '',
-                last_name: '',
-                email: '',
-                phone: '',
-                address: '',
-                city: '',
-                country: '',
-            },
-            message: '',
-            loading: false
+            loading: false,
+            uploadingLogo: false,
+            avatar: '/assets/images/profile.png'
         }
     },
     methods: {
+        /*Create Client*/
+        clientCreate() {
+            apiService.ClearErrorHandler();
+            this.loading = true;
+            const formData = new FormData(document.getElementById('clientCreate'));
+            apiService.POST_FORMDATA(apiRoutes.clientCreate, formData, (res) => {
+                this.loading = false;
+                if (res.status === 200) {
+                    toaster.info(res.message);
+                    this.$router.push({name: 'Clients'})
+                } else {
+                    apiService.ErrorHandler(res.errors)
+                }
+            })
+        },
+
+        /*Upload Avatar*/
+        AttachFile: function (event) {
+            let file = event.target.files[0];
+            this.avatar = URL.createObjectURL(file);
+        },
+
+        /*number validation*/
+        checkNumber(evt) {
+            var theEvent = evt || window.event;
+
+            // Handle paste
+            if (theEvent.type === 'paste') {
+                // @ts-ignore
+                key = event.clipboardData.getData('text/plain');
+            } else {
+                // Handle key press
+                var key = theEvent.keyCode || theEvent.which;
+                key = String.fromCharCode(key);
+            }
+            var regex = /^\d*\.?\d*$/;
+            if (!regex.test(key)) {
+                theEvent.returnValue = false;
+                if (theEvent.preventDefault) theEvent.preventDefault();
+            }
+        },
     },
     mounted() {
 

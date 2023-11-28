@@ -4,7 +4,7 @@
         <div class="card-body">
             <div class="row mb-3 align-items-center">
                 <div class="col-lg-4 mb-3 mb-lg-0">
-                    <input type="text" class="form-control form-control-lg" placeholder="Search">
+                    <input type="text" class="form-control" placeholder="Search">
                 </div>
                 <div class="col-lg-8 text-end">
                     <router-link :to="{name: 'CategoryCreate'}" class="btn btn-theme" style="width: 120px;">Create</router-link>

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('city');
             $table->string('country');
+            $table->tinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
