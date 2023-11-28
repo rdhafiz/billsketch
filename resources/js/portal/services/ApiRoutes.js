@@ -9,7 +9,8 @@ const ApiRoutes = {
     // Client
     clientCreate: ApiVersion + '/client/save',
     clientList: ApiVersion + '/client/list',
-    clientSingle: ApiVersion + '/client/list',
+    clientSingle: ApiVersion + '/client/single',
+    clientStatus: ApiVersion + '/client/update/status',
     clientUpdate: ApiVersion + '/client/update',
     clientDelete: ApiVersion + '/client/delete',
 };

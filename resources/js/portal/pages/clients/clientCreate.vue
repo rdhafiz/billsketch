@@ -1,15 +1,15 @@
 <template>
     <div class="row justify-content-center res">
         <div class="col-xxl-8">
-            <form @submit.prevent="clientCreate">
+            <form @submit.prevent="clientCreate" id="clientCreate" enctype="multipart/form-data">
                 <div class="row">
                     <div class="cl col-lg-12">
                         <div v-if="message" class="alert alert-success text-center">{{message}}</div>
                     </div>
                     <div class="cl col-lg-12">
                         <div class="d-flex align-items-center mb-4 avatar">
-                            <img :src="'/assets/images/profile.png'" height="80" width="80" alt="avatar">
-                            <input type="file" id="uploadAvatar" class="form-control-custom d-none" name="file_path"
+                            <img :src="avatar" height="80" width="80" alt="avatar" class="rounded-circle">
+                            <input type="file" id="uploadAvatar" class="form-control-custom d-none" name="logo"
                                    @change="AttachFile($event)" accept="image/*"
                                    autocomplete="new-file_path">
                             <label for="uploadAvatar" class="btn btn-theme ms-4 w-160">Upload Photo</label>
@@ -138,7 +138,8 @@ export default {
             },
             message: '',
             loading: false,
-            uploadingLogo: false
+            uploadingLogo: false,
+            avatar: '/assets/images/profile.png'
         }
     },
     methods: {
@@ -146,10 +147,8 @@ export default {
         clientCreate() {
             apiService.ClearErrorHandler();
             this.loading = true;
-            const formData = new FormData();
-            formData.append('name', this.formData.name);
-            formData.append('logo', this.formData.name);
-            apiService.POST(apiRoutes.clientCreate, formData, (res) => {
+            const formData = new FormData(document.getElementById('clientCreate'));
+            apiService.POST_FORMDATA(apiRoutes.clientCreate, formData, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
                     this.formData = {
@@ -159,7 +158,9 @@ export default {
                         address: '',
                         city: '',
                         country: '',
+                        logo: ''
                     }
+                    this.avatar = '/assets/images/profile.png'
                     this.message = res.message;
                     setTimeout(()=> {
                         this.message = '';
@@ -169,23 +170,11 @@ export default {
                 }
             })
         },
+
+        /*Upload Avatar*/
         AttachFile: function (event) {
-            this.uploadingLogo = true;
             let file = event.target.files[0];
-            console.log(file)
-            // let formData = new FormData();
-            // formData.append("file", file);
-            // formData.append("media_type", 1);
-            // axios.post('{{ route('API.MEDIA.UPLOAD') }}', formData).then(response => {
-            //     this.uploadingLogo = false
-            //     let res = response.data;
-            //     if (parseInt(res.status) === 200) {
-            //         this.errorFile = null
-            //         this.photoParam.photo_path = res.data.file_path
-            //     }else{
-            //         this.errorFile = res.error;
-            //     }
-            // });
+            this.avatar = URL.createObjectURL(file);
         },
     },
     mounted() {

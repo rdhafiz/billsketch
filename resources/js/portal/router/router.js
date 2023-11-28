@@ -37,7 +37,7 @@ const routes = [
             /*client routes*/
             {path: ROOT_URL + '/clients', name: 'Clients', component: Clients},
             {path: ROOT_URL + '/clients/create', name: 'ClientCreate', component: ClientCreate},
-            {path: ROOT_URL + '/clients/edit/:name', name: 'ClientEdit', component: ClientEdit},
+            {path: ROOT_URL + '/clients/edit/:id', name: 'ClientEdit', component: ClientEdit},
 
             /*employee routes*/
             {path: ROOT_URL + '/employees', name: 'Employees', component: Employees},

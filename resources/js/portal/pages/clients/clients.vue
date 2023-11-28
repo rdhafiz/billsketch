@@ -3,57 +3,72 @@
     <div class="card">
         <div class="card-body">
             <div class="row mb-3 align-items-center">
-                <div class="col-lg-4 mb-3 mb-lg-0">
-                    <input type="text" class="form-control form-control-lg" placeholder="Search" v-model="param.keyword" @keyup="searchData">
+                <div class="col-sm-6 col-lg-4 col-xxl-3 mb-3 mb-lg-0">
+                    <input type="text" class="form-control form-control-lg" placeholder="Search" v-model="param.keyword"
+                           @keyup="searchData">
                 </div>
-                <div class="col-lg-8 text-end">
-                    <router-link :to="{name: 'ClientCreate'}" class="btn btn-theme" style="width: 120px;">Create</router-link>
+                <div class="col-sm-6 col-lg-4 col-xxl-2 mb-3 mb-lg-0">
+                    <select name="status" class="form-select form-select-lg form-control form-control-lg" v-model="param.list_type" @change="changeStatus">
+                        <option value="">Active</option>
+                        <option value="archive">Archive</option>
+                    </select>
+                </div>
+                <div class="col-lg-4 col-xxl-7 text-end">
+                    <router-link :to="{name: 'ClientCreate'}" class="btn btn-theme" style="width: 120px;">Create
+                    </router-link>
                 </div>
             </div>
             <div class="table-data table-responsive">
                 <table class="table table-hover">
                     <thead>
-                        <tr>
-                            <th>Logo</th>
-                            <th style="min-width: 180px;">Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th></th>
-                        </tr>
+                    <tr>
+                        <th>Logo</th>
+                        <th style="min-width: 180px;">Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th></th>
+                    </tr>
                     </thead>
                     <tbody v-if="tableData.length > 0 && loading === false">
-                        <tr v-for="(each, index) in tableData">
-                            <td>
-                                <div class="avatar">
-                                    <img :src="'/assets/images/profile.png'" height="40" width="40" class="rounded-circle" alt="avatar">
-                                </div>
-                            </td>
-                            <td>{{each.name}}</td>
-                            <td>{{each.email}}</td>
-                            <td>{{ each.phone }}</td>
-                            <td class="text-end" style="min-width: 120px;">
-                                <router-link :to="{name: 'ClientEdit', params: {name: each.name}}" class="btn btn-theme">
-                                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                                </router-link>
-                                <button class="btn btn-danger ms-2" @click="deleteClient">
-                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                </button>
-                            </td>
-                        </tr>
+                    <tr v-for="(each, index) in tableData">
+                        <td>
+                            <div class="avatar">
+                                <img :src="each.logo_path" height="40" width="40" class="rounded-circle" alt="avatar"
+                                     v-if="each.logo_path">
+                                <img :src="'/assets/images/profile.png'" height="40" width="40" class="rounded-circle"
+                                     alt="avatar" v-if="!each.logo_path">
+                            </div>
+                        </td>
+                        <td style="min-width: 200px;">{{ each.name }}</td>
+                        <td>{{ each.email }}</td>
+                        <td>{{ each.phone }}</td>
+                        <td class="text-end" style="min-width: 120px;">
+                            <router-link :to="{name: 'ClientEdit', params: {id: each.id}}" class="btn btn-theme">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </router-link>
+                            <button class="btn btn-secondary ms-2" @click="updateClientStatus(each.id)">
+                                <i class="fa fa-archive" aria-hidden="true" v-if="!param.list_type"></i>
+                                <i class="fa fa-refresh" aria-hidden="true" v-if="param.list_type"></i>
+                            </button>
+                            <button class="btn btn-danger ms-2" @click="deleteClient(each.id)">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    </tr>
                     </tbody>
                     <tbody v-if="tableData.length === 0 && loading === false">
-                        <tr>
-                            <td colspan="5">
-                                <div class="alert alert-warning text-center mb-0">No data found</div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="5">
+                            <div class="alert alert-warning text-center mb-0">No data found</div>
+                        </td>
+                    </tr>
                     </tbody>
                     <tbody v-if="loading === true">
-                        <tr>
-                            <td colspan="5">
-                                <div class="alert alert-primary text-center mb-0">Loading...</div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="5">
+                            <div class="alert alert-primary text-center mb-0">Loading...</div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-center">
@@ -85,23 +100,26 @@ import apiRoutes from "../../services/ApiRoutes";
 
 export default {
     components: {},
-    data () {
-      return {
-          param: {
-              keyword: '',
-              limit: 1
-          },
-          tableData: [],
-          loading: false,
-          searchTimeout: null,
+    data() {
+        return {
+            param: {
+                keyword: '',
+                list_type: '',
+                limit: 15
+            },
+            tableData: [],
+            loading: false,
+            searchTimeout: null,
 
 
-          /*Pagination Variables*/
-          total_pages: 0,
-          current_page: 0,
-          last_page: 0,
-          buttons: [],
-      }
+            /*Pagination Variables*/
+            total_pages: 0,
+            current_page: 0,
+            last_page: 0,
+            buttons: [],
+
+            status: ''
+        }
     },
     methods: {
         /*Search Clients*/
@@ -113,7 +131,7 @@ export default {
         },
 
         /*Get Clients*/
-        getClients(){
+        getClients() {
             this.loading = true;
             apiService.POST(apiRoutes.clientList, this.param, (res) => {
                 this.loading = false;
@@ -128,28 +146,61 @@ export default {
                 }
             })
         },
-        deleteClient(id){
-          swal({
-              title: "Are you sure?",
-              text: "Are you sure that you want to delete this client?",
-              icon: "warning",
-              buttons: true,
-              dangerMode: true,
-          })
-              .then(willDelete => {
-                  console.log(1)
-                  if (willDelete) {
-                      apiService.POST(apiRoutes.clientDelete, {id} , (res) => {
-                          if (res.status === 200) {
-                              swal("Deleted!", "Client has been deleted!", "success");
-                              this.getClients();
-                          } else {
-                              swal("Error!",res.errors?.id[0], "error");
-                          }
-                      })
-                  }
-              });
-      }
+
+        /*Delete Client*/
+        deleteClient(id) {
+            swal({
+                title: "Are you sure?",
+                text: "Are you sure that you want to delete this client?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then(willDelete => {
+                    console.log(1)
+                    if (willDelete) {
+                        apiService.POST(apiRoutes.clientDelete, {id}, (res) => {
+                            if (res.status === 200) {
+                                swal("Deleted!", "Client has been deleted!", "success");
+                                this.getClients();
+                            } else {
+                                swal("Error!", res.errors?.id[0], "error");
+                            }
+                        })
+                    }
+                });
+        },
+
+        /*Change Status*/
+        changeStatus(){
+            this.status = this.param.list_type;
+            this.getClients();
+        },
+
+        /*Update Client Status*/
+        updateClientStatus(id) {
+            swal({
+                title: "Are you sure?",
+                text: `Are you sure that you want to ${this.status === '' ? 'archive' : 'restore'} this client?`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then(willDelete => {
+                    console.log(1)
+                    if (willDelete) {
+                        apiService.POST(apiRoutes.clientStatus, {id}, (res) => {
+                            if (res.status === 200) {
+                                swal(`${this.status === '' ? 'Archived!' : 'Restored!'}`, `${this.status === 'archive' ? 'Client has been archived!' : 'Client has been restored!!'}`, "success"
+                                );
+                                this.getClients();
+                            } else {
+                                swal("Error!", res.errors?.id[0], "error");
+                            }
+                        })
+                    }
+                });
+        }
     },
     mounted() {
         this.getClients();
