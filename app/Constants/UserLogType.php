@@ -17,6 +17,8 @@ class UserLogType
     const Client_view = 'Client view';
     const Client_update = 'Client update';
     const Client_delete = 'Client delete';
+    const Client_archive = 'Client archive';
+    const Client_restore = 'Client restore';
     const Employee_create = 'Employee create';
     const Employee_view = 'Employee view';
     const Employee_update = 'Employee update';
