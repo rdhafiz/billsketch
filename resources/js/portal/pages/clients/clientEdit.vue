@@ -2,7 +2,7 @@
 
     <div class="row justify-content-center res">
         <div class="col-xxl-8">
-            <form>
+            <form @submit.prevent="updateClient">
                 <div class="row">
                     <div class="cl col-lg-12">
                         <div v-if="message" class="alert alert-success text-center">{{message}}</div>
@@ -111,7 +111,7 @@
                                     <div class="col-lg-12">
                                         <div class="text-end">
                                             <router-link :to="{name: 'Clients'}" class="btn btn-danger w-160 me-3">Cancel</router-link>
-                                            <button type="submit" class="btn btn-theme w-160" v-if="loading === false">Save</button>
+                                            <button type="submit" class="btn btn-theme w-160" v-if="loading === false">Update</button>
                                             <button type="button" disabled v-if="loading === true"
                                                     class="btn btn-theme w-160">
                                                 <i class="fa fa-spinner spin" aria-hidden="true"></i>
@@ -129,6 +129,9 @@
 
 </template>
 <script>
+
+import apiService from "../../services/ApiService";
+import apiRoutes from "../../services/ApiRoutes";
 
 export default {
     components: {},
@@ -148,9 +151,36 @@ export default {
         }
     },
     methods: {
+        /*Get Client Data*/
+        getSingle(id){
+            apiService.POST(apiRoutes.clientSingle, {id} , (res) => {
+                if (res.status === 200) {
+                    this.formData = res.data.data;
+                } else {
+                    apiService.ErrorHandler(res.errors)
+                }
+            })
+        },
+
+        /*Update Client*/
+        updateClient(){
+            apiService.ClearErrorHandler();
+            this.loading = true;
+            apiService.POST(apiRoutes.clientUpdate, this.formData, (res) => {
+                this.loading = false;
+                if (res.status === 200) {
+                    this.formData = res.message;
+                } else {
+                    apiService.ErrorHandler(res.errors)
+                }
+            })
+        }
     },
     mounted() {
-
+        if(this.$route.params){
+            const {id} = this.$route.params;
+            this.getSingle(id)
+        }
     },
     created() {
         window.scroll(0, 0);

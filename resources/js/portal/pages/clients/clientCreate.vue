@@ -1,7 +1,7 @@
 <template>
     <div class="row justify-content-center res">
         <div class="col-xxl-8">
-            <form>
+            <form @submit.prevent="clientCreate">
                 <div class="row">
                     <div class="cl col-lg-12">
                         <div v-if="message" class="alert alert-success text-center">{{message}}</div>
@@ -9,10 +9,12 @@
                     <div class="cl col-lg-12">
                         <div class="d-flex align-items-center mb-4 avatar">
                             <img :src="'/assets/images/profile.png'" height="80" width="80" alt="avatar">
-                            <button type="button" class="btn btn-theme ms-4 w-160">Upload Photo</button>
+                            <input type="file" id="uploadAvatar" class="form-control-custom d-none" name="file_path"
+                                   @change="AttachFile($event)" accept="image/*"
+                                   autocomplete="new-file_path">
+                            <label for="uploadAvatar" class="btn btn-theme ms-4 w-160">Upload Photo</label>
                         </div>
                     </div>
-
                     <div class="cl col-lg-12">
                         <div class="card">
                             <div class="card-body">
@@ -21,24 +23,11 @@
                                         <div class="card mb-4">
                                             <div class="card-body">
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label" for="first_name">First Name</label>
+                                                    <label class="form-label" for="name">Name</label>
                                                     <input type="text" class="form-control form-control-lg"
-                                                           id="first_name" name="first_name" placeholder="First Name"
-                                                           v-model="formData.first_name">
-                                                    <div class="error-report text-danger "></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="card mb-4">
-                                            <div class="card-body">
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label" for="last_name">Last Name</label>
-                                                    <input type="text" class="form-control form-control-lg"
-                                                           id="last_name" name="last_name" placeholder="Last Name"
-                                                           v-model="formData.last_name">
-                                                    <div class="error-report text-danger "></div>
+                                                           id="name" name="name" placeholder="Name"
+                                                           v-model="formData.name">
+                                                    <div class="error-report text-danger"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -69,7 +58,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-6">
                                         <div class="card mb-4">
                                             <div class="card-body">
                                                 <div class="form-group mb-3">
@@ -130,24 +119,74 @@
 </template>
 <script>
 
+
+import apiService from "../../services/ApiService";
+import apiRoutes from "../../services/ApiRoutes";
+
 export default {
     components: {},
     data() {
         return {
             formData: {
-                first_name: '',
-                last_name: '',
+                name: '',
                 email: '',
                 phone: '',
                 address: '',
                 city: '',
                 country: '',
+                logo: ''
             },
             message: '',
-            loading: false
+            loading: false,
+            uploadingLogo: false
         }
     },
     methods: {
+        /*Create Client*/
+        clientCreate() {
+            apiService.ClearErrorHandler();
+            this.loading = true;
+            const formData = new FormData();
+            formData.append('name', this.formData.name);
+            formData.append('logo', this.formData.name);
+            apiService.POST(apiRoutes.clientCreate, formData, (res) => {
+                this.loading = false;
+                if (res.status === 200) {
+                    this.formData = {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        address: '',
+                        city: '',
+                        country: '',
+                    }
+                    this.message = res.message;
+                    setTimeout(()=> {
+                        this.message = '';
+                    }, 3000)
+                } else {
+                    apiService.ErrorHandler(res.errors)
+                }
+            })
+        },
+        AttachFile: function (event) {
+            this.uploadingLogo = true;
+            let file = event.target.files[0];
+            console.log(file)
+            // let formData = new FormData();
+            // formData.append("file", file);
+            // formData.append("media_type", 1);
+            // axios.post('{{ route('API.MEDIA.UPLOAD') }}', formData).then(response => {
+            //     this.uploadingLogo = false
+            //     let res = response.data;
+            //     if (parseInt(res.status) === 200) {
+            //         this.errorFile = null
+            //         this.photoParam.photo_path = res.data.file_path
+            //     }else{
+            //         this.errorFile = res.error;
+            //     }
+            // });
+        },
     },
     mounted() {
 
