@@ -2,15 +2,18 @@
 
     <div class="row justify-content-center res">
         <div class="col-xxl-8">
-            <form @submit.prevent="UpdateProfile">
+            <form @submit.prevent="UpdateProfile" id="profile" enctype="multipart/form-data">
                 <div class="row">
                     <div class="cl col-lg-12">
                         <div v-if="message" class="alert alert-success text-center">{{message}}</div>
                     </div>
                     <div class="cl col-lg-12">
                         <div class="d-flex align-items-center mb-4 avatar">
-                                <img :src="'/assets/images/profile.png'" height="80" width="80" alt="avatar">
-                            <button type="button" class="btn btn-theme ms-4 w-160">Upload Photo</button>
+                            <img :src="avatar" height="80" width="80" alt="avatar" class="rounded-circle">
+                            <input type="file" id="uploadAvatar" class="form-control-custom d-none" name="avatar"
+                                   @change="AttachFile($event)" accept="image/*"
+                                   autocomplete="new-file_path">
+                            <label for="uploadAvatar" class="btn btn-theme ms-4 w-160">Upload Photo</label>
                         </div>
                     </div>
                     <div class="cl col-lg-6">
@@ -140,8 +143,15 @@
 import apiService from "../../services/ApiService";
 import apiRoutes from "../../services/ApiRoutes";
 
+import {createToaster} from "@meforma/vue-toaster";
+
+const toaster = createToaster({
+    position: 'top-right'
+});
+
+
 export default {
-    components: {},
+    components: {createToaster},
     data() {
         return {
             formData: {
@@ -155,10 +165,12 @@ export default {
                 company_country: '',
             },
             message: '',
-            loading: false
+            loading: false,
+            avatar: '/assets/images/profile.png'
         }
     },
     methods: {
+        /*Get Profile Data*/
         profile() {
             apiService.GET(apiRoutes.profile, (res) => {
                 if(res.status === 200){
@@ -171,28 +183,38 @@ export default {
                             company_city: res.data.company_info.city,
                             company_country: res.data.company_info.country,
                         };
+                        this.avatar = res.data.avatar_path ?? this.avatar;
                     } else{
                       this.formData = res.data;
                     }
                 }
             })
         },
+
+        /*Update Profile*/
         UpdateProfile(){
             apiService.ClearErrorHandler();
             this.loading = true;
-            apiService.POST(apiRoutes.updateProfile, this.formData, (res) => {
+            const formData = new FormData(document.getElementById('profile'));
+            formData.append('user_type', this.formData.user_type);
+            apiService.POST_FORMDATA(apiRoutes.updateProfile, formData, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
                     document.querySelector('#user_name').textContent = this.formData.first_name+' '+this.formData.last_name;
-                    this.message  = res.message;
-                    setTimeout(()=> {
-                        this.message = '';
-                    }, 3000)
+                    toaster.info(res.message);
+                    this.$router.push({name: 'Profile'})
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }
             })
-        }
+        },
+
+        /*Upload Avatar*/
+        AttachFile: function (event) {
+            let file = event.target.files[0];
+            this.avatar = URL.createObjectURL(file);
+        },
+
     },
     mounted() {
         this.profile();

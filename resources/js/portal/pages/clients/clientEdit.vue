@@ -150,7 +150,7 @@ export default {
             apiService.POST(apiRoutes.clientSingle, {id} , (res) => {
                 if (res.status === 200) {
                     this.formData = res.data;
-                    this.avatar = res.data.logo_path ?? '/assets/images/profile.png';
+                    this.avatar = res.data.logo_path ?? this.avatar;
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }

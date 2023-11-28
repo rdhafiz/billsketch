@@ -22,8 +22,7 @@
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="name">Name</label>
                                                     <input type="text" class="form-control form-control-lg"
-                                                           id="name" name="name" placeholder="Name"
-                                                           v-model="formData.name">
+                                                           id="name" name="name" placeholder="Name">
                                                     <div class="error-report text-danger"></div>
                                                 </div>
                                             </div>
@@ -35,8 +34,7 @@
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="email">Email</label>
                                                     <input type="email" class="form-control form-control-lg"
-                                                           id="email" name="email" placeholder="Email"
-                                                           v-model="formData.email">
+                                                           id="email" name="email" placeholder="Email">
                                                     <div class="error-report text-danger "></div>
                                                 </div>
                                             </div>
@@ -49,7 +47,7 @@
                                                     <label class="form-label" for="email">Phone</label>
                                                     <input type="text" class="form-control form-control-lg"
                                                            id="phone" name="phone" placeholder="Phone"
-                                                           autocomplete="new-phone" @keypress="checkNumber($event)" v-model="formData.phone">
+                                                           autocomplete="new-phone" @keypress="checkNumber($event)">
                                                     <div class="error-report text-danger "></div>
                                                 </div>
                                             </div>
@@ -61,8 +59,7 @@
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="email">Address</label>
                                                     <input type="text" class="form-control form-control-lg"
-                                                           id="address" name="address" placeholder="Address"
-                                                           v-model="formData.address">
+                                                           id="address" name="address" placeholder="Address">
                                                     <div class="error-report text-danger "></div>
                                                 </div>
                                             </div>
@@ -74,8 +71,7 @@
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="email">City</label>
                                                     <input type="text" class="form-control form-control-lg"
-                                                           id="city" name="city" placeholder="city"
-                                                           v-model="formData.city">
+                                                           id="city" name="city" placeholder="city">
                                                     <div class="error-report text-danger "></div>
                                                 </div>
                                             </div>
@@ -87,8 +83,7 @@
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="email">Country</label>
                                                     <input type="text" class="form-control form-control-lg"
-                                                           id="country" name="country" placeholder="Country"
-                                                           v-model="formData.country">
+                                                           id="country" name="country" placeholder="Country">
                                                     <div class="error-report text-danger "></div>
                                                 </div>
                                             </div>
@@ -130,15 +125,6 @@ export default {
     components: {createToaster},
     data() {
         return {
-            formData: {
-                name: '',
-                email: '',
-                phone: '',
-                address: '',
-                city: '',
-                country: '',
-                logo: ''
-            },
             loading: false,
             uploadingLogo: false,
             avatar: '/assets/images/profile.png'
