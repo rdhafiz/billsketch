@@ -23,9 +23,11 @@
                     <thead>
                     <tr>
                         <th>Logo</th>
-                        <th style="min-width: 180px;">Name</th>
+                        <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
+                        <th>City</th>
+                        <th>Country</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -42,7 +44,9 @@
                         <td style="min-width: 200px;">{{ each.name }}</td>
                         <td>{{ each.email }}</td>
                         <td>{{ each.phone }}</td>
-                        <td class="text-end" style="min-width: 120px;">
+                        <td>{{ each.city }}</td>
+                        <td>{{ each.country }}</td>
+                        <td class="text-end" style="min-width: 180px;">
                             <router-link :to="{name: 'ClientEdit', params: {id: each.id}}" class="btn btn-theme">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                             </router-link>
@@ -58,36 +62,92 @@
                     </tbody>
                     <tbody v-if="tableData.length === 0 && loading === false">
                     <tr>
-                        <td colspan="5">
+                        <td colspan="7">
                             <div class="alert alert-warning text-center mb-0">No data found</div>
                         </td>
                     </tr>
                     </tbody>
                     <tbody v-if="loading === true">
                     <tr>
-                        <td colspan="5">
+                        <td colspan="7">
                             <div class="alert alert-primary text-center mb-0">Loading...</div>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-                <div class="d-flex justify-content-center">
+
+                <!--  pagination start -->
+                <div class="d-flex justify-content-center overflow-auto" v-if="tableData.length > 0 && loading === false" style="min-width: 400px;">
                     <nav aria-label="...">
                         <ul class="pagination">
-                            <li class="page-item disabled">
-                                <a class="page-link">Previous</a>
+                            <li class="page-item" :class="{'disabled': this.current_page === 1}">
+                                <a href="javascript:void(0)" class="page-link" @click="prevPage()">Previous</a>
                             </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item active" aria-current="page">
-                                <a class="page-link" href="#">2</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Next</a>
+                            <template v-if="buttons.length <= 6">
+                                <li class="page-item" :class="{'active': current_page == page}" aria-current="page" v-for="(page, index) in buttons" >
+                                    <a href="javascript:void(0)" class="page-link" @click="pageChange(page)">{{ page }}</a>
+                                </li>
+                            </template>
+                            <template v-if="buttons.length > 6">
+                                <li class="page-item" :class="{'active': current_page == 1}">
+                                    <a class="page-link" @click="pageChange(1)"
+                                       href="javascript:void(0)">1</a>
+                                </li>
+
+                                <li v-if="current_page > 3" class="page-item">
+                                    <a class="page-link" @click="pageChange(current_page - 2)"
+                                       href="javascript:void(0)">...</a>
+                                </li>
+
+                                <li v-if="current_page == buttons.length" class="page-item"
+                                     :class="{'active': current_page == (current_page - 2)}">
+                                    <a class="page-link" @click="pageChange(current_page - 2)"
+                                       href="javascript:void(0)" v-text="current_page - 2"></a>
+                                </li>
+
+                                <li v-if="current_page > 2" class="page-item"
+                                     :class="{'active': current_page == (current_page - 1)}">
+                                    <a class="page-link" @click="pageChange(current_page - 1)"
+                                       href="javascript:void(0)" v-text="current_page - 1"></a>
+                                </li>
+
+                                <li v-if="current_page != 1 && current_page != buttons.length"
+                                     class="page-item active">
+                                    <a class="page-link" @click="pageChange(current_page)"
+                                       href="javascript:void(0)"
+                                       v-text="current_page"></a>
+                                </li>
+
+                                <li v-if="current_page < buttons.length - 1" class="page-item"
+                                     :class="{'active': current_page == (current_page + 1)}">
+                                    <a class="page-link" @click="pageChange(current_page + 1)"
+                                       href="javascript:void(0)" v-text="current_page + 1"></a>
+                                </li>
+
+                                <li v-if="current_page == 1" class="page-item"
+                                     :class="{'active': current_page == (current_page + 2)}">
+                                    <a class="page-link" @click="pageChange(current_page + 2)"
+                                       href="javascript:void(0)" v-text="current_page + 2"></a>
+                                </li>
+
+                                <li v-if="current_page < buttons.length - 2" class="page-item">
+                                    <a class="page-link" @click="pageChange(current_page + 2)"
+                                       href="javascript:void(0)">...</a>
+                                </li>
+
+                                <li class="page-item"
+                                     :class="{'active': current_page == buttons.length}">
+                                    <a class="page-link" @click="pageChange(buttons.length)"
+                                       href="javascript:void(0)" v-text="buttons.length"></a>
+                                </li>
+                            </template>
+                            <li class="page-item" :class="{'disabled': this.current_page === this.last_page}">
+                                <a class="page-link" href="#"  @click="nextPage()">Next</a>
                             </li>
                         </ul>
                     </nav>
                 </div>
+                <!--  pagination end -->
             </div>
         </div>
     </div>
@@ -104,8 +164,7 @@ export default {
         return {
             param: {
                 keyword: '',
-                list_type: '',
-                limit: 15
+                list_type: ''
             },
             tableData: [],
             loading: false,
@@ -122,6 +181,23 @@ export default {
         }
     },
     methods: {
+        prevPage() {
+            if (this.current_page > 1) {
+                this.current_page = this.current_page - 1;
+                this.getClients()
+            }
+        },
+        nextPage() {
+            if (this.current_page < this.total_pages) {
+                this.current_page = this.current_page + 1;
+                this.getClients()
+            }
+        },
+        pageChange(page) {
+            this.current_page = page;
+            this.getClients();
+        },
+
         /*Search Clients*/
         searchData() {
             clearTimeout(this.searchTimeout)
@@ -133,6 +209,7 @@ export default {
         /*Get Clients*/
         getClients() {
             this.loading = true;
+            this.param.page = this.current_page;
             apiService.POST(apiRoutes.clientList, this.param, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
@@ -173,6 +250,7 @@ export default {
 
         /*Change Status*/
         changeStatus(){
+            this.current_page = 0;
             this.status = this.param.list_type;
             this.getClients();
         },
@@ -191,7 +269,7 @@ export default {
                     if (willDelete) {
                         apiService.POST(apiRoutes.clientStatus, {id}, (res) => {
                             if (res.status === 200) {
-                                swal(`${this.status === '' ? 'Archived!' : 'Restored!'}`, `${this.status === 'archive' ? 'Client has been archived!' : 'Client has been restored!!'}`, "success"
+                                swal(`${!this.status ? 'Archived!' : 'Restored!'}`, `${!this.status ? 'Client has been archived!' : 'Client has been restored!!'}`, "success"
                                 );
                                 this.getClients();
                             } else {

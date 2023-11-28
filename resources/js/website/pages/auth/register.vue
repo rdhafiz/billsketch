@@ -282,7 +282,6 @@ export default {
                 theEvent.returnValue = false;
                 if (theEvent.preventDefault) theEvent.preventDefault();
             }
-
         },
     },
     created() {

@@ -53,13 +53,13 @@
                                                     <label class="form-label" for="email">Phone</label>
                                                     <input type="text" class="form-control form-control-lg"
                                                            id="phone" name="phone" placeholder="Phone"
-                                                           v-model="formData.phone">
+                                                           autocomplete="new-phone" @keypress="checkNumber($event)" v-model="formData.phone">
                                                     <div class="error-report text-danger "></div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-6">
                                         <div class="card mb-4">
                                             <div class="card-body">
                                                 <div class="form-group mb-3">
@@ -148,7 +148,7 @@ export default {
             apiService.POST(apiRoutes.clientSingle, {id} , (res) => {
                 if (res.status === 200) {
                     this.formData = res.data;
-                    this.avatar = res.data.logo_path;
+                    this.avatar = res.data.logo_path ?? '/assets/images/profile.png';
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }
@@ -164,7 +164,7 @@ export default {
             apiService.POST_FORMDATA(apiRoutes.clientUpdate, formData, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
-                    this.formData = res.message;
+                    this.message = res.message;
                     setTimeout(()=> {
                         this.message = '';
                     }, 3000)
@@ -178,6 +178,26 @@ export default {
         AttachFile: function (event) {
             let file = event.target.files[0];
             this.avatar = URL.createObjectURL(file);
+        },
+
+        /*number validation*/
+        checkNumber(evt) {
+            var theEvent = evt || window.event;
+
+            // Handle paste
+            if (theEvent.type === 'paste') {
+                // @ts-ignore
+                key = event.clipboardData.getData('text/plain');
+            } else {
+                // Handle key press
+                var key = theEvent.keyCode || theEvent.which;
+                key = String.fromCharCode(key);
+            }
+            var regex = /^\d*\.?\d*$/;
+            if (!regex.test(key)) {
+                theEvent.returnValue = false;
+                if (theEvent.preventDefault) theEvent.preventDefault();
+            }
         },
     },
     mounted() {
