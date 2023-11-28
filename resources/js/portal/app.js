@@ -7,6 +7,9 @@ window.$ = $;
 import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.js'
 window.bootstrap = bootstrap
 
+// Toaster
+import Toaster from "@meforma/vue-toaster";
+
 // Axios
 import axios from "axios";
 
@@ -19,5 +22,5 @@ import router from "./router/router";
 
 // Init Vue App
 createApp(App)
-    .use(router, axios)
+    .use(router, axios, Toaster)
     .mount('#app')

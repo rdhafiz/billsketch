@@ -4,11 +4,11 @@
         <div class="card-body">
             <div class="row mb-3 align-items-center">
                 <div class="col-sm-6 col-lg-4 col-xxl-3 mb-3 mb-lg-0">
-                    <input type="text" class="form-control form-control-lg" placeholder="Search" v-model="param.keyword"
+                    <input type="text" class="form-control" placeholder="Search" v-model="param.keyword"
                            @keyup="searchData">
                 </div>
                 <div class="col-sm-6 col-lg-4 col-xxl-2 mb-3 mb-lg-0">
-                    <select name="status" class="form-select form-select-lg form-control form-control-lg" v-model="param.list_type" @change="changeStatus">
+                    <select name="status" class="form-select" v-model="param.list_type" @change="changeStatus">
                         <option value="">Active</option>
                         <option value="archive">Archive</option>
                     </select>
@@ -228,7 +228,7 @@ export default {
         deleteClient(id) {
             swal({
                 title: "Are you sure?",
-                text: "Are you sure that you want to delete this client?",
+                text: "If you delete a client, all associated data, such as invoices related to that client, will be permanently removed from the system.",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,

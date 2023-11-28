@@ -5,9 +5,6 @@
             <form @submit.prevent="updateClient" id="clientEdit" enctype="multipart/form-data">
                 <div class="row">
                     <div class="cl col-lg-12">
-                        <div v-if="message" class="alert alert-success text-center">{{message}}</div>
-                    </div>
-                    <div class="cl col-lg-12">
                         <div class="d-flex align-items-center mb-4 avatar">
                             <img :src="avatar" height="80" width="80" alt="avatar" class="rounded-circle">
                             <input type="file" id="uploadAvatar" class="form-control-custom d-none" name="logo"
@@ -123,8 +120,14 @@
 import apiService from "../../services/ApiService";
 import apiRoutes from "../../services/ApiRoutes";
 
+import {createToaster} from "@meforma/vue-toaster";
+
+const toaster = createToaster({
+    position: 'top-right'
+});
+
 export default {
-    components: {},
+    components: {createToaster},
     data() {
         return {
             formData: {
@@ -138,7 +141,6 @@ export default {
                 country: '',
             },
             avatar: '/assets/images/profile.png',
-            message: '',
             loading: false
         }
     },
@@ -164,10 +166,8 @@ export default {
             apiService.POST_FORMDATA(apiRoutes.clientUpdate, formData, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
-                    this.message = res.message;
-                    setTimeout(()=> {
-                        this.message = '';
-                    }, 3000)
+                    toaster.info(res.message);
+                    this.$router.push({name: 'Clients'})
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }
