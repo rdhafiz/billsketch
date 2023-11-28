@@ -35,5 +35,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:api']], function () {
     Route::post('single', [ClientsController::class, 'single']);
     Route::post('delete', [ClientsController::class, 'delete']);
     Route::post('list', [ClientsController::class, 'list']);
+    Route::post('update/status', [ClientsController::class, 'archiveOrRestore']);
+    Route::post('restore', [ClientsController::class, 'restore']);
 });
 

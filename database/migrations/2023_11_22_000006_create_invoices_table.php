@@ -32,6 +32,7 @@ return new class extends Migration
             $table->float('bonus')->nullable();
             $table->float('total')->nullable();
             $table->text('note')->nullable();
+            $table->tinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
