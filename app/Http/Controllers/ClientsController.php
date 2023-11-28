@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\UserLogType;
 use App\Helpers\Helpers;
 use App\Models\Clients;
+use App\Models\Invoices;
 use App\Repositories\ClientsRepositories;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -151,7 +152,8 @@ class ClientsController extends Controller
             if (!$client->delete()) {
                 return response()->json(['status' => 500, 'message' => 'Cannot delete client'], 200);
             }
-            // Todo: we need to soft delete all relational data related to this client ... Imran
+
+            Helpers::relationalDataAction($client->id, 'client_id', 'delete', new Invoices());
             Helpers::fileRemove($client, 'logo');
             Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_delete);
             return response()->json(['status' => 200, 'message' => 'Client deleted successfully '], 200);
@@ -206,15 +208,15 @@ class ClientsController extends Controller
             if (!$client->save()) {
                 $message = 'Cannot restore client';
                 if ($client->is_active == 0) {
-                    $message = 'Cannot archive successfully';
+                    $message = 'Cannot archive client';
                 }
                 return response()->json(['status' => 500, 'message' => $message], 200);
             }
             Helpers::saveUserActivity($requestData['session_user']['id'],$client->is_active == 1 ? UserLogType::Client_restore : UserLogType::Client_archive);
             $message = 'Client archive successfully';
-            // Todo: we need to archive all relational data of this client
+            Helpers::relationalDataAction($client->id, 'client_id', 'archive', new Invoices());
             if ($client->is_active == 1) {
-                // Todo: we need to restore all relational data of this client
+                Helpers::relationalDataAction($client->id, 'client_id', 'restore', new Invoices());
                 $message = 'Client restore successfully';
             }
             return response()->json(['status' => 200, 'message' => $message], 200);

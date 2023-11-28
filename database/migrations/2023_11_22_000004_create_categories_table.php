@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('icon')->nullable();
             $table->string('color')->nullable();
+            $table->tinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

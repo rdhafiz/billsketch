@@ -38,7 +38,6 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:api']], function () {
     Route::post('delete', [ClientsController::class, 'delete']);
     Route::post('list', [ClientsController::class, 'list']);
     Route::post('update/status', [ClientsController::class, 'archiveOrRestore']);
-    Route::post('restore', [ClientsController::class, 'restore']);
 });
 Route::group(['prefix' => 'employee', 'middleware' => ['auth:api']], function () {
     Route::post('save', [EmployeesController::class, 'save']);
@@ -46,6 +45,7 @@ Route::group(['prefix' => 'employee', 'middleware' => ['auth:api']], function ()
     Route::post('single', [EmployeesController::class, 'single']);
     Route::post('delete', [EmployeesController::class, 'delete']);
     Route::post('list', [EmployeesController::class, 'list']);
+    Route::post('update/status', [EmployeesController::class, 'archiveOrRestore']);
 });
 Route::group(['prefix' => 'category', 'middleware' => ['auth:api']], function () {
     Route::post('save', [CategoriesController::class, 'save']);
@@ -53,4 +53,5 @@ Route::group(['prefix' => 'category', 'middleware' => ['auth:api']], function ()
     Route::post('single', [CategoriesController::class, 'single']);
     Route::post('delete', [CategoriesController::class, 'delete']);
     Route::post('list', [CategoriesController::class, 'list']);
+    Route::post('update/status', [CategoriesController::class, 'archiveOrRestore']);
 });

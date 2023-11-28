@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\UserLogType;
 use App\Helpers\Helpers;
 use App\Models\Employees;
+use App\Models\Invoices;
 use App\Repositories\EmployeesRepositories;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -151,6 +152,7 @@ class EmployeesController extends Controller
             if (!$employee->delete()) {
                 return response()->json(['status' => 500, 'message' => 'Cannot delete employee'], 200);
             }
+            Helpers::relationalDataAction($employee->id, 'employee_id', 'delete', new Invoices());
             Helpers::fileRemove($employee, 'logo');
             Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_delete);
             return response()->json(['status' => 200, 'message' => 'Employee deleted successfully '], 200);
@@ -168,6 +170,7 @@ class EmployeesController extends Controller
             $requestData = $request->all();
             $filter = [
                 'keyword' => $requestData['keyword'] ?? '',
+                'list_type' => $requestData['list_type'] ?? 'active',
             ];
             $paginatedData = [
                 'limit' => $requestData['limit'] ?? 15,
@@ -177,6 +180,44 @@ class EmployeesController extends Controller
             $user = $requestData['session_user'];
             $result = EmployeesRepositories::list($filter, $paginatedData, $user);
             return response()->json(['status' => 200, 'data' => $result]);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
+        }
+    }
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function archiveOrRestore(Request $request): JsonResponse
+    {
+        try {
+            $requestData = $request->all();
+            $validator = Validator::make($requestData, [
+                'id' => 'required|integer',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
+            }
+            $employee = Employees::find($requestData['id']);
+            if (!$employee instanceof Employees) {
+                return response()->json(['status' => 500, 'message' => 'Cannot find employee'], 200);
+            }
+            $employee->is_active = $employee->is_active == 0 ? 1 : 0;
+            if (!$employee->save()) {
+                $message = 'Cannot restore employee';
+                if ($employee->is_active == 0) {
+                    $message = 'Cannot archive employee';
+                }
+                return response()->json(['status' => 500, 'message' => $message], 200);
+            }
+            Helpers::saveUserActivity($requestData['session_user']['id'],$employee->is_active == 1 ? UserLogType::Employee_restore : UserLogType::Employee_archive);
+            $message = 'Employee archive successfully';
+            Helpers::relationalDataAction($employee->id, 'employee_id', 'archive', new Invoices());
+            if ($employee->is_active == 1) {
+                Helpers::relationalDataAction($employee->id, 'employee_id', 'restore', new Invoices());
+                $message = 'Employee restore successfully';
+            }
+            return response()->json(['status' => 200, 'message' => $message], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }

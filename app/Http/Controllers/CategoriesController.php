@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\UserLogType;
 use App\Helpers\Helpers;
 use App\Models\Categories;
+use App\Models\Invoices;
 use App\Repositories\CategoriesRepositories;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -128,6 +129,7 @@ class CategoriesController extends Controller
             if (!$category->delete()) {
                 return response()->json(['status' => 500, 'message' => 'Cannot delete category'], 200);
             }
+            Helpers::relationalDataAction($category->id, 'category_id', 'delete', new Invoices());
             Helpers::fileRemove($category, 'icon');
             Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Category_delete);
             return response()->json(['status' => 200, 'message' => 'Category deleted successfully '], 200);
@@ -145,6 +147,7 @@ class CategoriesController extends Controller
             $requestData = $request->all();
             $filter = [
                 'keyword' => $requestData['keyword'] ?? '',
+                'list_type' => $requestData['list_type'] ?? 'active',
             ];
             $paginatedData = [
                 'limit' => $requestData['limit'] ?? 15,
@@ -154,6 +157,44 @@ class CategoriesController extends Controller
             $user = $requestData['session_user'];
             $result = CategoriesRepositories::list($filter, $paginatedData, $user);
             return response()->json(['status' => 200, 'data' => $result]);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
+        }
+    }
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function archiveOrRestore(Request $request): JsonResponse
+    {
+        try {
+            $requestData = $request->all();
+            $validator = Validator::make($requestData, [
+                'id' => 'required|integer',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
+            }
+            $category = Categories::find($requestData['id']);
+            if (!$category instanceof Categories) {
+                return response()->json(['status' => 500, 'message' => 'Cannot find category'], 200);
+            }
+            $category->is_active = $category->is_active == 0 ? 1 : 0;
+            if (!$category->save()) {
+                $message = 'Cannot restore category';
+                if ($category->is_active == 0) {
+                    $message = 'Cannot archive category';
+                }
+                return response()->json(['status' => 500, 'message' => $message], 200);
+            }
+            Helpers::saveUserActivity($requestData['session_user']['id'],$category->is_active == 1 ? UserLogType::Category_restore : UserLogType::Category_archive);
+            $message = 'Category archive successfully';
+            Helpers::relationalDataAction($category->id, 'category_id', 'archive', new Invoices());
+            if ($category->is_active == 1) {
+                Helpers::relationalDataAction($category->id, 'category_id', 'restore', new Invoices());
+                $message = 'Category restore successfully';
+            }
+            return response()->json(['status' => 200, 'message' => $message], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
