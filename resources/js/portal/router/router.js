@@ -42,12 +42,12 @@ const routes = [
             /*employee routes*/
             {path: ROOT_URL + '/employees', name: 'Employees', component: Employees},
             {path: ROOT_URL + '/employees/create', name: 'EmployeeCreate', component: EmployeeCreate},
-            {path: ROOT_URL + '/employees/edit', name: 'EmployeeEdit', component: EmployeeEdit},
+            {path: ROOT_URL + '/employees/edit/:id', name: 'EmployeeEdit', component: EmployeeEdit},
 
             /*category routes*/
             {path: ROOT_URL + '/categories', name: 'Categories', component: Categories},
             {path: ROOT_URL + '/categories/create', name: 'CategoryCreate', component: CategoryCreate},
-            {path: ROOT_URL + '/categories/edit', name: 'CategoryEdit', component: CategoryEdit},
+            {path: ROOT_URL + '/categories/edit/:id', name: 'CategoryEdit', component: CategoryEdit},
 
 
             {path: ROOT_URL + '/invoices', name: 'Invoices', component: Invoices},
