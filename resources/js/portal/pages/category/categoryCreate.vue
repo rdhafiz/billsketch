@@ -31,9 +31,9 @@
                                     <div class="col-lg-12">
                                         <div class="card mb-4">
                                             <div class="card-body">
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label" for="name">Color</label>
-                                                    <input type="text" class="form-control form-control-lg"
+                                                <div class="form-group">
+                                                    <label class="form-label" for="color">Color</label>
+                                                    <input type="color" class="form-control form-control-lg"
                                                            id="color" name="color" placeholder="color">
                                                     <div class="error-report text-danger"></div>
                                                 </div>
@@ -76,11 +76,11 @@ export default {
     data() {
         return {
             loading: false,
-            icon: '/assets/images/circle.png'
+            icon: '/assets/images/categories.png',
         }
     },
     methods: {
-        /*Create Client*/
+        /*Create Category*/
         categoryCreate() {
             apiService.ClearErrorHandler();
             this.loading = true;

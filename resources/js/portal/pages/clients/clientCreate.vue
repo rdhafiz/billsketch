@@ -173,7 +173,6 @@ export default {
         },
     },
     mounted() {
-
     },
     created() {
         window.scroll(0, 0);

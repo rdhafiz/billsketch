@@ -5,11 +5,11 @@
                 <div class="row">
                     <div class="cl col-lg-12">
                         <div class="d-flex align-items-center mb-4 avatar">
-                            <img :src="clientLogo" height="80" width="80" alt="logo" class="rounded-circle">
-                            <input type="file" id="uploadLogo" class="form-control-custom d-none" name="logo"
+                            <img :src="avatar" height="80" width="80" alt="avatar" class="rounded-circle">
+                            <input type="file" id="uploadAvatar" class="form-control-custom d-none" name="avatar"
                                    @change="AttachFile($event)" accept="image/*"
                                    autocomplete="new-file_path">
-                            <label for="uploadLogo" class="btn btn-theme ms-4 w-160">Upload Photo</label>
+                            <label for="uploadAvatar" class="btn btn-theme ms-4 w-160">Upload Photo</label>
                         </div>
                     </div>
                     <div class="cl col-lg-12">
@@ -124,7 +124,7 @@ export default {
     components: {createToaster},
     data() {
         return {
-            clientLogo: '/assets/images/profile.png',
+            avatar: '/assets/images/profile.png',
             loading: false
         }
     },
@@ -145,10 +145,10 @@ export default {
             })
         },
 
-        /*Upload Logo*/
+        /*Upload Avatar*/
         AttachFile: function (event) {
             let file = event.target.files[0];
-            this.clientLogo = URL.createObjectURL(file);
+            this.avatar = URL.createObjectURL(file);
         },
 
         /*number validation*/

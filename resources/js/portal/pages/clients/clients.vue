@@ -77,7 +77,7 @@
                 </table>
 
                 <!--  pagination start -->
-                <div class="d-flex justify-content-center overflow-auto" v-if="tableData.length > 0 && loading === false" style="min-width: 400px;">
+                <div class="d-flex justify-content-center overflow-auto" v-if="tableData.length > 0 && loading === false && last_page > 1" style="min-width: 400px;">
                     <nav aria-label="...">
                         <ul class="pagination">
                             <li class="page-item" :class="{'disabled': this.current_page === 1}">

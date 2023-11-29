@@ -31,10 +31,10 @@
                                     <div class="col-lg-12">
                                         <div class="card mb-4">
                                             <div class="card-body">
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label" for="name">Color</label>
-                                                    <input type="text" class="form-control form-control-lg"
-                                                           id="color" name="color" placeholder="color"  v-model="formData.color">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="color">Color</label>
+                                                    <input type="color" class="form-control form-control-lg"
+                                                           id="color" name="color" placeholder="color" v-model="formData.color">
                                                     <div class="error-report text-danger"></div>
                                                 </div>
                                             </div>
@@ -81,7 +81,7 @@ export default {
                 color: ''
             },
             loading: false,
-            icon: '/assets/images/circle.png'
+            icon: '/assets/images/categories.png'
         }
     },
     methods: {
@@ -102,6 +102,7 @@ export default {
             apiService.ClearErrorHandler();
             this.loading = true;
             const formData = new FormData(document.getElementById('categoryEdit'));
+            formData.append('id', this.formData.id);
             apiService.POST_FORMDATA(apiRoutes.categoryUpdate, formData, (res) => {
                 this.loading = false;
                 if (res.status === 200) {

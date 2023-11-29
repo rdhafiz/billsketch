@@ -32,10 +32,10 @@
                     <tr v-for="(each, index) in tableData">
                         <td>
                             <div class="avatar">
-                                <img :src="each.icon" height="40" width="40" class="rounded-circle" alt="avatar"
-                                     v-if="each.icon">
-                                <img :src="'/assets/images/circle.png'" height="40" width="40" class="rounded-circle"
-                                     alt="avatar" v-if="!each.logo_path">
+                                <img :src="each.icon_path" height="40" width="40" class="rounded-circle" alt="avatar"
+                                     v-if="each.icon_path">
+                                <img :src="'/assets/images/categories.png'" height="40" width="40" class="rounded-circle"
+                                     alt="avatar" v-if="!each.icon_path">
                             </div>
                         </td>
                         <td style="min-width: 200px;">{{ each.name }}</td>
@@ -71,7 +71,7 @@
                 </table>
 
                 <!--  pagination start -->
-                <div class="d-flex justify-content-center overflow-auto" v-if="tableData.length > 0 && loading === false" style="min-width: 400px;">
+                <div class="d-flex justify-content-center overflow-auto" v-if="tableData.length > 0 && loading === false && last_page > 1" style="min-width: 400px;">
                     <nav aria-label="...">
                         <ul class="pagination">
                             <li class="page-item" :class="{'disabled': this.current_page === 1}">
@@ -208,10 +208,10 @@ export default {
                 this.loading = false;
                 if (res.status === 200) {
                     this.tableData = res.data.data;
-                    // this.last_page = res.data.last_page
-                    // this.total_pages = res.data.total < res.data.per_page ? 1 : Math.ceil((res.data.total / res.data.per_page))
-                    // this.current_page = res.data.current_page;
-                    // this.buttons = [...Array(this.total_pages).keys()].map(i => i + 1);
+                    this.last_page = res.data.last_page
+                    this.total_pages = res.data.total < res.data.per_page ? 1 : Math.ceil((res.data.total / res.data.per_page))
+                    this.current_page = res.data.current_page;
+                    this.buttons = [...Array(this.total_pages).keys()].map(i => i + 1);
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }
