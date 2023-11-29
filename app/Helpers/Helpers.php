@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Repositories\UserActivityLogRepository;
 use Illuminate\Support\Facades\Log;
 use Jenssegers\Agent\Agent;
+use Illuminate\Database\Eloquent\Model;
 
 class Helpers
 {
@@ -91,6 +92,25 @@ class Helpers
             UserActivityLogRepository::save($userLog);
         } catch (\Exception $exception) {
             Log::error("Helpers::saveUserActivity, Cannot save UserActivity: " . $exception->getMessage());
+        }
+    }
+
+    /**
+     * @param integer $localKeyValue
+     * @param string $foreignKey
+     * @param string $action
+     * @param Model $foreignModel
+     */
+
+    public static function relationalDataAction(int $localKeyValue, string $foreignKey, string $action, Model $foreignModel): void
+    {
+        if ($action == 'delete') {
+            $foreignModel::where($foreignKey, $localKeyValue)->delete();
+        }
+        elseif ($action == 'restore') {
+            $foreignModel::where($foreignKey, $localKeyValue)->update(['is_active' => 1]);
+        } else {
+            $foreignModel::where($foreignKey, $localKeyValue)->update(['is_active' => 0]);
         }
     }
 }

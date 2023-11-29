@@ -24,7 +24,7 @@ return new class extends Migration
             $table->text('cancel_reason')->nullable();
             $table->text('overdue_reason')->nullable();
             $table->string('currency');
-            $table->integer('recurring');
+            $table->integer('recurring')->default(0);
             $table->integer('recurring_frequency')->nullable();
             $table->float('sub_total')->nullable();
             $table->float('tax')->nullable();

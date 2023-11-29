@@ -23,10 +23,14 @@ class UserLogType
     const Employee_view = 'Employee view';
     const Employee_update = 'Employee update';
     const Employee_delete = 'Employee delete';
+    const Employee_archive = 'Employee archive';
+    const Employee_restore = 'Employee restore';
     const Category_create = 'Category create';
     const Category_view = 'Category view';
     const Category_update = 'Category update';
     const Category_delete = 'Category delete';
+    const Category_archive = 'Category archive';
+    const Category_restore = 'Category restore';
     const Invoice_create = 'Invoice create';
     const Invoice_view = 'Invoice view';
     const Invoice_update = 'Invoice update';
