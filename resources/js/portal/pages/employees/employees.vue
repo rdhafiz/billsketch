@@ -3,45 +3,152 @@
     <div class="card">
         <div class="card-body">
             <div class="row mb-3 align-items-center">
-                <div class="col-lg-4 mb-3 mb-lg-0">
-                    <input type="text" class="form-control" placeholder="Search">
+                <div class="col-sm-6 col-lg-4 col-xxl-3 mb-3 mb-lg-0">
+                    <input type="text" class="form-control" placeholder="Search" v-model="param.keyword"
+                           @keyup="searchData">
                 </div>
-                <div class="col-lg-8 text-end">
+                <div class="col-sm-6 col-lg-4 col-xxl-2 mb-3 mb-lg-0">
+                    <select name="status" class="form-select" v-model="param.list_type" @change="changeStatus">
+                        <option value="">Active</option>
+                        <option value="archive">Archive</option>
+                    </select>
+                </div>
+                <div class="col-lg-4 col-xxl-7 text-end">
                     <router-link :to="{name: 'EmployeeCreate'}" class="btn btn-theme" style="width: 120px;">Create</router-link>
                 </div>
             </div>
             <div class="table-data table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>Logo</th>
-                        <th style="min-width: 180px;">Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <div class="avatar">
-                                <img :src="'/assets/images/profile.png'" height="40" width="40" class="rounded-circle" alt="avatar">
-                            </div>
-                        </td>
-                        <td>Noyon Ahammed</td>
-                        <td>noyon@gmail.com</td>
-                        <td>01700000000</td>
-                        <td class="text-end" style="min-width: 120px;">
-                            <router-link :to="{name: 'EmployeeEdit'}" class="btn btn-theme">
-                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                            </router-link>
-                            <button class="btn btn-danger ms-2" @click="deleteClient">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="table-data table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Logo</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>City</th>
+                            <th>Country</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody v-if="tableData.length > 0 && loading === false">
+                        <tr v-for="(each, index) in tableData">
+                            <td>
+                                <div class="avatar">
+                                    <img :src="each.avatar_path" height="40" width="40" class="rounded-circle" alt="avatar"
+                                         v-if="each.avatar_path">
+                                    <img :src="'/assets/images/profile.png'" height="40" width="40" class="rounded-circle"
+                                         alt="avatar" v-if="!each.avatar_path">
+                                </div>
+                            </td>
+                            <td style="min-width: 200px;">{{ each.name }}</td>
+                            <td>{{ each.email }}</td>
+                            <td>{{ each.phone }}</td>
+                            <td>{{ each.city }}</td>
+                            <td>{{ each.country }}</td>
+                            <td class="text-end" style="min-width: 180px;">
+                                <router-link :to="{name: 'EmployeeEdit', params: {id: each.id}}" class="btn btn-theme">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </router-link>
+                                <button class="btn btn-secondary ms-2" @click="updateEmployeeStatus(each.id)">
+                                    <i class="fa fa-archive" aria-hidden="true" v-if="!param.list_type"></i>
+                                    <i class="fa fa-refresh" aria-hidden="true" v-if="param.list_type"></i>
+                                </button>
+                                <button class="btn btn-danger ms-2" @click="deleteEmployee(each.id)">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tbody v-if="tableData.length === 0 && loading === false">
+                        <tr>
+                            <td colspan="7">
+                                <div class="alert alert-warning text-center mb-0">No data found</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tbody v-if="loading === true">
+                        <tr>
+                            <td colspan="7">
+                                <div class="alert alert-primary text-center mb-0">Loading...</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!--  pagination start -->
+                    <div class="d-flex justify-content-center overflow-auto" v-if="tableData.length > 0 && loading === false && last_page > 1" style="min-width: 400px;">
+                        <nav aria-label="...">
+                            <ul class="pagination">
+                                <li class="page-item" :class="{'disabled': this.current_page === 1}">
+                                    <a href="javascript:void(0)" class="page-link" @click="prevPage()">Previous</a>
+                                </li>
+                                <template v-if="buttons.length <= 6">
+                                    <li class="page-item" :class="{'active': current_page == page}" aria-current="page" v-for="(page, index) in buttons" >
+                                        <a href="javascript:void(0)" class="page-link" @click="pageChange(page)">{{ page }}</a>
+                                    </li>
+                                </template>
+                                <template v-if="buttons.length > 6">
+                                    <li class="page-item" :class="{'active': current_page == 1}">
+                                        <a class="page-link" @click="pageChange(1)"
+                                           href="javascript:void(0)">1</a>
+                                    </li>
+
+                                    <li v-if="current_page > 3" class="page-item">
+                                        <a class="page-link" @click="pageChange(current_page - 2)"
+                                           href="javascript:void(0)">...</a>
+                                    </li>
+
+                                    <li v-if="current_page == buttons.length" class="page-item"
+                                        :class="{'active': current_page == (current_page - 2)}">
+                                        <a class="page-link" @click="pageChange(current_page - 2)"
+                                           href="javascript:void(0)" v-text="current_page - 2"></a>
+                                    </li>
+
+                                    <li v-if="current_page > 2" class="page-item"
+                                        :class="{'active': current_page == (current_page - 1)}">
+                                        <a class="page-link" @click="pageChange(current_page - 1)"
+                                           href="javascript:void(0)" v-text="current_page - 1"></a>
+                                    </li>
+
+                                    <li v-if="current_page != 1 && current_page != buttons.length"
+                                        class="page-item active">
+                                        <a class="page-link" @click="pageChange(current_page)"
+                                           href="javascript:void(0)"
+                                           v-text="current_page"></a>
+                                    </li>
+
+                                    <li v-if="current_page < buttons.length - 1" class="page-item"
+                                        :class="{'active': current_page == (current_page + 1)}">
+                                        <a class="page-link" @click="pageChange(current_page + 1)"
+                                           href="javascript:void(0)" v-text="current_page + 1"></a>
+                                    </li>
+
+                                    <li v-if="current_page == 1" class="page-item"
+                                        :class="{'active': current_page == (current_page + 2)}">
+                                        <a class="page-link" @click="pageChange(current_page + 2)"
+                                           href="javascript:void(0)" v-text="current_page + 2"></a>
+                                    </li>
+
+                                    <li v-if="current_page < buttons.length - 2" class="page-item">
+                                        <a class="page-link" @click="pageChange(current_page + 2)"
+                                           href="javascript:void(0)">...</a>
+                                    </li>
+
+                                    <li class="page-item"
+                                        :class="{'active': current_page == buttons.length}">
+                                        <a class="page-link" @click="pageChange(buttons.length)"
+                                           href="javascript:void(0)" v-text="buttons.length"></a>
+                                    </li>
+                                </template>
+                                <li class="page-item" :class="{'disabled': this.current_page === this.last_page}">
+                                    <a class="page-link" href="#"  @click="nextPage()">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <!--  pagination end -->
+                </div>
             </div>
         </div>
     </div>
@@ -49,24 +156,133 @@
 </template>
 <script>
 import swal from 'sweetalert';
+import apiService from "../../services/ApiService";
+import apiRoutes from "../../services/ApiRoutes";
 
 export default {
     components: {},
+    data() {
+        return {
+            param: {
+                keyword: '',
+                list_type: ''
+            },
+            tableData: [],
+            loading: false,
+            searchTimeout: null,
+
+
+            /*Pagination Variables*/
+            total_pages: 0,
+            current_page: 0,
+            last_page: 0,
+            buttons: [],
+
+            status: ''
+        }
+    },
     methods: {
-        deleteClient(){
+        prevPage() {
+            if (this.current_page > 1) {
+                this.current_page = this.current_page - 1;
+                this.getEmployees()
+            }
+        },
+        nextPage() {
+            if (this.current_page < this.total_pages) {
+                this.current_page = this.current_page + 1;
+                this.getEmployees()
+            }
+        },
+        pageChange(page) {
+            this.current_page = page;
+            this.getEmployees();
+        },
+
+        /*Search Employees*/
+        searchData() {
+            clearTimeout(this.searchTimeout)
+            this.searchTimeout = setTimeout(() => {
+                this.getEmployees()
+            }, 800)
+        },
+
+        /*Get Employees*/
+        getEmployees() {
+            this.loading = true;
+            this.param.page = this.current_page;
+            apiService.POST(apiRoutes.employeeList, this.param, (res) => {
+                this.loading = false;
+                if (res.status === 200) {
+                    this.tableData = res.data.data;
+                    this.last_page = res.data.last_page
+                    this.total_pages = res.data.total < res.data.per_page ? 1 : Math.ceil((res.data.total / res.data.per_page))
+                    this.current_page = res.data.current_page;
+                    this.buttons = [...Array(this.total_pages).keys()].map(i => i + 1);
+                } else {
+                    apiService.ErrorHandler(res.errors)
+                }
+            })
+        },
+
+        /*Delete Employee*/
+        deleteEmployee(id) {
             swal({
                 title: "Are you sure?",
-                text: "Are you sure that you want to delete this employee?",
+                text: "If you delete a employee, all associated data, such as invoices related to that employee, will be permanently removed from the system.",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
             })
                 .then(willDelete => {
+                    console.log(1)
                     if (willDelete) {
-                        swal("Deleted!", "Employee has been deleted!", "success");
+                        apiService.POST(apiRoutes.employeeDelete, {id}, (res) => {
+                            if (res.status === 200) {
+                                swal("Deleted!", "Employee has been deleted!", "success");
+                                this.getEmployees();
+                            } else {
+                                swal("Error!", res.errors?.id[0], "error");
+                            }
+                        })
+                    }
+                });
+        },
+
+        /*Change Status*/
+        changeStatus(){
+            this.current_page = 0;
+            this.status = this.param.list_type;
+            this.getEmployees();
+        },
+
+        /*Update Employee Status*/
+        updateEmployeeStatus(id) {
+            swal({
+                title: "Are you sure?",
+                text: `Are you sure that you want to ${this.status === '' ? 'archive' : 'restore'} this employee?`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then(willDelete => {
+                    console.log(1)
+                    if (willDelete) {
+                        apiService.POST(apiRoutes.employeeStatus, {id}, (res) => {
+                            if (res.status === 200) {
+                                swal(`${!this.status ? 'Archived!' : 'Restored!'}`, `${!this.status ? 'Employee has been archived!' : 'Employee has been restored!!'}`, "success"
+                                );
+                                this.getEmployees();
+                            } else {
+                                swal("Error!", res.errors?.id[0], "error");
+                            }
+                        })
                     }
                 });
         }
+    },
+    mounted() {
+        this.getEmployees();
     },
     created() {
         window.scroll(0, 0);

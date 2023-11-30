@@ -62,7 +62,7 @@ class CategoriesRepositories
      */
     public static function list(array $filter, array $pagination, User $user): mixed
     {
-        $result = Categories::select('name', 'icon', 'color')
+        $result = Categories::select('id', 'name', 'icon', 'color')
             ->where('user_id', $user['id']);
         if (!empty($filter['list_type']) && $filter['list_type'] == 'archive') {
             $result->where('is_active', 0);

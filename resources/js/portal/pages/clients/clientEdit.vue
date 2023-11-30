@@ -6,11 +6,11 @@
                 <div class="row">
                     <div class="cl col-lg-12">
                         <div class="d-flex align-items-center mb-4 avatar">
-                            <img :src="avatar" height="80" width="80" alt="avatar" class="rounded-circle">
-                            <input type="file" id="uploadAvatar" class="form-control-custom d-none" name="logo"
+                            <img :src="clientLogo" height="80" width="80" alt="logo" class="rounded-circle">
+                            <input type="file" id="uploadLogo" class="form-control-custom d-none" name="logo"
                                    @change="AttachFile($event)" accept="image/*"
                                    autocomplete="new-file_path">
-                            <label for="uploadAvatar" class="btn btn-theme ms-4 w-160">Upload Photo</label>
+                            <label for="uploadLogo" class="btn btn-theme ms-4 w-160">Upload Photo</label>
                         </div>
                     </div>
                     <div class="cl col-lg-12">
@@ -132,15 +132,14 @@ export default {
         return {
             formData: {
                 id: '',
-                first_name: '',
-                last_name: '',
+                name: '',
                 email: '',
                 phone: '',
                 address: '',
                 city: '',
                 country: '',
             },
-            avatar: '/assets/images/profile.png',
+            clientLogo: '/assets/images/profile.png',
             loading: false
         }
     },
@@ -150,7 +149,7 @@ export default {
             apiService.POST(apiRoutes.clientSingle, {id} , (res) => {
                 if (res.status === 200) {
                     this.formData = res.data;
-                    this.avatar = res.data.logo_path ?? this.avatar;
+                    this.clientLogo = res.data.logo_path ?? this.clientLogo;
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }
@@ -174,10 +173,10 @@ export default {
             })
         },
 
-        /*Upload Avatar*/
+        /*Upload Logo*/
         AttachFile: function (event) {
             let file = event.target.files[0];
-            this.avatar = URL.createObjectURL(file);
+            this.clientLogo = URL.createObjectURL(file);
         },
 
         /*number validation*/
