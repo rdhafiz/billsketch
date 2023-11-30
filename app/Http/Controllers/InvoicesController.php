@@ -78,32 +78,30 @@ class InvoicesController extends Controller
                 'invoice_item_headings' => !empty($requestData['invoice_item_headings']) ? json_encode($requestData['invoice_item_headings']) : null,
                 'note' => $requestData['note'] ?? null,
             ];
-            if (!empty($requestData['invoice_items']) && count($requestData['invoice_items']) > 0) {
-                $invoiceItems = [];
-                $totalItemsValue = 0;
-                foreach ($requestData['invoice_items'] as $item) {
-                    $totalItemValue = ($item['unit_frequency'] == null ? 0 : $item['unit_frequency']) * ($item['unit_value'] == null ? 0 : $item['unit_value']);
-                    $invoiceItems[] = [
-                        'description' => $item['description'] ?? null,
-                        'unit_frequency' => $item['unit_frequency'] ?? null,
-                        'unit_value' => $item['unit_value'] ?? null,
-                        'total' => $totalItemValue,
-                    ];
-                    $totalItemsValue += $totalItemValue;
-                }
-                $invoiceData['sub_total'] = $totalItemsValue;
-                $invoiceData['total'] = self::calculateInvoiceTotal($invoiceData, $totalItemsValue);
-                $invoice = InvoiceRepository::save($invoiceData);
-                if (!$invoice instanceof Invoices) {
-                    return response()->json(['status' => 500, 'message' => 'Cannot save invoice'], 200);
-                }
-                foreach ($invoiceItems as &$item) {
-                    $item['invoice_id'] = $invoice->id;
-                }
-                if (!InvoiceItems::insert($invoiceItems)) {
-                    DB::rollBack();
-                    return response()->json(['status' => 500, 'message' => 'Cannot save invoice'], 200);
-                }
+            $invoiceItems = [];
+            $totalItemsValue = 0;
+            foreach ($requestData['invoice_items'] as $item) {
+                $totalItemValue = ($item['unit_frequency'] == null ? 0 : $item['unit_frequency']) * ($item['unit_value'] == null ? 0 : $item['unit_value']);
+                $invoiceItems[] = [
+                    'description' => $item['description'] ?? null,
+                    'unit_frequency' => $item['unit_frequency'] ?? null,
+                    'unit_value' => $item['unit_value'] ?? null,
+                    'total' => $totalItemValue,
+                ];
+                $totalItemsValue += $totalItemValue;
+            }
+            $invoiceData['sub_total'] = $totalItemsValue;
+            $invoiceData['total'] = self::calculateInvoiceTotal($invoiceData, $totalItemsValue);
+            $invoice = InvoiceRepository::save($invoiceData);
+            if (!$invoice instanceof Invoices) {
+                return response()->json(['status' => 500, 'message' => 'Cannot save invoice'], 200);
+            }
+            foreach ($invoiceItems as &$item) {
+                $item['invoice_id'] = $invoice->id;
+            }
+            if (!InvoiceItems::insert($invoiceItems)) {
+                DB::rollBack();
+                return response()->json(['status' => 500, 'message' => 'Cannot save invoice'], 200);
             }
             DB::commit();
             Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Invoice_create);
