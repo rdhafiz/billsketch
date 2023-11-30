@@ -63,4 +63,7 @@ Route::group(['prefix' => 'invoice', 'middleware' => ['auth:api']], function () 
     Route::post('delete', [InvoicesController::class, 'delete']);
     Route::post('list', [InvoicesController::class, 'list']);
     Route::post('update/status', [InvoicesController::class, 'archiveOrRestore']);
+    Route::get('get/status', [InvoicesController::class, 'getStatus']);
+    Route::get('get/recurring', [InvoicesController::class, 'getRecurringValue']);
+    Route::post('get/number', [InvoicesController::class, 'getLatestNumber']);
 });

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Invoices;
+use App\Models\User;
 
 class InvoiceRepository
 {
@@ -32,10 +33,47 @@ class InvoiceRepository
         $invoiceModel->bonus = $invoiceData['bonus'] ?? null;
         $invoiceModel->total = $invoiceData['total'] ?? null;
         $invoiceModel->note = $invoiceData['note'] ?? null;
+        $invoiceModel->invoice_item_headings = $invoiceData['invoice_item_headings'] ?? null;
         if (!$invoiceModel->save()) {
             return ['message' => 'Cannot save invoice'];
         }
         return $invoiceModel;
+    }
+
+    /**
+     * @param User $user
+     * @param string $invoiceUserType
+     * @param string $invoiceUserId
+     * @return int
+     */
+    public static function getLatestNumber(User $user, string $invoiceUserType, string $invoiceUserId): int
+    {
+        $invoiceNumber = Invoices::where('user_id', $user['id'])
+            ->where($invoiceUserType, $invoiceUserId)
+            ->pluck('invoice_no')->toArray();
+        if (!empty($invoiceNumber)) {
+            $maxNumber = max($invoiceNumber);
+            return (int)$maxNumber+1;
+        }
+        return 1;
+    }
+
+    /**
+     * @param User $user
+     * @param string $invoiceUserType
+     * @param string $invoiceUserId
+     * @param integer $invoiceNo
+     * @return bool
+     */
+    public static function checkIfInvoiceNoExist(User $user, string $invoiceUserType, string $invoiceUserId, int $invoiceNo): bool
+    {
+        $invoiceNumber = Invoices::where('user_id', $user['id'])
+            ->where($invoiceUserType, $invoiceUserId)
+            ->pluck('invoice_no')->toArray();
+        if (!empty($invoiceNumber) && in_array($invoiceNo, $invoiceNumber)) {
+            return true;
+        }
+        return false;
     }
 
 }

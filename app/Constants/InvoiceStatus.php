@@ -11,4 +11,16 @@ class InvoiceStatus
     const Paid = 5;
     const Overdue = 6;
     const Canceled = 7;
+
+    public static function getArray()
+    {
+        return [
+            ['value' => self::Draft, 'name'=> 'Draft'],
+            ['value' => self::Pending, 'name'=> 'Pending'],
+            ['value' => self::Partially_paid, 'name'=> 'Partially paid'],
+            ['value' => self::Paid, 'name'=> 'Paid'],
+            ['value' => self::Overdue, 'name'=> 'Overdue'],
+            ['value' => self::Canceled, 'name'=> 'Canceled'],
+        ];
+    }
 }

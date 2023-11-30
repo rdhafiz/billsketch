@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('currency');
             $table->integer('recurring')->default(0);
             $table->integer('recurring_frequency')->nullable();
+            $table->integer('recurring_end_date')->nullable();
             $table->float('sub_total')->nullable();
             $table->float('tax')->nullable();
             $table->float('discount')->nullable();
@@ -33,6 +34,7 @@ return new class extends Migration
             $table->float('total')->nullable();
             $table->text('note')->nullable();
             $table->tinyInteger('is_active')->default(1);
+            $table->text('invoice_item_headings')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

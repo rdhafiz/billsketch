@@ -29,7 +29,8 @@ return new class extends Migration
             $table->string('social_provider')->nullable();
             $table->unsignedBigInteger('social_provider_id')->nullable();
             $table->integer('user_type')->comment('1 = individual, 2 = company');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             $table->softDeletes();
         });
     }

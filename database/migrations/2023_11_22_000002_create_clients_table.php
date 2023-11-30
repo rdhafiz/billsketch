@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('city');
             $table->string('country');
             $table->tinyInteger('is_active')->default(1);
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             $table->softDeletes();
         });
     }
