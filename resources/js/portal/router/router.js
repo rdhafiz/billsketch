@@ -20,6 +20,7 @@ import EmployeeEdit from "../pages/employees/employeeEdit.vue";
 import Categories from "../pages/category/categories.vue";
 import CategoryCreate from "../pages/category/categoryCreate.vue";
 import CategoryEdit from "../pages/category/categoryEdit.vue";
+import InvoiceCreate from "../pages/invoices/invoiceCreate.vue";
 
 //=====================
 // Routes
@@ -49,8 +50,9 @@ const routes = [
             {path: ROOT_URL + '/categories/create', name: 'CategoryCreate', component: CategoryCreate},
             {path: ROOT_URL + '/categories/edit/:id', name: 'CategoryEdit', component: CategoryEdit},
 
-
+            /*invoice routes*/
             {path: ROOT_URL + '/invoices', name: 'Invoices', component: Invoices},
+            {path: ROOT_URL + '/invoices/create', name: 'InvoiceCreate', component: InvoiceCreate},
             {path: ROOT_URL + '/recurring-invoices', name: 'RecurringInvoices', component: RecurringInvoices},
 
             /* profile routes */
