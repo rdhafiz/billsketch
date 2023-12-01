@@ -39,4 +39,25 @@
             }
         }
     }
+
+    .preview-footer{
+        display: flex;
+        @media screen and (max-width: 1750px) {
+            flex-direction: column;
+        }
+        .notes{
+            width: 50%;
+            @media screen and (max-width: 1750px) {
+                width: 100%;
+                margin-bottom: 40px;
+            }
+        }
+        .total{
+            width: 50%;
+            text-align: right;
+            @media screen and (max-width: 1750px) {
+                width: 100%;
+            }
+        }
+    }
 }

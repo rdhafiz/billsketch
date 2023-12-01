@@ -21,58 +21,58 @@
             <div class="table-data table-responsive">
                 <table class="table table-hover">
                     <thead>
-                    <tr>
-                        <th>Logo</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>City</th>
-                        <th>Country</th>
-                        <th></th>
-                    </tr>
+                        <tr>
+                            <th>Logo</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>City</th>
+                            <th>Country</th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody v-if="tableData.length > 0 && loading === false">
-                    <tr v-for="(each, index) in tableData">
-                        <td>
-                            <div class="avatar">
-                                <img :src="each.logo_path" height="40" width="40" class="rounded-circle" alt="avatar"
-                                     v-if="each.logo_path">
-                                <img :src="'/assets/images/profile.png'" height="40" width="40" class="rounded-circle"
-                                     alt="avatar" v-if="!each.logo_path">
-                            </div>
-                        </td>
-                        <td style="min-width: 200px;">{{ each.name }}</td>
-                        <td>{{ each.email }}</td>
-                        <td>{{ each.phone }}</td>
-                        <td>{{ each.city }}</td>
-                        <td>{{ each.country }}</td>
-                        <td class="text-end" style="min-width: 180px;">
-                            <router-link :to="{name: 'ClientEdit', params: {id: each.id}}" class="btn btn-theme">
-                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                            </router-link>
-                            <button class="btn btn-secondary ms-2" @click="updateClientStatus(each.id)">
-                                <i class="fa fa-archive" aria-hidden="true" v-if="!param.list_type"></i>
-                                <i class="fa fa-refresh" aria-hidden="true" v-if="param.list_type"></i>
-                            </button>
-                            <button class="btn btn-danger ms-2" @click="deleteClient(each.id)">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </button>
-                        </td>
-                    </tr>
+                        <tr v-for="(each, index) in tableData">
+                            <td>
+                                <div class="avatar">
+                                    <img :src="each.logo_path" height="40" width="40" class="rounded-circle" alt="avatar"
+                                         v-if="each.logo_path">
+                                    <img :src="'/assets/images/profile.png'" height="40" width="40" class="rounded-circle"
+                                         alt="avatar" v-if="!each.logo_path">
+                                </div>
+                            </td>
+                            <td style="min-width: 200px;">{{ each.name }}</td>
+                            <td>{{ each.email }}</td>
+                            <td>{{ each.phone }}</td>
+                            <td>{{ each.city }}</td>
+                            <td>{{ each.country }}</td>
+                            <td class="text-end" style="min-width: 180px;">
+                                <router-link :to="{name: 'ClientEdit', params: {id: each.id}}" class="btn btn-theme">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </router-link>
+                                <button class="btn btn-secondary ms-2" @click="updateClientStatus(each.id)">
+                                    <i class="fa fa-archive" aria-hidden="true" v-if="!param.list_type"></i>
+                                    <i class="fa fa-refresh" aria-hidden="true" v-if="param.list_type"></i>
+                                </button>
+                                <button class="btn btn-danger ms-2" @click="deleteClient(each.id)">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
                     </tbody>
                     <tbody v-if="tableData.length === 0 && loading === false">
-                    <tr>
-                        <td colspan="7">
-                            <div class="alert alert-warning text-center mb-0">No data found</div>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="7">
+                                <div class="alert alert-warning text-center mb-0">No data found</div>
+                            </td>
+                        </tr>
                     </tbody>
                     <tbody v-if="loading === true">
-                    <tr>
-                        <td colspan="7">
-                            <div class="alert alert-primary text-center mb-0">Loading...</div>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="7">
+                                <div class="alert alert-primary text-center mb-0">Loading...</div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
 

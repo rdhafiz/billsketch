@@ -5,13 +5,13 @@
                 <div class="row">
                     <div class="col-lg-12 mb-4">
                         <div class="d-flex justify-content-between flex-column flex-lg-row align-items-lg-center">
-                            <div class="h1 mb-2 mb-lg-0">Invoice Create</div>
+                            <div class="h1 mb-2 mb-lg-0">Invoice Edit</div>
                             <div class="text-end">
                                 <router-link :to="{name: 'Invoices'}" class="btn btn-danger w-160 me-3">
                                     Cancel
                                 </router-link>
                                 <button type="submit" class="btn btn-theme w-160" v-if="loading === false">
-                                    Save
+                                    Update
                                 </button>
                                 <button type="button" disabled v-if="loading === true"
                                         class="btn btn-theme w-160">
@@ -31,18 +31,14 @@
                                                     <label for="invoice_type"><strong>Invoice As:</strong></label>
                                                     <div>
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio"
-                                                                   name="invoice_type"
-                                                                   id="inlineCheckbox1" value="1"
-                                                                   v-model="formData.invoice_type">
+                                                            <input class="form-check-input" type="radio" name="invoice_type"
+                                                                   id="inlineCheckbox1" value="1" v-model="formData.invoice_type">
                                                             <label class="form-check-label"
                                                                    for="inlineCheckbox1">Bill To</label>
                                                         </div>
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio"
-                                                                   name="invoice_type"
-                                                                   id="inlineCheckbox2" value="2"
-                                                                   v-model="formData.invoice_type">
+                                                            <input class="form-check-input" type="radio" name="invoice_type"
+                                                                   id="inlineCheckbox2" value="2" v-model="formData.invoice_type">
                                                             <label class="form-check-label"
                                                                    for="inlineCheckbox2">Bill Pay</label>
                                                         </div>
@@ -70,8 +66,7 @@
                                                     <label for="invoice_type"><strong>Recurring</strong></label>
                                                     <div>
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   name="recurring"
+                                                            <input class="form-check-input" type="checkbox" name="recurring"
                                                                    id="recurring" @change="changeValue($event)">
                                                             <label class="form-check-label"
                                                                    for="recurring">Toggle</label>
@@ -79,11 +74,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group mb-3" v-if="isRecurringPeriod">
-                                                    <label for="recurring_period"><strong>Recurring
-                                                        Periods</strong></label>
+                                                    <label for="recurring_period"><strong>Recurring Periods</strong></label>
                                                     <div class="d-flex align-items-center">
-                                                        <input type="text" class="form-control" name="Recurring"
-                                                               style="width: 120px">
+                                                        <input type="text" class="form-control" name="Recurring" style="width: 120px">
                                                         <strong class="ms-3">Days</strong>
                                                     </div>
                                                 </div>
@@ -99,20 +92,18 @@
                                                     <flat-pickr v-model="date"
                                                                 :config="config"
                                                                 class="form-control"
-                                                                placeholder="Select date"/>
+                                                                placeholder="Select date" />
                                                 </div>
                                                 <div class="form-group mb-3">
-                                                    <label for="invoice_due_date"><strong>Invoice Due
-                                                        Date</strong></label>
+                                                    <label for="invoice_due_date"><strong>Invoice Due Date</strong></label>
                                                     <flat-pickr v-model="due_date"
                                                                 :config="config"
                                                                 class="form-control"
-                                                                placeholder="Select date"/>
+                                                                placeholder="Select date" />
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label for="invoice_status"><strong>Invoice Status</strong></label>
-                                                    <select name="invoice_status" id="invoice_status"
-                                                            class="form-select">
+                                                    <select name="invoice_status" id="invoice_status" class="form-select">
                                                         <option value="1">Draft</option>
                                                         <option value="2">Pending</option>
                                                         <option value="3">Processing</option>
@@ -129,71 +120,65 @@
                                         <div class="table-data table-responsive">
                                             <table class="table table-bordered">
                                                 <thead>
-                                                <tr>
-                                                    <th style="min-width: 160px;">
-                                                        <div class="form-group">
-                                                            <select name="" class="form-select">
-                                                                <option value="">Services</option>
-                                                                <option value="">Products</option>
-                                                                <option value="">Description</option>
-                                                            </select>
-                                                        </div>
-                                                    </th>
-                                                    <th style="min-width: 160px;">
-                                                        <div class="form-group">
-                                                            <select name="" class="form-select">
-                                                                <option value="">Hours</option>
-                                                                <option value="">Days</option>
-                                                                <option value="">Months</option>
-                                                            </select>
-                                                        </div>
-                                                    </th>
-                                                    <th style="min-width: 160px;">
-                                                        <div class="form-group">
-                                                            <select name="" class="form-select">
-                                                                <option value="">Unit Payment</option>
-                                                                <option value="">Unit Price</option>
-                                                            </select>
-                                                        </div>
-                                                    </th>
-                                                    <th class="text-center" style="min-width: 160px;">Total</th>
-                                                    <th v-if="tableData.length > 1"></th>
-                                                </tr>
+                                                    <tr>
+                                                        <th style="min-width: 160px;">
+                                                            <div class="form-group">
+                                                                <select name="" class="form-select">
+                                                                    <option value="">Services</option>
+                                                                    <option value="">Products</option>
+                                                                    <option value="">Description</option>
+                                                                </select>
+                                                            </div>
+                                                        </th>
+                                                        <th style="min-width: 160px;">
+                                                            <div class="form-group">
+                                                                <select name="" class="form-select">
+                                                                    <option value="">Hours</option>
+                                                                    <option value="">Days</option>
+                                                                    <option value="">Months</option>
+                                                                </select>
+                                                            </div>
+                                                        </th>
+                                                        <th style="min-width: 160px;">
+                                                            <div class="form-group">
+                                                                <select name="" class="form-select">
+                                                                    <option value="">Unit Payment</option>
+                                                                    <option value="">Unit Price</option>
+                                                                </select>
+                                                            </div>
+                                                        </th>
+                                                        <th class="text-center" style="min-width: 160px;">Total</th>
+                                                        <th v-if="tableData.length > 1"></th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
-                                                <tr v-for="(each, index) in tableData">
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <input type="text" class="form-control">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <input type="text" class="form-control" v-model="each.hours"
-                                                                   @keypress="checkNumber($event)"
-                                                                   @keyup="calculateTotal(index)">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <input type="text" class="form-control" v-model="each.price"
-                                                                   @keypress="checkNumber($event)"
-                                                                   @keyup="calculateTotal(index)">
-                                                        </div>
-                                                    </td>
-                                                    <td class="text-end">{{each.total}}</td>
-                                                    <td class="text-center" v-if="tableData.length > 1">
-                                                        <button type="button" class="btn btn-danger"
-                                                                @click="tableData.splice(index, 1)">
-                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                                        </button>
-                                                    </td>
-                                                </tr>
+                                                    <tr v-for="(each, index) in tableData">
+                                                        <td>
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control" v-model="each.hours" @keypress="checkNumber($event)" @keyup="calculateTotal(index)">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control" v-model="each.price" @keypress="checkNumber($event)" @keyup="calculateTotal(index)">
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-end">{{each.total}}</td>
+                                                        <td class="text-center" v-if="tableData.length > 1">
+                                                            <button type="button" class="btn btn-danger" @click="tableData.splice(index, 1)">
+                                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <button type="button" class="btn btn-theme" @click="insertData"
-                                                style="width: 160px;">
+                                        <button type="button" class="btn btn-theme" @click="insertData" style="width: 160px;">
                                             <i class="fa fa-plus" aria-hidden="true"></i> Add New
                                         </button>
                                     </div>
@@ -272,12 +257,12 @@ export default {
         }
     },
     methods: {
-        changeValue(e) {
+        changeValue(e){
             this.isRecurringPeriod = !this.isRecurringPeriod;
         },
 
         /*insert table data*/
-        insertData(index) {
+        insertData(index){
             this.tableData.push({
                 hours: 0,
                 price: 0,
@@ -286,7 +271,7 @@ export default {
         },
 
         /*calculate total*/
-        calculateTotal(index) {
+        calculateTotal(index){
             const total = parseInt(this.tableData[index].hours) * parseInt(this.tableData[index].price);
             this.tableData[index].total = isNaN(total) ? 0 : total;
         },
