@@ -27,6 +27,7 @@ class InvoiceRepository
         $invoiceModel->currency = $invoiceData['currency'];
         $invoiceModel->recurring = $invoiceData['recurring'] ?? 0;
         $invoiceModel->recurring_frequency = $invoiceData['recurring_frequency'] ?? null;
+        $invoiceModel->recurring_end_date = $invoiceData['recurring_end_date'] ?? null;
         $invoiceModel->sub_total = $invoiceData['sub_total'] ?? null;
         $invoiceModel->tax = $invoiceData['tax'] ?? null;
         $invoiceModel->discount = $invoiceData['discount'] ?? null;
@@ -76,4 +77,61 @@ class InvoiceRepository
         return false;
     }
 
+    /**
+     * @param integer $invoiceId
+     * @return array|Invoices
+     */
+    public static function single(int $invoiceId): array|Invoices
+    {
+        $invoice = Invoices::where('id', $invoiceId)->with(['invoice_items', 'category', 'client', 'employee'])->first();
+        if (!$invoice instanceof Invoices) {
+            return ['message' => 'Cannot find invoice'];
+        }
+        return $invoice;
+    }
+    /**
+     * @param array $filter
+     * @param array $pagination
+     * @param User $user
+     * @return mixed
+     */
+    public static function list(array $filter, array $pagination, User $user): mixed
+    {
+        $result = Invoices::where('user_id', $user['id'])->with(['invoice_items', 'category', 'client', 'employee']);
+        if (!empty($filter['list_type']) && $filter['list_type'] == 'archive') {
+            $result->where('is_active', 0);
+        } elseif ($filter['list_type'] == 'overdue') {
+            $result->where('invoice_due_date', '<', date('Y-m-d'));
+        } else {
+            $result->where('is_active', 1);
+        }
+        if (!empty($filter['start_date']) && !empty($filter['end_date'])) {
+            $result->whereBetween('created_at', [$filter['start_date'].' 00:00:00', $filter['end_date'].' 23:59:59']);
+        } else {
+            if (!empty($filter['start_date'])) {
+                $result->where('created_at', '>=', $filter['start_date'].' 00:00:00');
+            }
+            if (!empty($filter['end_date'])) {
+                $result->where('created_at', '<=', $filter['end_date'].' 23:59:59');
+            }
+        }
+        if (!empty($filter['client_id'])) {
+            $result->where('client_id', $filter['client_id']);
+        }
+        if (!empty($filter['employee_id'])) {
+            $result->orWhere('employee_id', $filter['employee_id']);
+        }
+        if (!empty($filter['category_id'])) {
+            $result->orWhere('category_id', $filter['category_id']);
+        }
+        if (!empty($filter['keyword'])) {
+            $result->where(function($q) use ($filter) {
+                $q->where('invoice_no', 'LIKE', '%'.$filter['keyword'].'%');
+            });
+        }
+        if ($pagination['pagination'] === true) {
+            return $result->orderBy($pagination['order_by'], $pagination['order_mode'])->paginate($pagination['limit']);
+        }
+        return $result->orderBy($pagination['order_by'], $pagination['order_mode'])->get()->toArray();
+    }
 }

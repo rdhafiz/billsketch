@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\UserLogType;
 use App\Helpers\Helpers;
 use App\Models\Categories;
+use App\Models\InvoiceItems;
 use App\Models\Invoices;
 use App\Repositories\CategoriesRepositories;
 use Illuminate\Http\JsonResponse;
@@ -129,7 +130,7 @@ class CategoriesController extends Controller
             if (!$category->delete()) {
                 return response()->json(['status' => 500, 'message' => 'Cannot delete category'], 200);
             }
-            Helpers::relationalDataAction($category->id, 'category_id', 'delete', new Invoices());
+            Helpers::relationalDataAction($category->id, 'category_id', 'delete', new Invoices(), true, new InvoiceItems());
             Helpers::fileRemove($category, 'icon');
             Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Category_delete);
             return response()->json(['status' => 200, 'message' => 'Category deleted successfully '], 200);

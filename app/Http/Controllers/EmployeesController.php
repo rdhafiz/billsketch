@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\UserLogType;
 use App\Helpers\Helpers;
 use App\Models\Employees;
+use App\Models\InvoiceItems;
 use App\Models\Invoices;
 use App\Repositories\EmployeesRepositories;
 use Illuminate\Http\JsonResponse;
@@ -152,7 +153,7 @@ class EmployeesController extends Controller
             if (!$employee->delete()) {
                 return response()->json(['status' => 500, 'message' => 'Cannot delete employee'], 200);
             }
-            Helpers::relationalDataAction($employee->id, 'employee_id', 'delete', new Invoices());
+            Helpers::relationalDataAction($employee->id, 'employee_id', 'delete', new Invoices(), true, new InvoiceItems());
             Helpers::fileRemove($employee, 'logo');
             Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_delete);
             return response()->json(['status' => 200, 'message' => 'Employee deleted successfully '], 200);

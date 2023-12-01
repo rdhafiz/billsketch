@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('currency');
             $table->integer('recurring')->default(0);
             $table->integer('recurring_frequency')->nullable();
-            $table->integer('recurring_end_date')->nullable();
+            $table->timestamp('recurring_end_date')->nullable();
             $table->float('sub_total')->nullable();
             $table->float('tax')->nullable();
             $table->float('discount')->nullable();

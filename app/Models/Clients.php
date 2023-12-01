@@ -10,7 +10,7 @@ class Clients extends Model
 {
     use HasFactory, SoftDeletes;
     protected $appends = [
-        'logo_path'
+        'logo_path',
     ];
 
     public function getLogoPathAttribute()

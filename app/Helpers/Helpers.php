@@ -26,8 +26,8 @@ class Helpers
      */
     public static function fileRemove($model, $field): void
     {
-        if (!empty($model[$field]) && file_exists(public_path('storage/uploads/'.$model[$field]))) {
-            unlink(public_path('storage/uploads/'.$model[$field]));
+        if (!empty($model[$field]) && file_exists(public_path('storage/uploads/' . $model[$field]))) {
+            unlink(public_path('storage/uploads/' . $model[$field]));
         }
     }
 
@@ -67,17 +67,18 @@ class Helpers
                 return 'robot';
             }
         } else if ($type == 'os') {
-            return $agent->platform() ? $agent->platform().' - '.$agent->version($agent->platform()) : null;
+            return $agent->platform() ? $agent->platform() . ' - ' . $agent->version($agent->platform()) : null;
         } else if ($type == 'browser') {
-            return $agent->browser() ? $agent->browser().' - '.$agent->version($agent->browser()) : null;
+            return $agent->browser() ? $agent->browser() . ' - ' . $agent->version($agent->browser()) : null;
         } else {
             return null;
         }
     }
+
     /**
      * @param integer $userId
      * @param string $logType
-    */
+     */
     public static function saveUserActivity(int $userId, string $logType): void
     {
         try {
@@ -102,12 +103,15 @@ class Helpers
      * @param Model $foreignModel
      */
 
-    public static function relationalDataAction(int $localKeyValue, string $foreignKey, string $action, Model $foreignModel): void
+    public static function relationalDataAction(int $localKeyValue, string $foreignKey, string $action, Model $foreignModel, bool $isNeedToDeleteChildRelation = false, Model $targetChildModel = null): void
     {
         if ($action == 'delete') {
+            if ($isNeedToDeleteChildRelation === true && $targetChildModel != null) {
+                $modelArrayIds = $foreignModel::where($foreignKey, $localKeyValue)->pluck('id')->toArray();
+                $targetChildModel::whereIn('invoice_id', $modelArrayIds)->delete();
+            }
             $foreignModel::where($foreignKey, $localKeyValue)->delete();
-        }
-        elseif ($action == 'restore') {
+        } elseif ($action == 'restore') {
             $foreignModel::where($foreignKey, $localKeyValue)->update(['is_active' => 1]);
         } else {
             $foreignModel::where($foreignKey, $localKeyValue)->update(['is_active' => 0]);
