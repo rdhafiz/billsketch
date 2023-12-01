@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('os')->nullable();
             $table->string('browser')->nullable();
             $table->string('status')->default(1);
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             $table->softDeletes();
         });
     }

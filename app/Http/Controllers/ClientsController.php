@@ -177,6 +177,7 @@ class ClientsController extends Controller
                 'limit' => $requestData['limit'] ?? 15,
                 'order_by' => $requestData['order_by'] ?? 'id',
                 'order_mode' => $requestData['order_mode'] ?? 'DESC',
+                'pagination' => $requestData['pagination'] ?? true,
             ];
             $user = $requestData['session_user'];
             $result = ClientsRepositories::list($filter, $paginatedData, $user);

@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('address');
             $table->string('city');
             $table->string('country');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             $table->softDeletes();
         });
     }

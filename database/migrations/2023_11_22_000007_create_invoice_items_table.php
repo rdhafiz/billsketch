@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('unit_frequency')->nullable();
             $table->float('unit_value')->nullable();
             $table->float('total')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             $table->softDeletes();
         });
     }

@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\InvoicesController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -54,4 +55,15 @@ Route::group(['prefix' => 'category', 'middleware' => ['auth:api']], function ()
     Route::post('delete', [CategoriesController::class, 'delete']);
     Route::post('list', [CategoriesController::class, 'list']);
     Route::post('update/status', [CategoriesController::class, 'archiveOrRestore']);
+});
+Route::group(['prefix' => 'invoice', 'middleware' => ['auth:api']], function () {
+    Route::post('save', [InvoicesController::class, 'save']);
+    Route::post('update', [InvoicesController::class, 'update']);
+    Route::post('single', [InvoicesController::class, 'single']);
+    Route::post('delete', [InvoicesController::class, 'delete']);
+    Route::post('list', [InvoicesController::class, 'list']);
+    Route::post('update/status', [InvoicesController::class, 'archiveOrRestore']);
+    Route::get('get/status', [InvoicesController::class, 'getStatus']);
+    Route::get('get/recurring', [InvoicesController::class, 'getRecurringValue']);
+    Route::post('get/number', [InvoicesController::class, 'getLatestNumber']);
 });

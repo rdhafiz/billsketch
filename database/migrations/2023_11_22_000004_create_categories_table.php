@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('icon')->nullable();
             $table->string('color')->nullable();
             $table->tinyInteger('is_active')->default(1);
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             $table->softDeletes();
         });
     }
