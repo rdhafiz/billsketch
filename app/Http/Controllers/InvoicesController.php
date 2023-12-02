@@ -382,9 +382,7 @@ class InvoicesController extends Controller
             }
             Helpers::saveUserActivity($requestData['session_user']['id'],$invoice->is_active == 1 ? UserLogType::Invoice_restore : UserLogType::Invoice_archive);
             $message = 'Invoice archive successfully';
-            Helpers::relationalDataAction($invoice->id, 'invoice_id', 'archive', new InvoiceItems());
             if ($invoice->is_active == 1) {
-                Helpers::relationalDataAction($invoice->id, 'invoice_id', 'restore', new InvoiceItems());
                 $message = 'Invoice restore successfully';
             }
             return response()->json(['status' => 200, 'message' => $message], 200);
