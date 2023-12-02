@@ -40,6 +40,38 @@ class InvoiceRepository
         }
         return $invoiceModel;
     }
+    /**
+     * @param Invoices $invoiceModel
+     * @param array $invoiceData
+     * @return array|Invoices
+     */
+    public static function update(Invoices $invoiceModel, array $invoiceData): array|Invoices
+    {
+        $invoiceModel->client_id = $invoiceData['client_id'] ?? null;
+        $invoiceModel->employee_id = $invoiceData['employee_id'] ?? null;
+        $invoiceModel->category_id = $invoiceData['category_id'];
+        $invoiceModel->invoice_no = $invoiceData['invoice_no'];
+        $invoiceModel->invoice_date = $invoiceData['invoice_date'] ?? null;
+        $invoiceModel->invoice_due_date = $invoiceData['invoice_due_date'] ?? null;
+        $invoiceModel->invoice_status = $invoiceData['invoice_status'] ?? null;
+        $invoiceModel->cancel_reason = $invoiceData['cancel_reason'] ?? null;
+        $invoiceModel->overdue_reason = $invoiceData['overdue_reason'] ?? null;
+        $invoiceModel->currency = $invoiceData['currency'];
+        $invoiceModel->recurring = $invoiceData['recurring'] ?? 0;
+        $invoiceModel->recurring_frequency = $invoiceData['recurring_frequency'] ?? null;
+        $invoiceModel->recurring_end_date = $invoiceData['recurring_end_date'] ?? null;
+        $invoiceModel->sub_total = $invoiceData['sub_total'] ?? null;
+        $invoiceModel->tax = $invoiceData['tax'] ?? null;
+        $invoiceModel->discount = $invoiceData['discount'] ?? null;
+        $invoiceModel->bonus = $invoiceData['bonus'] ?? null;
+        $invoiceModel->total = $invoiceData['total'] ?? null;
+        $invoiceModel->note = $invoiceData['note'] ?? null;
+        $invoiceModel->invoice_item_headings = $invoiceData['invoice_item_headings'] ?? null;
+        if (!$invoiceModel->save()) {
+            return ['message' => 'Cannot save invoice'];
+        }
+        return $invoiceModel;
+    }
 
     /**
      * @param User $user
@@ -66,11 +98,14 @@ class InvoiceRepository
      * @param integer $invoiceNo
      * @return bool
      */
-    public static function checkIfInvoiceNoExist(User $user, string $invoiceUserType, string $invoiceUserId, int $invoiceNo): bool
+    public static function checkIfInvoiceNoExist(User $user, string $invoiceUserType, string $invoiceUserId, int $invoiceNo, bool $isOwn = false, int $invoiceId = null): bool
     {
-        $invoiceNumber = Invoices::where('user_id', $user['id'])
-            ->where($invoiceUserType, $invoiceUserId)
-            ->pluck('invoice_no')->toArray();
+        $invoiceNumber = Invoices::where('user_id', $user['id']);
+        if ($isOwn === true) {
+            $invoiceNumber->where('id', '!=', $invoiceId);
+        }
+        $invoiceNumber->where($invoiceUserType, $invoiceUserId);
+        $invoiceNumber = $invoiceNumber->pluck('invoice_no')->toArray();
         if (!empty($invoiceNumber) && in_array($invoiceNo, $invoiceNumber)) {
             return true;
         }
@@ -115,14 +150,21 @@ class InvoiceRepository
                 $result->where('created_at', '<=', $filter['end_date'].' 23:59:59');
             }
         }
-        if (!empty($filter['client_id'])) {
-            $result->where('client_id', $filter['client_id']);
-        }
-        if (!empty($filter['employee_id'])) {
-            $result->orWhere('employee_id', $filter['employee_id']);
+        if (!empty($filter['client_id']) && !empty($filter['employee_id'])) {
+            $result->where(function($q) use ($filter) {
+                $q->where('client_id', '=', $filter['client_id']);
+                $q->orWhere('employee_id', '=', $filter['employee_id']);
+            });
+        } else {
+            if (!empty($filter['client_id'])) {
+                $result->where('client_id', $filter['client_id']);
+            }
+            if (!empty($filter['employee_id'])) {
+                $result->where('employee_id', $filter['employee_id']);
+            }
         }
         if (!empty($filter['category_id'])) {
-            $result->orWhere('category_id', $filter['category_id']);
+            $result->where('category_id', $filter['category_id']);
         }
         if (!empty($filter['keyword'])) {
             $result->where(function($q) use ($filter) {

@@ -35,6 +35,8 @@ class UserLogType
     const Invoice_view = 'Invoice view';
     const Invoice_update = 'Invoice update';
     const Invoice_delete = 'Invoice delete';
+    const Invoice_archive = 'Invoice archive';
+    const Invoice_restore = 'Invoice restore';
     const Share_invoice = 'Share invoice';
     const Download_invoice = 'Download invoice';
 }
