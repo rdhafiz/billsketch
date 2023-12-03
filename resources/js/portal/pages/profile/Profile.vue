@@ -119,7 +119,7 @@ export default {
             apiService.GET(apiRoutes.profile, (res) => {
                 if(res.status === 200){
                     this.UserInfo = res.data;
-                    this.avatar = res.data.avatar_path
+                    this.avatar = res.data.avatar_path ?? this.avatar;
                 }
             })
         },

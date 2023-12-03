@@ -5,6 +5,7 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@meforma/vue-toaster": "^1.3.0",
         "@vitejs/plugin-vue": "^4.2.3",
         "axios": "^1.1.2",
         "bootstrap": "^5.3.1",
@@ -14,8 +15,7 @@
         "sass": "^1.65.1",
         "vite": "^4.0.0",
         "vue": "^3.3.4",
-        "vue-router": "^4.2.4",
-        "@meforma/vue-toaster": "^1.3.0"
+        "vue-router": "^4.2.4"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^6.4.2",
@@ -25,6 +25,7 @@
         "fontawesome-4.7": "^4.7.0",
         "jquery": "^3.7.1",
         "sweetalert": "^2.1.2",
-        "swiper": "^11.0.4"
+        "swiper": "^11.0.4",
+        "vue-flatpickr-component": "^11.0.3"
     }
 }
