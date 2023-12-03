@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\UserLogType;
 use App\Helpers\Helpers;
 use App\Models\Clients;
+use App\Models\InvoiceItems;
 use App\Models\Invoices;
 use App\Repositories\ClientsRepositories;
 use Illuminate\Http\JsonResponse;
@@ -153,7 +154,7 @@ class ClientsController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot delete client'], 200);
             }
 
-            Helpers::relationalDataAction($client->id, 'client_id', 'delete', new Invoices());
+            Helpers::relationalDataAction($client->id, 'client_id', 'delete', new Invoices(), true, new InvoiceItems());
             Helpers::fileRemove($client, 'logo');
             Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_delete);
             return response()->json(['status' => 200, 'message' => 'Client deleted successfully '], 200);

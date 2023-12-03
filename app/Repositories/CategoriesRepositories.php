@@ -74,6 +74,9 @@ class CategoriesRepositories
                 $q->where('name', 'LIKE', '%'.$filter['keyword'].'%');
             });
         }
-        return $result->orderBy($pagination['order_by'], $pagination['order_mode'])->paginate($pagination['limit']);
+        if ($pagination['pagination'] === true) {
+            return $result->orderBy($pagination['order_by'], $pagination['order_mode'])->paginate($pagination['limit']);
+        }
+        return $result->orderBy($pagination['order_by'], $pagination['order_mode'])->get()->toArray();
     }
 }
