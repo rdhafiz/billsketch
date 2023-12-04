@@ -12,6 +12,7 @@ use App\Repositories\InvoiceRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\In;
 
@@ -215,17 +216,17 @@ class InvoicesController extends Controller
 
     public function calculateInvoiceTotal($invoiceData, $totalItemsValue)
     {
-        $taxAmount = 0;
         if (!empty($invoiceData['tax'])) {
             $taxAmount = ($totalItemsValue * $invoiceData['tax']) / 100;
-        }
-        if (!empty($invoiceData['bonus'])) {
-            $totalItemsValue += $invoiceData['bonus'];
+            $totalItemsValue = $totalItemsValue - $taxAmount;
         }
         if (!empty($invoiceData['discount'])) {
             $totalItemsValue -= $invoiceData['discount'];
         }
-        return $totalItemsValue - $taxAmount;
+        if (!empty($invoiceData['bonus'])) {
+            $totalItemsValue += $invoiceData['bonus'];
+        }
+        return $totalItemsValue;
     }
 
     /**
@@ -339,6 +340,7 @@ class InvoicesController extends Controller
                 'category_id' => $requestData['category_id'] ?? null,
                 'employee_id' => $requestData['employee_id'] ?? null,
                 'client_id' => $requestData['client_id'] ?? null,
+                'recurring' => $requestData['recurring'] ?? false,
             ];
             $paginatedData = [
                 'limit' => $requestData['limit'] ?? 15,
@@ -386,6 +388,72 @@ class InvoicesController extends Controller
                 $message = 'Invoice restore successfully';
             }
             return response()->json(['status' => 200, 'message' => $message], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+    */
+    public function share(Request $request): JsonResponse
+    {
+        try {
+            $requestData = $request->all();
+            $validator = Validator::make($requestData, [
+                'id' => 'required|integer',
+                'email' => 'required|email',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
+            }
+            $invoice = Invoices::find($requestData['id']);
+            if (!$invoice instanceof Invoices) {
+                return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
+            }
+            $shareInfo = [];
+            $shareInfo['link'] = env('APP_URL').'/share/invoice/'.base64_encode($invoice->id);
+            $shareInfo['email'] = $requestData['email'];
+            if (!empty($shareInfo['subject'])) {
+                $shareInfo['subject'] = $requestData['subject'];
+            } else {
+                $shareInfo['subject'] = 'An invoice shared to you from ' .$requestData['session_user']['first_name'] .' '. $requestData['session_user']['last_name'] ?? '' . env('APP_NAME'); // todo: Please add a nice subject here... ridwan??
+            }
+            if (!empty($shareInfo['body'])) {
+                $shareInfo['body'] = $requestData['body'];
+            } else {
+                $shareInfo['body'] = 'This a an invoice shared to you, To view the invoice please click the link bellow'; // todo: Please add a nice body here... ridwan??
+            }
+            Mail::send('email.share', ['shareInfo' => $shareInfo], function ($message) use ($shareInfo) {
+                $message->to($shareInfo['email'])->subject($shareInfo['subject']);
+                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            });
+            return response()->json(['status' => 200, 'message' => 'Invoice shared successfully'], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function viewInvoice(Request $request): JsonResponse
+    {
+        try {
+            $requestData = $request->all();
+            $validator = Validator::make($requestData, [
+                'invoice_code' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
+            }
+            $invoice = InvoiceRepository::single(base64_decode($requestData['invoice_code']));
+            if (!$invoice instanceof Invoices) {
+                return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
+            }
+            return response()->json(['status' => 200, 'data' => $invoice], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }

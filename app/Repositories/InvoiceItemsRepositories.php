@@ -57,10 +57,9 @@ class InvoiceItemsRepositories
     /**
      * @param array $filter
      * @param array $pagination
-     * @param User $user
      * @return mixed
      */
-    public static function list(array $filter, array $pagination, User $user): mixed
+    public static function list(array $filter, array $pagination): mixed
     {
         $result = InvoiceItems::select('id', 'description', 'unit_frequency', 'unit_value', 'total');
         if (!empty($filter['keyword'])) {

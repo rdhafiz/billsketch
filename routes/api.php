@@ -67,6 +67,7 @@ Route::group(['prefix' => 'invoice', 'middleware' => ['auth:api']], function () 
     Route::get('get/status', [InvoicesController::class, 'getStatus']);
     Route::get('get/recurring', [InvoicesController::class, 'getRecurringValue']);
     Route::post('get/number', [InvoicesController::class, 'getLatestNumber']);
+    Route::post('share', [InvoicesController::class, 'share']);
     Route::group(['prefix' => 'item', 'middleware' => ['auth:api']], function () {
         Route::post('save', [InvoiceItemsController::class, 'save']);
         Route::post('update', [InvoiceItemsController::class, 'update']);
@@ -75,4 +76,6 @@ Route::group(['prefix' => 'invoice', 'middleware' => ['auth:api']], function () 
         Route::post('list', [InvoiceItemsController::class, 'list']);
     });
 });
-
+Route::group(['prefix' => 'invoice/public'], function () {
+    Route::post('view', [InvoicesController::class, 'viewInvoice']);
+});
