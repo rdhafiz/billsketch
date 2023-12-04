@@ -416,7 +416,6 @@ class InvoicesController extends Controller
             $shareInfo = [];
             $shareInfo['link'] = env('APP_URL').'/share/invoice/'.base64_encode($invoice->id);
             $shareInfo['email'] = $requestData['email'];
-            $shareInfo['qrcode'] = $invoice->qrcode ?? null;
             if (!empty($shareInfo['subject'])) {
                 $shareInfo['subject'] = $requestData['subject'];
             } else {
