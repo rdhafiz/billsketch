@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\In;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class InvoicesController extends Controller
 {
@@ -415,6 +416,7 @@ class InvoicesController extends Controller
             $shareInfo = [];
             $shareInfo['link'] = env('APP_URL').'/share/invoice/'.base64_encode($invoice->id);
             $shareInfo['email'] = $requestData['email'];
+            $shareInfo['qrcode'] = $invoice->qrcode ?? null;
             if (!empty($shareInfo['subject'])) {
                 $shareInfo['subject'] = $requestData['subject'];
             } else {
@@ -454,6 +456,37 @@ class InvoicesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
             }
             return response()->json(['status' => 200, 'data' => $invoice], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function generateQRCode(Request $request): JsonResponse
+    {
+        try {
+            $requestData = $request->all();
+            $validator = Validator::make($requestData, [
+                'id' => 'required|integer',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
+            }
+            $invoice = InvoiceRepository::single($requestData['id']);
+            if (!$invoice instanceof Invoices) {
+                return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
+            }
+            // Generate QR code for a URL
+            $url = env('APP_URL').'/share/invoice/'.base64_encode($invoice->id);
+            QrCode::format('svg')->size(300)->generate($url, public_path('storage/uploads/qrcode_'.base64_encode($invoice->id).'.svg'));
+            $invoice->qrcode = 'qrcode_'.base64_encode($invoice->id).'.svg';
+            if (!$invoice->save()) {
+                return response()->json(['status' => 500, 'message' => 'Cannot generate QR code'], 200);
+            }
+            return response()->json(['status' => 200, 'message' => 'Qr code generated successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
