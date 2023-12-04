@@ -1,7 +1,7 @@
 <template>
     <div class="row justify-content-center res">
         <div class="col-12">
-            <form>
+            <form @submit.prevent="invoiceUpdate">
                 <div class="row">
                     <div class="col-lg-12 mb-4">
                         <div class="d-flex justify-content-between flex-column flex-lg-row align-items-lg-center">
@@ -31,86 +31,124 @@
                                                     <label for="invoice_type"><strong>Invoice As:</strong></label>
                                                     <div>
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="invoice_type"
-                                                                   id="inlineCheckbox1" value="1" v-model="formData.invoice_type">
+                                                            <input class="form-check-input" type="radio"
+                                                                   name="invoice_type"
+                                                                   id="inlineCheckbox1" value="1"
+                                                                   v-model="invoice_type">
                                                             <label class="form-check-label"
                                                                    for="inlineCheckbox1">Bill To</label>
                                                         </div>
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="invoice_type"
-                                                                   id="inlineCheckbox2" value="2" v-model="formData.invoice_type">
+                                                            <input class="form-check-input" type="radio"
+                                                                   name="invoice_type"
+                                                                   id="inlineCheckbox2" value="2"
+                                                                   v-model="invoice_type">
                                                             <label class="form-check-label"
                                                                    for="inlineCheckbox2">Bill Pay</label>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group mb-3" v-if="formData.invoice_type == 1">
+                                                <div class="form-group mb-3" v-if="invoice_type == 1">
                                                     <label for="client"><strong>Client</strong></label>
-                                                    <select name="client" id="client" class="form-select">
-                                                        <option value="">Select</option>
+                                                    <select name="client_id" id="client" class="form-select"
+                                                            v-model="formData.client_id" @change="getInvoiceNumber('client', formData.client_id)">
+                                                        <option value="" disabled>Select</option>
+                                                        <template v-if="clients.length > 0">
+                                                            <option :value="each.id" v-for="(each) in clients">
+                                                                {{ each.name }}
+                                                            </option>
+                                                        </template>
                                                     </select>
+                                                    <div class="error-report text-danger "></div>
                                                 </div>
-                                                <div class="form-group mb-3" v-if="formData.invoice_type == 2">
+                                                <div class="form-group mb-3" v-if="invoice_type == 2">
                                                     <label for="employee"><strong>Employee</strong></label>
-                                                    <select name="employee" id="employee" class="form-select">
-                                                        <option value="">Select</option>
+                                                    <select name="employee_id" id="employee" class="form-select"
+                                                            v-model="formData.employee_id" @change="getInvoiceNumber('employee', formData.employee_id)">
+                                                        <option value="" disabled>Select</option>
+                                                        <template v-if="employees.length > 0">
+                                                            <option :value="each.id" v-for="(each) in employees">
+                                                                {{ each.name }}
+                                                            </option>
+                                                        </template>
                                                     </select>
+                                                    <div class="error-report text-danger "></div>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label for="category"><strong>Category</strong></label>
-                                                    <select name="category" id="category" class="form-select">
-                                                        <option value="">Select</option>
+                                                    <select name="category_id" id="category" class="form-select"
+                                                            v-model="formData.category_id">
+                                                        <option value="" disabled>Select</option>
+                                                        <template v-if="categories.length > 0">
+                                                            <option :value="each.id" v-for="(each) in categories">
+                                                                {{ each.name }}
+                                                            </option>
+                                                        </template>
                                                     </select>
+                                                    <div class="error-report text-danger "></div>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label for="invoice_type"><strong>Recurring</strong></label>
                                                     <div>
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox" name="recurring"
+                                                            <input class="form-check-input" type="checkbox" :checked="formData.recurring"
+                                                                   name="recurring"
                                                                    id="recurring" @change="changeValue($event)">
                                                             <label class="form-check-label"
                                                                    for="recurring">Toggle</label>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group mb-3" v-if="isRecurringPeriod">
-                                                    <label for="recurring_period"><strong>Recurring Periods</strong></label>
-                                                    <div class="d-flex align-items-center">
-                                                        <input type="text" class="form-control" name="Recurring" style="width: 120px">
-                                                        <strong class="ms-3">Days</strong>
-                                                    </div>
+                                                <div class="form-group mb-3" v-if="formData.recurring">
+                                                    <label for="category"><strong>Recurring Periods</strong></label>
+                                                    <select name="category_id" id="category" class="form-select"
+                                                            v-model="formData.recurring_frequency">
+                                                        <option value="" disabled>Select</option>
+                                                        <template v-if="recurring.length > 0">
+                                                            <option :value="each.value" v-for="(each) in recurring">
+                                                                {{ each.name }}
+                                                            </option>
+                                                        </template>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-xl-4"></div>
                                             <div class="col-lg-5 col-xl-4">
                                                 <div class="form-group mb-3">
                                                     <label for="invoice_no"><strong>Invoice No</strong></label>
-                                                    <input type="text" class="form-control" name="invoice_no">
+                                                    <input type="text" class="form-control" name="invoice_no" v-model="formData.invoice_no">
+                                                    <div class="error-report text-danger "></div>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label for="invoice_date"><strong>Invoice Date</strong></label>
-                                                    <flat-pickr v-model="date"
+                                                    <flat-pickr v-model="formData.invoice_date"
                                                                 :config="config"
                                                                 class="form-control"
-                                                                placeholder="Select date" />
+                                                                name="invoice_date"
+                                                                placeholder="Select date"/>
                                                 </div>
                                                 <div class="form-group mb-3">
-                                                    <label for="invoice_due_date"><strong>Invoice Due Date</strong></label>
-                                                    <flat-pickr v-model="due_date"
+                                                    <label for="invoice_due_date"><strong>Invoice Due
+                                                        Date</strong></label>
+                                                    <flat-pickr v-model="formData.invoice_due_date"
                                                                 :config="config"
                                                                 class="form-control"
-                                                                placeholder="Select date" />
+                                                                name="invoice_due_date"
+                                                                placeholder="Select date"/>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label for="invoice_status"><strong>Invoice Status</strong></label>
-                                                    <select name="invoice_status" id="invoice_status" class="form-select">
-                                                        <option value="1">Draft</option>
-                                                        <option value="2">Pending</option>
-                                                        <option value="3">Processing</option>
-                                                        <option value="4">Partially paid</option>
-                                                        <option value="5">Paid</option>
-                                                        <option value="6">Overdue</option>
-                                                        <option value="7">Canceled</option>
+                                                    <select name="invoice_status" id="invoice_status"
+                                                            class="form-select" v-model="formData.invoice_status">
+                                                        <option :value="each.value" v-for="(each) in status">{{ each.name }}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="currency"><strong>Currency</strong></label>
+                                                    <select name="currency" id="currency"
+                                                            class="form-select" v-model="formData.currency">
+                                                        <option value="BDT">BDT</option>
+                                                        <option value="USA">USA</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -120,65 +158,78 @@
                                         <div class="table-data table-responsive">
                                             <table class="table table-bordered">
                                                 <thead>
-                                                    <tr>
-                                                        <th style="min-width: 160px;">
-                                                            <div class="form-group">
-                                                                <select name="" class="form-select">
-                                                                    <option value="">Services</option>
-                                                                    <option value="">Products</option>
-                                                                    <option value="">Description</option>
-                                                                </select>
-                                                            </div>
-                                                        </th>
-                                                        <th style="min-width: 160px;">
-                                                            <div class="form-group">
-                                                                <select name="" class="form-select">
-                                                                    <option value="">Hours</option>
-                                                                    <option value="">Days</option>
-                                                                    <option value="">Months</option>
-                                                                </select>
-                                                            </div>
-                                                        </th>
-                                                        <th style="min-width: 160px;">
-                                                            <div class="form-group">
-                                                                <select name="" class="form-select">
-                                                                    <option value="">Unit Payment</option>
-                                                                    <option value="">Unit Price</option>
-                                                                </select>
-                                                            </div>
-                                                        </th>
-                                                        <th class="text-center" style="min-width: 160px;">Total</th>
-                                                        <th v-if="tableData.length > 1"></th>
-                                                    </tr>
+                                                <tr>
+                                                    <th style="min-width: 160px;">
+                                                        <div class="form-group">
+                                                            <select class="form-select" v-model="formData.invoice_item_headings.description">
+                                                                <option value="Services">Services</option>
+                                                                <option value="Products">Products</option>
+                                                                <option value="Description">Description</option>
+                                                            </select>
+                                                        </div>
+                                                    </th>
+                                                    <th style="min-width: 160px;">
+                                                        <div class="form-group">
+                                                            <select class="form-select" v-model="formData.invoice_item_headings.frequency">
+                                                                <option value="Hours">Hours</option>
+                                                                <option value="Days">Days</option>
+                                                                <option value="Months">Months</option>
+                                                            </select>
+                                                        </div>
+                                                    </th>
+                                                    <th style="min-width: 160px;">
+                                                        <div class="form-group">
+                                                            <select class="form-select" v-model="formData.invoice_item_headings.value">
+                                                                <option value="Unit Payment">Unit Payment</option>
+                                                                <option value="Unit Price">Unit Price</option>
+                                                            </select>
+                                                        </div>
+                                                    </th>
+                                                    <th class="text-center" style="min-width: 160px;">Total</th>
+                                                    <th v-if="formData.invoice_items.length > 1"></th>
+                                                </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr v-for="(each, index) in tableData">
-                                                        <td>
-                                                            <div class="form-group">
-                                                                <input type="text" class="form-control">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="form-group">
-                                                                <input type="text" class="form-control" v-model="each.hours" @keypress="checkNumber($event)" @keyup="calculateTotal(index)">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="form-group">
-                                                                <input type="text" class="form-control" v-model="each.price" @keypress="checkNumber($event)" @keyup="calculateTotal(index)">
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-end">{{each.total}}</td>
-                                                        <td class="text-center" v-if="tableData.length > 1">
-                                                            <button type="button" class="btn btn-danger" @click="tableData.splice(index, 1)">
-                                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
+                                                <tr v-for="(each, index) in formData.invoice_items">
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <input type="text" class="form-control"
+                                                                   :name="'invoice_items.' + index + '.description'"
+                                                                   v-model="formData.invoice_items[index]['description']">
+                                                            <div class="error-report text-danger "></div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <input type="text" class="form-control"
+                                                                   :name="'invoice_items.' + index + '.unit_frequency'"
+                                                                   v-model="formData.invoice_items[index]['unit_frequency']"
+                                                                   @keypress="checkNumber($event)"
+                                                                   @keyup="calculateTotal(index)">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <input type="text" class="form-control"
+                                                                   :name="'invoice_items.' + index + '.unit_value'"
+                                                                   v-model="formData.invoice_items[index]['unit_value']"
+                                                                   @keypress="checkNumber($event)"
+                                                                   @keyup="calculateTotal(index)">
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-end">{{ each.total }}</td>
+                                                    <td class="text-center" v-if="formData.invoice_items.length > 1">
+                                                        <button type="button" class="btn btn-danger"
+                                                                @click="formData.invoice_items.splice(index, 1)">
+                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <button type="button" class="btn btn-theme" @click="insertData" style="width: 160px;">
+                                        <button type="button" class="btn btn-theme" @click="insertData"
+                                                style="width: 160px;">
                                             <i class="fa fa-plus" aria-hidden="true"></i> Add New
                                         </button>
                                     </div>
@@ -187,24 +238,47 @@
                                             <div class="col-12 col-xl-5 col-xxl-4">
                                                 <div class="form-group">
                                                     <label for="notes"><strong>Notes</strong></label>
-                                                    <textarea name="" rows="7"
-                                                              class="form-control"></textarea>
+                                                    <textarea name="note" rows="7"
+                                                              class="form-control" v-model="formData.note"></textarea>
                                                 </div>
                                             </div>
                                             <div
                                                 class="col-12 col-xl-7 col-xxl-8 d-flex flex-column align-items-start align-items-sm-end  mt-3 mt-xl-0">
-                                                <div class="d-flex flex-column flex-sm-row h5 mb-3 mb-sm-2"><strong class="text-start text-sm-end">Invoice
-                                                    Subtotal: </strong> <span class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end" style="min-width: 100px;">600</span></div>
-                                                <div class="d-flex flex-column flex-sm-row h5 mb-3 mb-sm-2"><strong class="text-start text-sm-end">Invoice
-                                                    Tax: </strong> <span class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end" style="min-width: 100px;">10%</span></div>
-                                                <div class="d-flex flex-column flex-sm-row h5 mb-3 mb-sm-2" v-if="formData.invoice_type == 1"><strong
+                                                <div class="d-flex flex-column flex-sm-row h5 mb-3 mb-sm-2"><strong
+                                                    class="text-start text-sm-end">Invoice
+                                                    Subtotal: </strong> <span
+                                                    class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
+                                                    style="width: 200px;">{{ formData.sub_total }}</span></div>
+                                                <div
+                                                    class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center h5 mb-3 mb-sm-2">
+                                                    <strong
+                                                        class="text-start text-sm-end">Invoice
+                                                        Tax: </strong>
+                                                    <input type="text"
+                                                           class="form-control ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
+                                                           style="width: 200px;" v-model="formData.tax">
+                                                </div>
+                                                <div
+                                                    class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center h5 mb-3 mb-sm-2"
+                                                    v-if="invoice_type == 1"><strong
                                                     class="text-start text-sm-end">Invoice Discount: </strong>
-                                                    <span class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end" style="min-width: 100px;">10%</span></div>
-                                                <div class="d-flex flex-column flex-sm-row h5 mb-3 mb-sm-2" v-if="formData.invoice_type == 2"><strong
+                                                    <input type="text"
+                                                           class="form-control ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
+                                                           style="width: 200px;" v-model="formData.discount">
+                                                </div>
+                                                <div
+                                                    class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center h5 mb-3 mb-sm-2"
+                                                    v-if="invoice_type == 2"><strong
                                                     class="text-start text-sm-end">Invoice Bonus: </strong>
-                                                    <span class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end" style="min-width: 100px;">10%</span></div>
-                                                <div class="d-flex flex-column flex-sm-row h5 mb-3 mb-sm-2"><strong class="text-start text-sm-end">Invoice
-                                                    Total: </strong> <span class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end" style="min-width: 100px;">800</span></div>
+                                                    <input type="text"
+                                                           class="form-control ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
+                                                           style="width: 200px;" v-model="formData.bonus">
+                                                </div>
+                                                <div class="d-flex flex-column flex-sm-row h5 mb-3 mb-sm-2">
+                                                    <strong class="text-start text-sm-end">Invoice
+                                                        Total: </strong> <span
+                                                    class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
+                                                    style="width: 200px;">{{ formData.total }}</span></div>
                                             </div>
                                         </div>
                                     </div>
@@ -237,14 +311,36 @@ export default {
     data() {
         return {
             loading: false,
+            invoice_type: 1,
             formData: {
-                invoice_type: 1
+                client_id: '',
+                employee_id: '',
+                category_id: '',
+                invoice_no: '',
+                invoice_due_date: '',
+                invoice_date: '',
+                invoice_status: 1,
+                sub_total: '',
+                tax: '',
+                discount: '',
+                bonus: '',
+                note: '',
+                currency: 'BDT',
+                recurring: '',
+                recurring_frequency: '',
+                recurring_end_date: '',
+                invoice_item_headings: {
+                    description: 'Services',
+                    frequency: 'Hours',
+                    value: 'Unit Payment',
+                },
+                invoice_items: [{
+                    description: '',
+                    unit_frequency: 0,
+                    unit_value: 0,
+                    total: 0,
+                }],
             },
-            tableData: [{
-                hours: 0,
-                price: 0,
-                total: 0
-            }],
             isRecurringPeriod: false,
             date: '',
             due_date: '',
@@ -253,27 +349,121 @@ export default {
                 altInput: true,
                 dateFormat: 'Y-m-d',
                 disableMobile: true
-            }
+            },
+            employees: [],
+            clients: [],
+            categories: [],
+            recurring: [],
+            status: [],
         }
     },
     methods: {
-        changeValue(e){
-            this.isRecurringPeriod = !this.isRecurringPeriod;
+
+        /*Get Employees*/
+        getEmployees() {
+            apiService.POST(apiRoutes.employeeList, {pagination: false}, (res) => {
+                if (res.status === 200) {
+                    this.employees = res.data;
+                } else {
+                    apiService.ErrorHandler(res.errors)
+                }
+            })
+        },
+
+        /*Get Clients*/
+        getClients() {
+            apiService.POST(apiRoutes.clientList, {pagination: false}, (res) => {
+                if (res.status === 200) {
+                    this.clients = res.data;
+                } else {
+                    apiService.ErrorHandler(res.errors)
+                }
+            })
+        },
+
+        /*Get Categories*/
+        getCategories() {
+            apiService.POST(apiRoutes.categoryList, {pagination: false}, (res) => {
+                if (res.status === 200) {
+                    this.categories = res.data;
+                } else {
+                    apiService.ErrorHandler(res.errors)
+                }
+            })
+        },
+
+        /*Get Status*/
+        getStatus() {
+            apiService.GET(apiRoutes.invoiceStatusList, (res) => {
+                this.status = res;
+            })
+        },
+
+        /*Get Recurring*/
+        getRecurring() {
+            apiService.GET(apiRoutes.invoiceRecurring, (res) => {
+                this.recurring = res;
+            })
+        },
+
+        /*Get Invoice Number*/
+        getInvoiceNumber(type, id) {
+            const param = type == 'client' ? {client_id: id} : {employee_id: id};
+            apiService.POST(apiRoutes.invoiceNumber, param,(res) => {
+                this.formData.invoice_no = res.invoice_number;
+            })
+        },
+
+        /*Get Invoice Data*/
+        getInvoice(id){
+            apiService.POST(apiRoutes.invoiceSingle, {id}, (res) => {
+                if (res.status === 200) {
+                    this.formData = {
+                        ...res.data,
+                        invoice_date: res.data.invoice_date_formatted,
+                        invoice_due_date: res.data.invoice_due_date_formatted,
+                        invoice_item_headings: res.data.invoice_item_headings_formatted
+                    };
+                    this.invoice_type = res.data.client ? 1 : 2;
+                } else {
+                    apiService.ErrorHandler(res.errors)
+                }
+            })
+        },
+
+        /*Create Invoice*/
+        invoiceUpdate() {
+            apiService.ClearErrorHandler();
+            this.loading = true;
+            apiService.POST(apiRoutes.invoiceUpdate, this.formData, (res) => {
+                this.loading = false;
+                if (res.status === 200) {
+                    toaster.info(res.message);
+                    this.$router.push({name: 'Invoices'})
+                } else {
+                    apiService.ErrorHandler(res.errors)
+                }
+            })
+        },
+
+        changeValue() {
+            this.formData.recurring = this.formData.recurring == 0 ? 1 : 0;
         },
 
         /*insert table data*/
-        insertData(index){
-            this.tableData.push({
-                hours: 0,
-                price: 0,
-                total: 0,
+        insertData(index) {
+            this.formData.invoice_items.push({
+                description: '',
+                unit_frequency: '',
+                unit_value: '',
+                total: '',
             })
         },
 
         /*calculate total*/
-        calculateTotal(index){
-            const total = parseInt(this.tableData[index].hours) * parseInt(this.tableData[index].price);
-            this.tableData[index].total = isNaN(total) ? 0 : total;
+        calculateTotal(index) {
+            const total = parseInt(this.formData.invoice_items[index]['unit_frequency']) * parseInt(this.formData.invoice_items[index]['unit_value']);
+            this.formData.invoice_items[index]['total'] = isNaN(total) ? 0 : total;
         },
 
         /*number validation*/
@@ -297,7 +487,14 @@ export default {
         },
     },
     mounted() {
-
+        this.getEmployees();
+        this.getClients();
+        this.getCategories();
+        this.getStatus();
+        this.getRecurring();
+        if(this.$route.params){
+            this.getInvoice(this.$route.params.id);
+        }
     },
     created() {
         window.scroll(0, 0);
