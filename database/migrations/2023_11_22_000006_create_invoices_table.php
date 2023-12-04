@@ -35,6 +35,7 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->tinyInteger('is_active')->default(1);
             $table->text('invoice_item_headings')->nullable();
+            $table->string('qrcode')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

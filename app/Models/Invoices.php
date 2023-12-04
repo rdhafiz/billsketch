@@ -16,15 +16,22 @@ class Invoices extends Model
         'created_at_formatted',
         'updated_at_formatted',
         'invoice_item_headings_formatted',
+        'qrcode_path'
     ];
 
     protected $casts = [
-//        'invoice_item_headings' => 'json',
         'invoice_date' => 'datetime',
         'invoice_due_date' => 'datetime',
         'recurring_end_date' => 'datetime',
     ];
 
+    public function getQrcodePathAttribute()
+    {
+        if (!empty($this->qrcode)) {
+            return asset('storage/uploads/'.$this->qrcode);
+        }
+        return null;
+    }
     public function getInvoiceItemHeadingsFormattedAttribute()
     {
         if (!empty($this->invoice_item_headings)) {
