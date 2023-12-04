@@ -3,6 +3,7 @@
     <!----------------------->
     <!-- Start Home Works -->
     <!----------------------->
+    <a id="how_it_works"></a>
     <div class="page_works py-5">
 
         <!-- Start Home Works Content -->
