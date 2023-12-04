@@ -21,35 +21,35 @@
                                         <div class="row mb-4">
                                             <div class="col-sm-6 col-md-5 col-xl-4">
                                                 <div class="mb-3">
-                                                    <div><strong>Invoice As:</strong></div>
-                                                    <div>Bill To</div>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <div><strong>Client</strong></div>
-                                                    <div>Noyon Ahammed Sojon</div>
+                                                    <div><strong>{{ invoice?.client ? 'Client' : 'Employee'}}</strong></div>
+                                                    <div>{{ invoice?.client ? invoice?.client.name : invoice?.employee.name}}</div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <div><strong>Category</strong></div>
-                                                    <div>Laptop</div>
+                                                    <div>{{ invoice?.category.name }}</div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <div><strong>Recurring Periods</strong></div>
-                                                    <div>10 Days</div>
+                                                    <div>{{ invoice?.recurring_frequency }} Days</div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div><strong>Currency</strong></div>
+                                                    <div>{{ invoice?.currency }}</div>
                                                 </div>
                                             </div>
                                             <div class="d-none d-md-block col-md-2 col-xl-4"></div>
                                             <div class="col-sm-6 col-md-5 col-xl-4">
                                                 <div class="mb-3">
                                                     <div><strong>Invoice No</strong></div>
-                                                    <div>121234</div>
+                                                    <div>{{ invoice?.invoice_no }}</div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <div><strong>Invoice Date</strong></div>
-                                                    <div>01-12-23</div>
+                                                    <div>{{ invoice?.invoice_date_formatted }}</div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <div><strong>Invoice Due Date</strong></div>
-                                                    <div>01-12-23</div>
+                                                    <div>{{ invoice?.invoice_due_date_formatted }}</div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <div><strong>Invoice Status</strong></div>
@@ -63,20 +63,19 @@
                                             <table class="table table-bordered">
                                                 <thead>
                                                 <tr>
-                                                    <th style="min-width: 160px;">Services</th>
-                                                    <th class="text-center" style="min-width: 160px;">Hours</th>
-                                                    <th class="text-center" style="min-width: 160px;">Unit Price</th>
+                                                    <th style="min-width: 160px;">{{ invoice?.invoice_item_headings_formatted.description }}</th>
+                                                    <th class="text-center" style="min-width: 160px;">{{ invoice?.invoice_item_headings_formatted.frequency }}</th>
+                                                    <th class="text-center" style="min-width: 160px;">{{ invoice?.invoice_item_headings_formatted.value }}</th>
                                                     <th class="text-center" style="min-width: 160px;">Total</th>
-                                                    <th v-if="tableData.length > 1"></th>
                                                 </tr>
                                                 </thead>
-                                                <tbody>
-                                                <tr v-for="(each, index) in tableData">
-                                                    <td>HP</td>
-                                                    <td class="text-end">{{ each.hours }}</td>
-                                                    <td class="text-end">{{ each.price }}</td>
-                                                    <td class="text-end">{{ each.total }}</td>
-                                                </tr>
+                                                <tbody v-if="invoice?.invoice_items.length > 0">
+                                                    <tr v-for="(each, index) in invoice?.invoice_items">
+                                                        <td>{{ each.description }}</td>
+                                                        <td class="text-end">{{ each.unit_frequency }}</td>
+                                                        <td class="text-end">{{ each.unit_value }}</td>
+                                                        <td class="text-end">{{ each.total }}</td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -85,38 +84,34 @@
                                         <div class="preview-footer">
                                             <div class="notes">
                                                 <div><strong>Notes</strong></div>
-                                                <div>In publishing and graphic design, Lorem ipsum is a placeholder
-                                                    text commonly used to demonstrate the visual form of a document
-                                                    or a typeface without relying on meaningful content. Lorem ipsum
-                                                    may be used as a placeholder before final copy is available.
-                                                </div>
+                                                <div>{{invoice?.note}}</div>
                                             </div>
                                             <div class="total">
                                                 <div class="d-flex flex-column flex-sm-row justify-content-end h6 mb-3 mb-sm-2"><strong
                                                     class="text-start text-sm-end">Invoice
                                                     Subtotal: </strong> <span
                                                     class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                    style="min-width: 100px;">600</span></div>
+                                                    style="min-width: 120px;">{{ invoice?.sub_total }}</span></div>
                                                 <div class="d-flex flex-column flex-sm-row justify-content-end h6 mb-3 mb-sm-2"><strong
                                                     class="text-start text-sm-end">Invoice
                                                     Tax: </strong> <span
                                                     class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                    style="min-width: 100px;">10%</span></div>
+                                                    style="min-width: 120px;">{{ invoice?.tax }}</span></div>
                                                 <div class="d-flex flex-column flex-sm-row justify-content-end h6 mb-3 mb-sm-2"
-                                                     v-if="formData.invoice_type == 1"><strong
+                                                     v-if="invoice_type == 1"><strong
                                                     class="text-start text-sm-end">Invoice Discount: </strong>
                                                     <span class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                          style="min-width: 100px;">10%</span></div>
+                                                          style="min-width: 120px;">{{invoice?.discount}}</span></div>
                                                 <div class="d-flex flex-column flex-sm-row justify-content-end h6 mb-3 mb-sm-2"
-                                                     v-if="formData.invoice_type == 2"><strong
+                                                     v-if="invoice_type == 2"><strong
                                                     class="text-start text-sm-end">Invoice Bonus: </strong>
                                                     <span class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                          style="min-width: 100px;">10%</span></div>
+                                                          style="min-width: 120px;">{{invoice?.bonus}}</span></div>
                                                 <div class="d-flex flex-column flex-sm-row justify-content-end h6 mb-3 mb-sm-2"><strong
                                                     class="text-start text-sm-end">Invoice
                                                     Total: </strong> <span
                                                     class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                    style="min-width: 100px;">800</span></div>
+                                                    style="min-width: 120px;">{{ invoice?.total }}</span></div>
                                             </div>
                                         </div>
                                     </div>
@@ -148,68 +143,27 @@ export default {
     components: {createToaster, flatPickr},
     data() {
         return {
-            loading: false,
-            formData: {
-                invoice_type: 1
-            },
-            tableData: [{
-                hours: 0,
-                price: 0,
-                total: 0
-            }],
-            isRecurringPeriod: false,
-            date: '',
-            due_date: '',
-            config: {
-                altFormat: 'M j, Y',
-                altInput: true,
-                dateFormat: 'Y-m-d',
-                disableMobile: true
-            }
+            invoice: null,
+            tableData: [],
+            invoice_type: 1
         }
     },
     methods: {
-        changeValue(e) {
-            this.isRecurringPeriod = !this.isRecurringPeriod;
-        },
-
-        /*insert table data*/
-        insertData(index) {
-            this.tableData.push({
-                hours: 0,
-                price: 0,
-                total: 0,
+        /*Get Invoice Data*/
+        getInvoice(id){
+            apiService.POST(apiRoutes.invoiceSingle, {id}, (res) => {
+                if (res.status === 200) {
+                    this.invoice = res.data;
+                } else {
+                    apiService.ErrorHandler(res.errors)
+                }
             })
-        },
-
-        /*calculate total*/
-        calculateTotal(index) {
-            const total = parseInt(this.tableData[index].hours) * parseInt(this.tableData[index].price);
-            this.tableData[index].total = isNaN(total) ? 0 : total;
-        },
-
-        /*number validation*/
-        checkNumber(evt) {
-            var theEvent = evt || window.event;
-
-            // Handle paste
-            if (theEvent.type === 'paste') {
-                // @ts-ignore
-                key = event.clipboardData.getData('text/plain');
-            } else {
-                // Handle key press
-                var key = theEvent.keyCode || theEvent.which;
-                key = String.fromCharCode(key);
-            }
-            var regex = /^\d*\.?\d*$/;
-            if (!regex.test(key)) {
-                theEvent.returnValue = false;
-                if (theEvent.preventDefault) theEvent.preventDefault();
-            }
-        },
+        }
     },
     mounted() {
-
+        if(this.$route.params){
+            this.getInvoice(this.$route.params.id);
+        }
     },
     created() {
         window.scroll(0, 0);

@@ -22,65 +22,71 @@
             <div class="table-data table-responsive">
                 <table class="table table-hover">
                     <thead>
-                        <tr>
-                            <th style="min-width: 120px;">Invoice No</th>
-                            <th style="min-width: 180px;">Client</th>
-                            <th style="min-width: 180px;">Invoice Date</th>
-                            <th style="min-width: 180px;">Invoice Status</th>
-                            <th style="min-width: 180px;">Invoice Total</th>
-                            <th style="min-width: 220px;"></th>
-                        </tr>
+                    <tr>
+                        <th style="min-width: 120px;">Invoice No</th>
+                        <th style="min-width: 180px;">Client</th>
+                        <th style="min-width: 180px;">Invoice Date</th>
+                        <th style="min-width: 180px;">Invoice Status</th>
+                        <th style="min-width: 180px;">Invoice Total</th>
+                        <th style="min-width: 220px;"></th>
+                    </tr>
                     </thead>
                     <tbody v-if="tableData.length > 0 && loading === false">
                     <tr v-for="(each, index) in tableData">
-                            <td>1</td>
-                            <td>Noyon Ahammed</td>
-                            <td>01-12-23</td>
-                            <td>Draft</td>
-                            <td>5000</td>
-                            <td class="text-end">
-                                <router-link class="btn btn-warning text-white" :to="{name: 'InvoiceView', params: {id: 1}}">
-                                    <i class="fa fa-eye" aria-hidden="true"></i>
-                                </router-link>
-                                <router-link :to="{name: 'InvoiceEdit', params: {id: 1}}" class="btn btn-theme ms-2">
-                                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                                </router-link>
-                                <button class="btn btn-secondary ms-2" @click="updateInvoiceStatus(1)">
-                                    <i class="fa fa-archive" aria-hidden="true" v-if="!param.list_type"></i>
-                                    <i class="fa fa-refresh" aria-hidden="true" v-if="param.list_type"></i>
-                                </button>
-                                <button class="btn btn-danger ms-2" @click="deleteInvoice(1)">
-                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                </button>
-                            </td>
-                        </tr>
+                        <td>{{ each.invoice_no }}</td>
+                        <td v-if="each.client">{{ each.client.name }}</td>
+                        <td v-if="each.employee">{{ each.employee.name }}</td>
+                        <td>{{ each.invoice_date_formatted ? each.invoice_date_formatted : 'N/A' }}</td>
+                        <td>
+                            {{ each.invoice_status == 1 && 'Draft' || each.invoice_status == 2 && 'Pending' || each.invoice_status == 3 && 'Processing' || each.invoice_status == 4 && 'Partially paid' || each.invoice_status == 5 && 'Paid' || each.invoice_status == 6 && 'Overdue' || 'Canceled' }}
+                        </td>
+                        <td>{{ each.total }}</td>
+                        <td class="text-end">
+                            <router-link class="btn btn-warning text-white"
+                                         :to="{name: 'InvoiceView', params: {id: each.id}}">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </router-link>
+                            <router-link :to="{name: 'InvoiceEdit', params: {id: each.id}}" class="btn btn-theme ms-2">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </router-link>
+                            <button class="btn btn-secondary ms-2" @click="updateInvoiceStatus(1)">
+                                <i class="fa fa-archive" aria-hidden="true" v-if="!param.list_type"></i>
+                                <i class="fa fa-refresh" aria-hidden="true" v-if="param.list_type"></i>
+                            </button>
+                            <button class="btn btn-danger ms-2" @click="deleteInvoice(1)">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    </tr>
                     </tbody>
                     <tbody v-if="tableData.length === 0 && loading === false">
-                        <tr>
-                            <td colspan="7">
-                                <div class="alert alert-warning text-center mb-0">No data found</div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="7">
+                            <div class="alert alert-warning text-center mb-0">No data found</div>
+                        </td>
+                    </tr>
                     </tbody>
                     <tbody v-if="loading === true">
-                        <tr>
-                            <td colspan="7">
-                                <div class="alert alert-primary text-center mb-0">Loading...</div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="7">
+                            <div class="alert alert-primary text-center mb-0">Loading...</div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
 
             <!--  pagination start -->
-            <div class="d-flex justify-content-center overflow-auto" v-if="tableData.length > 0 && loading === false && last_page > 1" style="min-width: 400px;">
+            <div class="d-flex justify-content-center overflow-auto"
+                 v-if="tableData.length > 0 && loading === false && last_page > 1" style="min-width: 400px;">
                 <nav aria-label="...">
                     <ul class="pagination">
                         <li class="page-item" :class="{'disabled': this.current_page === 1}">
                             <a href="javascript:void(0)" class="page-link" @click="prevPage()">Previous</a>
                         </li>
                         <template v-if="buttons.length <= 6">
-                            <li class="page-item" :class="{'active': current_page == page}" aria-current="page" v-for="(page, index) in buttons" >
+                            <li class="page-item" :class="{'active': current_page == page}" aria-current="page"
+                                v-for="(page, index) in buttons">
                                 <a href="javascript:void(0)" class="page-link" @click="pageChange(page)">{{ page }}</a>
                             </li>
                         </template>
@@ -138,7 +144,7 @@
                             </li>
                         </template>
                         <li class="page-item" :class="{'disabled': this.current_page === this.last_page}">
-                            <a class="page-link" href="#"  @click="nextPage()">Next</a>
+                            <a class="page-link" href="#" @click="nextPage()">Next</a>
                         </li>
                     </ul>
                 </nav>
@@ -154,16 +160,14 @@ import apiService from "../../services/ApiService";
 import apiRoutes from "../../services/ApiRoutes";
 
 export default {
-    components: {
-
-    },
+    components: {},
     data() {
         return {
             param: {
                 keyword: '',
                 list_type: ''
             },
-            tableData: [''],
+            tableData: [],
             loading: false,
             searchTimeout: null,
 
@@ -195,7 +199,7 @@ export default {
             this.getInvoices();
         },
 
-        /*Search Clients*/
+        /*Search Invoices*/
         searchData() {
             clearTimeout(this.searchTimeout)
             this.searchTimeout = setTimeout(() => {
@@ -207,7 +211,7 @@ export default {
         getInvoices() {
             this.loading = true;
             this.param.page = this.current_page;
-            apiService.POST(apiRoutes.clientList, this.param, (res) => {
+            apiService.POST(apiRoutes.invoiceList, this.param, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
                     this.tableData = res.data.data;
@@ -222,7 +226,7 @@ export default {
         },
 
         /*Change Status*/
-        changeStatus(){
+        changeStatus() {
             this.current_page = 0;
             this.status = this.param.list_type;
             this.getInvoices();
@@ -232,7 +236,7 @@ export default {
         updateInvoiceStatus(id) {
             swal({
                 title: "Are you sure?",
-                text: `Are you sure that you want to ${this.status === '' ? 'archive' : 'restore'} this client?`,
+                text: `Are you sure that you want to ${this.status === '' ? 'archive' : 'restore'} this invoice?`,
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -240,7 +244,7 @@ export default {
                 .then(willDelete => {
                     console.log(1)
                     if (willDelete) {
-                        apiService.POST(apiRoutes.clientStatus, {id}, (res) => {
+                        apiService.POST(apiRoutes.invoiceStatus, {id}, (res) => {
                             if (res.status === 200) {
                                 swal(`${!this.status ? 'Archived!' : 'Restored!'}`, `${!this.status ? 'Invoice has been archived!' : 'Invoice has been restored!!'}`, "success"
                                 );
@@ -265,7 +269,7 @@ export default {
                 .then(willDelete => {
                     console.log(1)
                     if (willDelete) {
-                        apiService.POST(apiRoutes.clientDelete, {id}, (res) => {
+                        apiService.POST(apiRoutes.invoiceDelete, {id}, (res) => {
                             if (res.status === 200) {
                                 swal("Deleted!", "Invoice has been deleted!", "success");
                                 this.getInvoices();
@@ -276,6 +280,9 @@ export default {
                     }
                 });
         },
+    },
+    mounted() {
+        this.getInvoices();
     },
     created() {
         window.scroll(0, 0);
