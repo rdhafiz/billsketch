@@ -100,14 +100,16 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group mb-3" v-if="formData.recurring">
-                                                    <label for="recurring_period"><strong>Recurring
-                                                        Periods</strong></label>
-                                                    <div class="d-flex align-items-center">
-                                                        <input type="text" class="form-control" name="recurring_frequency"
-                                                               v-model="formData.recurring_frequency"
-                                                               style="width: 120px">
-                                                        <div class="error-report text-danger "></div>
-                                                    </div>
+                                                    <label for="category"><strong>Recurring Periods</strong></label>
+                                                    <select name="category_id" id="category" class="form-select"
+                                                            v-model="formData.recurring_frequency">
+                                                        <option value="" disabled>Select</option>
+                                                        <template v-if="recurring.length > 0">
+                                                            <option :value="each.value" v-for="(each) in recurring">
+                                                                {{ each.name }}
+                                                            </option>
+                                                        </template>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-xl-4"></div>
@@ -138,13 +140,7 @@
                                                     <label for="invoice_status"><strong>Invoice Status</strong></label>
                                                     <select name="invoice_status" id="invoice_status"
                                                             class="form-select" v-model="formData.invoice_status">
-                                                        <option value="1">Draft</option>
-                                                        <option value="2">Pending</option>
-                                                        <option value="3">Processing</option>
-                                                        <option value="4">Partially paid</option>
-                                                        <option value="5">Paid</option>
-                                                        <option value="6">Overdue</option>
-                                                        <option value="7">Canceled</option>
+                                                        <option :value="each.value" v-for="(each) in status">{{ each.name }}</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group mb-3">
@@ -356,7 +352,9 @@ export default {
             },
             employees: [],
             clients: [],
-            categories: []
+            categories: [],
+            recurring: [],
+            status: [],
         }
     },
     methods: {
@@ -448,9 +446,8 @@ export default {
             })
         },
 
-        changeValue(e) {
-            this.isRecurringPeriod = !this.isRecurringPeriod;
-            this.formData.recurring = this.isRecurringPeriod ? 1 : 0;
+        changeValue() {
+            this.formData.recurring = this.formData.recurring == 0 ? 1 : 0;
         },
 
         /*insert table data*/

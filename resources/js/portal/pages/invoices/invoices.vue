@@ -24,7 +24,7 @@
                     <thead>
                     <tr>
                         <th style="min-width: 120px;">Invoice No</th>
-                        <th style="min-width: 180px;">Client</th>
+                        <th style="min-width: 180px;">Client / Employee</th>
                         <th style="min-width: 180px;">Invoice Date</th>
                         <th style="min-width: 180px;">Invoice Status</th>
                         <th style="min-width: 180px;">Invoice Total</th>

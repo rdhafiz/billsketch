@@ -34,7 +34,7 @@
                                                             <input class="form-check-input" type="radio"
                                                                    name="invoice_type"
                                                                    id="inlineCheckbox1" value="1"
-                                                                   v-model="invoice_type" @change="formData.client_id = ''; formData.invoice_no = ''">
+                                                                   v-model="invoice_type">
                                                             <label class="form-check-label"
                                                                    for="inlineCheckbox1">Bill To</label>
                                                         </div>
@@ -42,7 +42,7 @@
                                                             <input class="form-check-input" type="radio"
                                                                    name="invoice_type"
                                                                    id="inlineCheckbox2" value="2"
-                                                                   v-model="invoice_type"  @change="formData.employee_id = ''; formData.invoice_no = ''">
+                                                                   v-model="invoice_type">
                                                             <label class="form-check-label"
                                                                    for="inlineCheckbox2">Bill Pay</label>
                                                         </div>
@@ -248,7 +248,7 @@
                                                     class="text-start text-sm-end">Invoice
                                                     Subtotal: </strong> <span
                                                     class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                    style="width: 200px;">600</span></div>
+                                                    style="width: 200px;">{{ this.subTotal }}</span></div>
                                                 <div
                                                     class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center h5 mb-3 mb-sm-2">
                                                     <strong
@@ -256,7 +256,7 @@
                                                         Tax: </strong>
                                                     <input type="text"
                                                            class="form-control ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                           style="width: 200px;" v-model="formData.tax">
+                                                           style="width: 200px;" v-model="formData.tax" @change="checkTax">
                                                 </div>
                                                 <div
                                                     class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center h5 mb-3 mb-sm-2"
@@ -354,7 +354,9 @@ export default {
             clients: [],
             categories: [],
             status: [],
-            recurring: []
+            recurring: [],
+            subTotal: 0,
+            total: 0,
         }
     },
     methods: {
@@ -414,6 +416,11 @@ export default {
             })
         },
 
+        /* Check Tax */
+        checkTax(type, id) {
+            // if(parseInt(this.formData.tax > 100) || this.formData.tax < 0)
+        },
+
         /*Create Invoice*/
         invoiceCreate() {
             apiService.ClearErrorHandler();
@@ -449,6 +456,13 @@ export default {
         calculateTotal(index) {
             const total = parseInt(this.formData.invoice_items[index]['unit_frequency']) * parseInt(this.formData.invoice_items[index]['unit_value']);
             this.formData.invoice_items[index]['total'] = isNaN(total) ? 0 : total;
+            this.calculateSubtotal();
+        },
+
+        /*calculate subtotal*/
+        calculateSubtotal(){
+            this.subTotal = this.formData.invoice_items.reduce((prev, current)=> (prev + parseInt(current.total)),0)
+            console.log(this.subTotal)
         },
 
         /*number validation*/
