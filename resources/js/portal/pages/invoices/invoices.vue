@@ -49,11 +49,11 @@
                             <router-link :to="{name: 'InvoiceEdit', params: {id: each.id}}" class="btn btn-theme ms-2">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                             </router-link>
-                            <button class="btn btn-secondary ms-2" @click="updateInvoiceStatus(1)">
+                            <button class="btn btn-secondary ms-2" @click="updateInvoiceStatus(each.id)">
                                 <i class="fa fa-archive" aria-hidden="true" v-if="!param.list_type"></i>
                                 <i class="fa fa-refresh" aria-hidden="true" v-if="param.list_type"></i>
                             </button>
-                            <button class="btn btn-danger ms-2" @click="deleteInvoice(1)">
+                            <button class="btn btn-danger ms-2" @click="deleteInvoice(each.id)">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </button>
                         </td>
@@ -273,6 +273,8 @@ export default {
                             if (res.status === 200) {
                                 swal("Deleted!", "Invoice has been deleted!", "success");
                                 this.getInvoices();
+                            } else if (res.message == 'Cannot find invoice') {
+                                swal("Error!", res.message, "error");
                             } else {
                                 swal("Error!", res.errors?.id[0], "error");
                             }

@@ -34,7 +34,7 @@
                                                             <input class="form-check-input" type="radio"
                                                                    name="invoice_type"
                                                                    id="inlineCheckbox1" value="1"
-                                                                   v-model="invoice_type">
+                                                                   v-model="invoice_type" @change="formData.client_id = ''; formData.invoice_no = ''">
                                                             <label class="form-check-label"
                                                                    for="inlineCheckbox1">Bill To</label>
                                                         </div>
@@ -42,7 +42,7 @@
                                                             <input class="form-check-input" type="radio"
                                                                    name="invoice_type"
                                                                    id="inlineCheckbox2" value="2"
-                                                                   v-model="invoice_type">
+                                                                   v-model="invoice_type"  @change="formData.employee_id = ''; formData.invoice_no = ''">
                                                             <label class="form-check-label"
                                                                    for="inlineCheckbox2">Bill Pay</label>
                                                         </div>
@@ -51,7 +51,7 @@
                                                 <div class="form-group mb-3" v-if="invoice_type == 1">
                                                     <label for="client"><strong>Client</strong></label>
                                                     <select name="client_id" id="client" class="form-select"
-                                                            v-model="formData.client_id">
+                                                            v-model="formData.client_id" @change="getInvoiceNumber('client', formData.client_id)">
                                                         <option value="" disabled>Select</option>
                                                         <template v-if="clients.length > 0">
                                                             <option :value="each.id" v-for="(each) in clients">
@@ -64,7 +64,7 @@
                                                 <div class="form-group mb-3" v-if="invoice_type == 2">
                                                     <label for="employee"><strong>Employee</strong></label>
                                                     <select name="employee_id" id="employee" class="form-select"
-                                                            v-model="formData.employee_id">
+                                                            v-model="formData.employee_id"  @change="getInvoiceNumber('employee', formData.employee_id)">
                                                         <option value="" disabled>Select</option>
                                                         <template v-if="employees.length > 0">
                                                             <option :value="each.id" v-for="(each) in employees">
@@ -91,7 +91,7 @@
                                                     <label for="invoice_type"><strong>Recurring</strong></label>
                                                     <div>
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
+                                                            <input class="form-check-input" type="checkbox" :checked="formData.recurring"
                                                                    name="recurring"
                                                                    id="recurring" @change="changeValue($event)">
                                                             <label class="form-check-label"
@@ -99,16 +99,17 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group mb-3" v-if="isRecurringPeriod">
-                                                    <label for="recurring_period"><strong>Recurring
-                                                        Periods</strong></label>
-                                                    <div class="d-flex align-items-center">
-                                                        <input type="text" class="form-control" name="recurring_frequency"
-                                                               v-model="formData.recurring_frequency"
-                                                               style="width: 120px">
-                                                        <strong class="ms-3">Days</strong>
-                                                        <div class="error-report text-danger "></div>
-                                                    </div>
+                                                <div class="form-group mb-3" v-if="formData.recurring">
+                                                    <label for="category"><strong>Recurring Periods</strong></label>
+                                                    <select name="category_id" id="category" class="form-select"
+                                                            v-model="formData.recurring_frequency">
+                                                        <option value="" disabled>Select</option>
+                                                        <template v-if="recurring.length > 0">
+                                                            <option :value="each.value" v-for="(each) in recurring">
+                                                                {{ each.name }}
+                                                            </option>
+                                                        </template>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-xl-4"></div>
@@ -139,13 +140,7 @@
                                                     <label for="invoice_status"><strong>Invoice Status</strong></label>
                                                     <select name="invoice_status" id="invoice_status"
                                                             class="form-select" v-model="formData.invoice_status">
-                                                        <option value="1">Draft</option>
-                                                        <option value="2">Pending</option>
-                                                        <option value="3">Processing</option>
-                                                        <option value="4">Partially paid</option>
-                                                        <option value="5">Paid</option>
-                                                        <option value="6">Overdue</option>
-                                                        <option value="7">Canceled</option>
+                                                        <option :value="each.value" v-for="(each) in status">{{ each.name }}</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group mb-3">
@@ -331,7 +326,7 @@ export default {
                 bonus: '',
                 note: '',
                 currency: 'BDT',
-                recurring: '',
+                recurring: 0,
                 recurring_frequency: '',
                 recurring_end_date: '',
                 invoice_item_headings: {
@@ -357,7 +352,9 @@ export default {
             },
             employees: [],
             clients: [],
-            categories: []
+            categories: [],
+            status: [],
+            recurring: []
         }
     },
     methods: {
@@ -395,6 +392,28 @@ export default {
             })
         },
 
+        /*Get Status*/
+        getStatus() {
+            apiService.GET(apiRoutes.invoiceStatusList, (res) => {
+                this.status = res;
+            })
+        },
+
+        /*Get Recurring*/
+        getRecurring() {
+            apiService.GET(apiRoutes.invoiceRecurring, (res) => {
+                this.recurring = res;
+            })
+        },
+
+        /*Get Invoice Number*/
+        getInvoiceNumber(type, id) {
+            const param = type == 'client' ? {client_id: id} : {employee_id: id};
+            apiService.POST(apiRoutes.invoiceNumber, param,(res) => {
+                this.formData.invoice_no = res.invoice_number;
+            })
+        },
+
         /*Create Invoice*/
         invoiceCreate() {
             apiService.ClearErrorHandler();
@@ -410,13 +429,12 @@ export default {
             })
         },
 
-        changeValue(e) {
-            this.isRecurringPeriod = !this.isRecurringPeriod;
-            this.formData.recurring = this.isRecurringPeriod ? 1 : 0;
+        changeValue() {
+            this.formData.recurring = this.formData.recurring == 0 ? 1 : 0;
         },
 
         /*insert table data*/
-        insertData(index) {
+        insertData() {
             this.formData.invoice_items.push({
                 description: '',
                 unit_frequency: '',
@@ -457,7 +475,8 @@ export default {
         this.getEmployees();
         this.getClients();
         this.getCategories();
-        console.log(1)
+        this.getStatus();
+        this.getRecurring();
     },
     created() {
         window.scroll(0, 0);

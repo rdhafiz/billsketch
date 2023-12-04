@@ -30,7 +30,7 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <div><strong>Recurring Periods</strong></div>
-                                                    <div>{{ invoice?.recurring_frequency }} Days</div>
+                                                    <div>{{ invoice?.recurring_frequency ? invoice.recurring_frequency : 'N/A' }}</div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <div><strong>Currency</strong></div>

@@ -51,7 +51,7 @@
                                                 <div class="form-group mb-3" v-if="invoice_type == 1">
                                                     <label for="client"><strong>Client</strong></label>
                                                     <select name="client_id" id="client" class="form-select"
-                                                            v-model="formData.client_id">
+                                                            v-model="formData.client_id" @change="getInvoiceNumber('client', formData.client_id)">
                                                         <option value="" disabled>Select</option>
                                                         <template v-if="clients.length > 0">
                                                             <option :value="each.id" v-for="(each) in clients">
@@ -64,7 +64,7 @@
                                                 <div class="form-group mb-3" v-if="invoice_type == 2">
                                                     <label for="employee"><strong>Employee</strong></label>
                                                     <select name="employee_id" id="employee" class="form-select"
-                                                            v-model="formData.employee_id">
+                                                            v-model="formData.employee_id" @change="getInvoiceNumber('employee', formData.employee_id)">
                                                         <option value="" disabled>Select</option>
                                                         <template v-if="employees.length > 0">
                                                             <option :value="each.id" v-for="(each) in employees">
@@ -99,14 +99,13 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group mb-3" v-if="isRecurringPeriod">
+                                                <div class="form-group mb-3" v-if="formData.recurring">
                                                     <label for="recurring_period"><strong>Recurring
                                                         Periods</strong></label>
                                                     <div class="d-flex align-items-center">
                                                         <input type="text" class="form-control" name="recurring_frequency"
                                                                v-model="formData.recurring_frequency"
                                                                style="width: 120px">
-                                                        <strong class="ms-3">Days</strong>
                                                         <div class="error-report text-danger "></div>
                                                     </div>
                                                 </div>
@@ -395,6 +394,28 @@ export default {
             })
         },
 
+        /*Get Status*/
+        getStatus() {
+            apiService.GET(apiRoutes.invoiceStatusList, (res) => {
+                this.status = res;
+            })
+        },
+
+        /*Get Recurring*/
+        getRecurring() {
+            apiService.GET(apiRoutes.invoiceRecurring, (res) => {
+                this.recurring = res;
+            })
+        },
+
+        /*Get Invoice Number*/
+        getInvoiceNumber(type, id) {
+            const param = type == 'client' ? {client_id: id} : {employee_id: id};
+            apiService.POST(apiRoutes.invoiceNumber, param,(res) => {
+                this.formData.invoice_no = res.invoice_number;
+            })
+        },
+
         /*Get Invoice Data*/
         getInvoice(id){
             apiService.POST(apiRoutes.invoiceSingle, {id}, (res) => {
@@ -472,6 +493,8 @@ export default {
         this.getEmployees();
         this.getClients();
         this.getCategories();
+        this.getStatus();
+        this.getRecurring();
         if(this.$route.params){
             this.getInvoice(this.$route.params.id);
         }
