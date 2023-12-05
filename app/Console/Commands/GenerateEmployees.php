@@ -28,16 +28,16 @@ class GenerateEmployees extends Command
     {
         try {
             $Employees = [
-                ['user_id' => '1', 'name' => 'Employee One', 'email' => 'employee.one@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
-                ['user_id' => '1', 'name' => 'Employee Two', 'email' => 'employee.two@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
-                ['user_id' => '2', 'name' => 'Employee One', 'email' => 'employee.one@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
-                ['user_id' => '2', 'name' => 'Employee Two', 'email' => 'employee.two@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
-                ['user_id' => '3', 'name' => 'Employee One', 'email' => 'employee.one@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
-                ['user_id' => '3', 'name' => 'Employee Two', 'email' => 'employee.two@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
-                ['user_id' => '4', 'name' => 'Employee One', 'email' => 'employee.one@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
-                ['user_id' => '4', 'name' => 'Employee Two', 'email' => 'employee.two@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
-                ['user_id' => '5', 'name' => 'Employee One', 'email' => 'employee.one@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
-                ['user_id' => '5', 'name' => 'Employee Two', 'email' => 'employee.two@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
+                ['user_id' => '1', 'invoice_prefix' => 'ECO',  'name' => 'Employee One', 'email' => 'employee.one@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
+                ['user_id' => '1', 'invoice_prefix' => 'ECT',  'name' => 'Employee Two', 'email' => 'employee.two@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
+                ['user_id' => '2', 'invoice_prefix' => 'ECO',  'name' => 'Employee One', 'email' => 'employee.one@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
+                ['user_id' => '2', 'invoice_prefix' => 'ECT',  'name' => 'Employee Two', 'email' => 'employee.two@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
+                ['user_id' => '3', 'invoice_prefix' => 'ECO',  'name' => 'Employee One', 'email' => 'employee.one@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
+                ['user_id' => '3', 'invoice_prefix' => 'ECT',  'name' => 'Employee Two', 'email' => 'employee.two@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
+                ['user_id' => '4', 'invoice_prefix' => 'ECO',  'name' => 'Employee One', 'email' => 'employee.one@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
+                ['user_id' => '4', 'invoice_prefix' => 'ECT',  'name' => 'Employee Two', 'email' => 'employee.two@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
+                ['user_id' => '5', 'invoice_prefix' => 'ECO',  'name' => 'Employee One', 'email' => 'employee.one@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
+                ['user_id' => '5', 'invoice_prefix' => 'ECT',  'name' => 'Employee Two', 'email' => 'employee.two@gmail.com', 'phone' => '12345678', 'address' => '6th Floor, Shahi Tower, Sector 7, Plot k/25', 'city' => 'Jashore', 'country' => 'Bangladesh'],
             ];
             Employees::insert($Employees);
             print_r(PHP_EOL.'Test employees are generated.'.PHP_EOL);

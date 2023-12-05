@@ -15,6 +15,7 @@ class ClientsRepositories
     {
         $clientModel = new Clients();
         $clientModel->user_id = $clientData['user_id'];
+        $clientModel->invoice_prefix = $clientData['invoice_prefix'];
         $clientModel->name = $clientData['name'];
         $clientModel->email = $clientData['email'];
         $clientModel->phone = $clientData['phone'];
@@ -35,6 +36,7 @@ class ClientsRepositories
      */
     public static function update(Clients $clientModel, array $clientData): array|Clients
     {
+        $clientModel->invoice_prefix = $clientData['invoice_prefix'];
         $clientModel->name = $clientData['name'];
         $clientModel->email = $clientData['email'];
         $clientModel->phone = $clientData['phone'];

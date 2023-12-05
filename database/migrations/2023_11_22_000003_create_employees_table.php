@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('invoice_preview');
+            $table->string('invoice_prefix');
             $table->unsignedInteger('user_id');
             $table->string('avatar')->nullable();
             $table->string('name');

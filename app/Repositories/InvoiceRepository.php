@@ -19,6 +19,7 @@ class InvoiceRepository
         $invoiceModel->employee_id = $invoiceData['employee_id'] ?? null;
         $invoiceModel->category_id = $invoiceData['category_id'];
         $invoiceModel->invoice_no = $invoiceData['invoice_no'];
+        $invoiceModel->invoice_number = $invoiceData['invoice_number'];
         $invoiceModel->invoice_date = $invoiceData['invoice_date'] ?? null;
         $invoiceModel->invoice_due_date = $invoiceData['invoice_due_date'] ?? null;
         $invoiceModel->invoice_status = $invoiceData['invoice_status'] ?? null;
@@ -50,7 +51,7 @@ class InvoiceRepository
         $invoiceModel->client_id = $invoiceData['client_id'] ?? null;
         $invoiceModel->employee_id = $invoiceData['employee_id'] ?? null;
         $invoiceModel->category_id = $invoiceData['category_id'];
-        $invoiceModel->invoice_no = $invoiceData['invoice_no'];
+        //$invoiceModel->invoice_no = $invoiceData['invoice_no'];
         $invoiceModel->invoice_date = $invoiceData['invoice_date'] ?? null;
         $invoiceModel->invoice_due_date = $invoiceData['invoice_due_date'] ?? null;
         $invoiceModel->invoice_status = $invoiceData['invoice_status'] ?? null;

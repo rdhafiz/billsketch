@@ -23,8 +23,8 @@
                 <table class="table table-hover">
                     <thead>
                     <tr>
-                        <th style="min-width: 120px;">Invoice No</th>
-                        <th style="min-width: 180px;">Client / Employee</th>
+                        <th style="min-width: 120px;">Invoice</th>
+                        <th style="min-width: 180px;">Name</th>
                         <th style="min-width: 180px;">Invoice Date</th>
                         <th style="min-width: 180px;">Invoice Status</th>
                         <th style="min-width: 180px;">Invoice Total</th>
@@ -33,9 +33,9 @@
                     </thead>
                     <tbody v-if="tableData.length > 0 && loading === false">
                     <tr v-for="(each, index) in tableData">
-                        <td>{{ each.invoice_no }}</td>
-                        <td v-if="each.client">{{ each.client.name }}</td>
-                        <td v-if="each.employee">{{ each.employee.name }}</td>
+                        <td>{{ each.invoice_number }}</td>
+                        <td v-if="each.client"><i class="fa fa-fw fa-arrow-down text-success"></i> {{ each.client.name }}</td>
+                        <td v-if="each.employee"><i class="fa fa-fw fa-arrow-up text-warning"></i> {{ each.employee.name }}</td>
                         <td>{{ each.invoice_date_formatted ? each.invoice_date_formatted : 'N/A' }}</td>
                         <td>
                             {{ each.invoice_status == 1 && 'Draft' || each.invoice_status == 2 && 'Pending' || each.invoice_status == 3 && 'Processing' || each.invoice_status == 4 && 'Partially paid' || each.invoice_status == 5 && 'Paid' || each.invoice_status == 6 && 'Overdue' || 'Canceled' }}
