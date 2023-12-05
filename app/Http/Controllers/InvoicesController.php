@@ -30,19 +30,19 @@ class InvoicesController extends Controller
             $requestData = $request->all();
             $validator = Validator::make($requestData, [
                 'category_id' => 'required|integer',
-                'invoice_no' => 'required|integer',
+                'invoice_no' => 'required|numeric',
                 'currency' => 'required|string',
                 'recurring' => 'nullable|integer',
                 'recurring_frequency' => 'nullable|required_if:recurring,1|integer|min:1',
                 'invoice_items' => 'required|array',
                 'invoice_items.*.description' => 'required',
-                'invoice_items.*.unit_frequency' => 'required|integer',
-                'invoice_items.*.unit_value' => 'required|integer',
+                'invoice_items.*.unit_frequency' => 'required|numeric',
+                'invoice_items.*.unit_value' => 'required|numeric',
                 'client_id' => 'nullable|integer|required_without:employee_id|exists:clients,id',
                 'employee_id' => 'nullable|integer|required_without:client_id|exists:employees,id',
-                'tax' => 'nullable|integer',
-                'discount' => 'nullable|integer',
-                'bonus' => 'nullable|integer',
+                'tax' => 'nullable|numeric',
+                'discount' => 'nullable|numeric',
+                'bonus' => 'nullable|numeric',
             ]);
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
@@ -127,19 +127,19 @@ class InvoicesController extends Controller
             $validator = Validator::make($requestData, [
                 'id' => 'required|integer',
                 'category_id' => 'required|integer',
-                'invoice_no' => 'required|integer',
+                'invoice_no' => 'required|numeric',
                 'currency' => 'required|string',
                 'recurring' => 'nullable|integer',
                 'recurring_frequency' => 'nullable|required_if:recurring,1|integer|min:1',
                 'invoice_items' => 'required|array',
                 'invoice_items.*.description' => 'required',
-                'invoice_items.*.unit_frequency' => 'required|integer',
-                'invoice_items.*.unit_value' => 'required|integer',
+                'invoice_items.*.unit_frequency' => 'required|numeric',
+                'invoice_items.*.unit_value' => 'required|numeric',
                 'client_id' => 'nullable|integer|required_without:employee_id|exists:clients,id',
                 'employee_id' => 'nullable|integer|required_without:client_id|exists:employees,id',
-                'tax' => 'nullable|integer',
-                'discount' => 'nullable|integer',
-                'bonus' => 'nullable|integer',
+                'tax' => 'nullable|numeric',
+                'discount' => 'nullable|numeric',
+                'bonus' => 'nullable|numeric',
             ]);
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);

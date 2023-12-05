@@ -2,7 +2,7 @@
     <div class="header_content border rounded-15 px-3">
 
         <div class="dropdown float-end" v-if="UserInfo !== null">
-            <a class="btn btn-theme rounded-10 shadow-none px-3 py-2" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="btn btn-outline-secondary rounded-10 shadow-none px-3 py-2" data-bs-toggle="dropdown" aria-expanded="false">
                 <span id="user_name">{{ UserInfo.first_name+' '+UserInfo.last_name }}</span> <i class="fa fa-fw fa-chevron-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-3 shadow rounded-10" style="width: 250px;">
