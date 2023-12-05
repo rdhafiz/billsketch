@@ -11,7 +11,7 @@
 
     .navbar-brand {
         img {
-            max-height: 35px;
+            max-height: 55px;
             //filter: brightness(0);
         }
     }
@@ -329,7 +329,7 @@
         display: flex;
         position: relative;
         z-index: 2;
-        background: linear-gradient(to right, #000000 , rgba(#000000, 0.5));
+        background: rgba(#000000, 0.8);
         align-items: center;
         .banner_preview{
             width: 100%;
@@ -364,6 +364,7 @@
                 position: absolute;
                 top: 0;
                 left: 0;
+                border-radius: 100px 80px 90px 70px;
                 width: 90px;
                 height: 100%;
                 display: inline-block;

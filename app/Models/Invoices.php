@@ -91,4 +91,10 @@ class Invoices extends Model
         return $this->hasOne(Employees::class, 'id', 'employee_id')->select('id', 'name', 'avatar');
     }
 
+    public static function generateInvoiceNumber($prefix, $number){
+        $invoiceNumber = str_pad($number, 6, '0', STR_PAD_LEFT);
+        $invoiceNumber = $prefix.'-'.$invoiceNumber;
+        return $invoiceNumber;
+    }
+
 }

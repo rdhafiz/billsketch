@@ -36,7 +36,7 @@
                         <router-link :to="{name: 'ContactUs'}" class="nav-link">Contact Us</router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="{name: 'Faq'}" class="nav-link">FAQ</router-link>
+                        <router-link :to="{name: 'Login'}" class="nav-link">Sign In</router-link>
                     </li>
 <!--                    <li class="nav-item">-->
 <!--                        <router-link :to="{name: 'AboutUs'}" class="nav-link">About Us</router-link>-->

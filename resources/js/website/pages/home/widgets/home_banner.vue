@@ -23,10 +23,13 @@
                                     <div class="title" data-aos="fade-up" data-aos-duration="500" data-aos-delay="1000">Your Invoices, Your Way</div>
                                 </div>
                                 <div class="banner_description_left" data-aos="fade-up" data-aos-duration="500" data-aos-delay="1500">
-                                    Create professional invoices effortlessly, share them seamlessly, and send with ease.
-                                    Download invoices in a snap and set up recurring invoices for recurring needs.
+                                    <br>
+                                    <span>It is Simple, Smart, Secure.</span> <br>
+                                    <span>Create professional invoices effortlessly, share them seamlessly and send with ease.</span>
                                     <br><br>
-                                    <h2 class="text-theme"><strong>Simple, Smart, Secure.</strong></h2>
+                                    <h3>
+                                        <a href="#how_it_works" class="text-decoration-none text-theme"><strong>Let's See How It Works <i class="fa fa-fw fa-arrow-right"></i></strong></a>
+                                    </h3>
                                 </div>
                             </div>
 

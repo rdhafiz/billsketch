@@ -35,6 +35,7 @@ class ClientsController extends Controller
             }
             $clientData = [
                 'user_id' => $requestData['session_user']['id'],
+                'invoice_prefix' => $requestData['invoice_prefix'] ?? preg_split("/[\s,_-]+/", $requestData['name']),
                 'name' => $requestData['name'],
                 'email' => $requestData['email'],
                 'phone' => $requestData['phone'],
@@ -87,6 +88,7 @@ class ClientsController extends Controller
             }
             $clientData = [
                 'id' => $requestData['id'],
+                'invoice_prefix' => $requestData['invoice_prefix'] ?? preg_split("/[\s,_-]+/", $requestData['name']),
                 'name' => $requestData['name'],
                 'email' => $requestData['email'],
                 'phone' => $requestData['phone'],

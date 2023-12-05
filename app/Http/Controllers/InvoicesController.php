@@ -6,6 +6,8 @@ use App\Constants\InvoiceRecurringStatus;
 use App\Constants\InvoiceStatus;
 use App\Constants\UserLogType;
 use App\Helpers\Helpers;
+use App\Models\Clients;
+use App\Models\Employees;
 use App\Models\InvoiceItems;
 use App\Models\Invoices;
 use App\Repositories\InvoiceRepository;
@@ -30,19 +32,19 @@ class InvoicesController extends Controller
             $requestData = $request->all();
             $validator = Validator::make($requestData, [
                 'category_id' => 'required|integer',
-                'invoice_no' => 'required|integer',
+                'invoice_no' => 'required|numeric',
                 'currency' => 'required|string',
                 'recurring' => 'nullable|integer',
                 'recurring_frequency' => 'nullable|required_if:recurring,1|integer|min:1',
                 'invoice_items' => 'required|array',
                 'invoice_items.*.description' => 'required',
-                'invoice_items.*.unit_frequency' => 'required|integer',
-                'invoice_items.*.unit_value' => 'required|integer',
+                'invoice_items.*.unit_frequency' => 'required|numeric',
+                'invoice_items.*.unit_value' => 'required|numeric',
                 'client_id' => 'nullable|integer|required_without:employee_id|exists:clients,id',
                 'employee_id' => 'nullable|integer|required_without:client_id|exists:employees,id',
-                'tax' => 'nullable|integer',
-                'discount' => 'nullable|integer',
-                'bonus' => 'nullable|integer',
+                'tax' => 'nullable|numeric',
+                'discount' => 'nullable|numeric',
+                'bonus' => 'nullable|numeric',
             ]);
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
@@ -59,12 +61,24 @@ class InvoicesController extends Controller
             if ($isInvoiceNoExist == true) {
                 return response()->json(['status' => 500, 'errors' => ['invoice_no' => ['Invoice no already exist']]]);
             }
+
+            $invoiceNumber = '';
+            if ($invoiceUserType === 'client_id') {
+                $employeeOrClient = Clients::where('id', $requestData['client_id'])->first();
+            } else {
+                $employeeOrClient = Employees::where('id', $requestData['employee_id'])->first();
+            }
+            if ($employeeOrClient != null) {
+                $invoiceNumber = Invoices::generateInvoiceNumber($employeeOrClient->invoice_prefix, $requestData['invoice_no']);
+            }
+
             $invoiceData = [
                 'user_id' => $requestData['session_user']['id'],
                 'client_id' => $requestData['client_id'] ?? null,
                 'employee_id' => $requestData['employee_id'] ?? null,
                 'category_id' => $requestData['category_id'],
                 'invoice_no' => $requestData['invoice_no'],
+                'invoice_number' => $invoiceNumber,
                 'invoice_date' => $requestData['invoice_date'] ?? null,
                 'invoice_due_date' => $requestData['invoice_due_date'] ?? null,
                 'invoice_status' => $requestData['invoice_status'] ?? InvoiceStatus::Draft,
@@ -106,7 +120,7 @@ class InvoicesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot save invoice'], 200);
             }
             DB::commit();
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Invoice_create);
+            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_create);
             return response()->json(['status' => 200, 'message' => 'Invoice has been created successfully'], 200);
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -127,19 +141,19 @@ class InvoicesController extends Controller
             $validator = Validator::make($requestData, [
                 'id' => 'required|integer',
                 'category_id' => 'required|integer',
-                'invoice_no' => 'required|integer',
+                //'invoice_no' => 'required|numeric',
                 'currency' => 'required|string',
                 'recurring' => 'nullable|integer',
                 'recurring_frequency' => 'nullable|required_if:recurring,1|integer|min:1',
                 'invoice_items' => 'required|array',
                 'invoice_items.*.description' => 'required',
-                'invoice_items.*.unit_frequency' => 'required|integer',
-                'invoice_items.*.unit_value' => 'required|integer',
-                'client_id' => 'nullable|integer|required_without:employee_id|exists:clients,id',
-                'employee_id' => 'nullable|integer|required_without:client_id|exists:employees,id',
-                'tax' => 'nullable|integer',
-                'discount' => 'nullable|integer',
-                'bonus' => 'nullable|integer',
+                'invoice_items.*.unit_frequency' => 'required|numeric',
+                'invoice_items.*.unit_value' => 'required|numeric',
+                //'client_id' => 'nullable|integer|required_without:employee_id|exists:clients,id',
+                //'employee_id' => 'nullable|integer|required_without:client_id|exists:employees,id',
+                'tax' => 'nullable|numeric',
+                'discount' => 'nullable|numeric',
+                'bonus' => 'nullable|numeric',
             ]);
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
@@ -161,15 +175,15 @@ class InvoicesController extends Controller
                 return response()->json(['status' => 500, 'errors' => ['invoice_no' => ['Invoice no already exist']]]);
             }
             $invoiceData = [
-                'client_id' => $requestData['client_id'] ?? null,
-                'employee_id' => $requestData['employee_id'] ?? null,
+                //'client_id' => $requestData['client_id'] ?? null,
+                //'employee_id' => $requestData['employee_id'] ?? null,
                 'category_id' => $requestData['category_id'],
-                'invoice_no' => $requestData['invoice_no'],
+                //'invoice_no' => $requestData['invoice_no'],
                 'invoice_date' => $requestData['invoice_date'] ?? null,
                 'invoice_due_date' => $requestData['invoice_due_date'] ?? null,
                 'invoice_status' => $requestData['invoice_status'] ?? InvoiceStatus::Draft,
-                'cancel_reason' => $requestData['cancel_reason'] ?? null,
-                'overdue_reason' => $requestData['overdue_reason'] ?? null,
+                //'cancel_reason' => $requestData['cancel_reason'] ?? null,
+                //'overdue_reason' => $requestData['overdue_reason'] ?? null,
                 'currency' => $requestData['currency'],
                 'recurring' => $requestData['recurring'] ?? 0,
                 'recurring_frequency' => $requestData['recurring_frequency'] ?? null,
@@ -207,7 +221,7 @@ class InvoicesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot update invoice'], 200);
             }
             DB::commit();
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Invoice_update);
+            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_update);
             return response()->json(['status' => 200, 'message' => 'Invoice has been updated successfully'], 200);
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -237,6 +251,7 @@ class InvoicesController extends Controller
     {
         return InvoiceStatus::getArray();
     }
+
     /**
      * @return array
      */
@@ -266,11 +281,23 @@ class InvoicesController extends Controller
             $invoiceUserType = !empty($requestData['employee_id']) ? 'employee_id' : 'client_id';
             $invoiceUserId = !empty($requestData['employee_id']) ? $requestData['employee_id'] : $requestData['client_id'];
             $latestNumber = InvoiceRepository::getLatestNumber($requestData['session_user'], $invoiceUserType, $invoiceUserId);
-            return response()->json(['status' => 200, 'invoice_number' => $latestNumber], 200);
+
+            $invoiceNumber = '';
+            if ($invoiceUserType === 'client_id') {
+                $employeeOrClient = Clients::where('id', $requestData['client_id'])->first();
+            } else {
+                $employeeOrClient = Employees::where('id', $requestData['employee_id'])->first();
+            }
+            if ($employeeOrClient != null) {
+                $invoiceNumber = Invoices::generateInvoiceNumber($employeeOrClient->invoice_prefix, $latestNumber);
+            }
+
+            return response()->json(['status' => 200, 'invoice_no' => $latestNumber, 'invoice_number' => $invoiceNumber], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
+
     /**
      * @param Request $request
      * @return JsonResponse
@@ -289,7 +316,7 @@ class InvoicesController extends Controller
             if (!$invoice instanceof Invoices) {
                 return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Invoice_view);
+            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_view);
             return response()->json(['status' => 200, 'data' => $invoice], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -318,12 +345,13 @@ class InvoicesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot delete invoice'], 200);
             }
             Helpers::relationalDataAction($invoice->id, 'invoice_id', 'delete', new InvoiceItems());
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Invoice_delete);
+            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_delete);
             return response()->json(['status' => 200, 'message' => 'Invoice deleted successfully '], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
     }
+
     /**
      * @param Request $request
      * @return JsonResponse
@@ -383,7 +411,7 @@ class InvoicesController extends Controller
                 }
                 return response()->json(['status' => 500, 'message' => $message], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],$invoice->is_active == 1 ? UserLogType::Invoice_restore : UserLogType::Invoice_archive);
+            Helpers::saveUserActivity($requestData['session_user']['id'], $invoice->is_active == 1 ? UserLogType::Invoice_restore : UserLogType::Invoice_archive);
             $message = 'Invoice archive successfully';
             if ($invoice->is_active == 1) {
                 $message = 'Invoice restore successfully';
@@ -397,7 +425,7 @@ class InvoicesController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-    */
+     */
     public function share(Request $request): JsonResponse
     {
         try {
@@ -414,12 +442,12 @@ class InvoicesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
             }
             $shareInfo = [];
-            $shareInfo['link'] = env('APP_URL').'/share/invoice/'.base64_encode($invoice->id);
+            $shareInfo['link'] = env('APP_URL') . '/share/invoice/' . base64_encode($invoice->id);
             $shareInfo['email'] = $requestData['email'];
             if (!empty($shareInfo['subject'])) {
                 $shareInfo['subject'] = $requestData['subject'];
             } else {
-                $shareInfo['subject'] = 'An invoice shared to you from ' .$requestData['session_user']['first_name'] .' '. $requestData['session_user']['last_name'] ?? '' . env('APP_NAME'); // todo: Please add a nice subject here... ridwan??
+                $shareInfo['subject'] = 'An invoice shared to you from ' . $requestData['session_user']['first_name'] . ' ' . $requestData['session_user']['last_name'] ?? '' . env('APP_NAME'); // todo: Please add a nice subject here... ridwan??
             }
             if (!empty($shareInfo['body'])) {
                 $shareInfo['body'] = $requestData['body'];
@@ -479,9 +507,9 @@ class InvoicesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
             }
             // Generate QR code for a URL
-            $url = env('APP_URL').'/share/invoice/'.base64_encode($invoice->id);
-            QrCode::format('svg')->size(300)->generate($url, public_path('storage/uploads/qrcode_'.base64_encode($invoice->id).'.svg'));
-            $invoice->qrcode = 'qrcode_'.base64_encode($invoice->id).'.svg';
+            $url = env('APP_URL') . '/share/invoice/' . base64_encode($invoice->id);
+            QrCode::format('svg')->size(300)->generate($url, public_path('storage/uploads/qrcode_' . base64_encode($invoice->id) . '.svg'));
+            $invoice->qrcode = 'qrcode_' . base64_encode($invoice->id) . '.svg';
             if (!$invoice->save()) {
                 return response()->json(['status' => 500, 'message' => 'Cannot generate QR code'], 200);
             }

@@ -15,6 +15,7 @@ class EmployeesRepositories
     {
         $employeeModel = new Employees();
         $employeeModel->user_id = $employeeData['user_id'];
+        $employeeModel->invoice_prefix = $employeeData['invoice_prefix'];
         $employeeModel->name = $employeeData['name'];
         $employeeModel->email = $employeeData['email'];
         $employeeModel->phone = $employeeData['phone'];
@@ -35,6 +36,7 @@ class EmployeesRepositories
      */
     public static function update(Employees $employeeModel, array $employeeData): array|Employees
     {
+        $employeeModel->invoice_prefix = $employeeData['invoice_prefix'];
         $employeeModel->name = $employeeData['name'];
         $employeeModel->email = $employeeData['email'];
         $employeeModel->phone = $employeeData['phone'];

@@ -41,7 +41,7 @@
                                             <div class="col-sm-6 col-md-5 col-xl-4">
                                                 <div class="mb-3">
                                                     <div><strong>Invoice No</strong></div>
-                                                    <div>{{ invoice?.invoice_no }}</div>
+                                                    <div>{{ invoice?.invoice_number }}</div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <div><strong>Invoice Date</strong></div>

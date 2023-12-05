@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('employee_id')->nullable();
             $table->unsignedInteger('category_id');
             $table->integer('invoice_no');
+            $table->string('invoice_number');
             $table->timestamp('invoice_date')->nullable();
             $table->timestamp('invoice_due_date')->nullable();
             $table->tinyInteger('invoice_status')->nullable();

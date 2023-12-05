@@ -115,9 +115,8 @@
                                             <div class="col-lg-2 col-xl-4"></div>
                                             <div class="col-lg-5 col-xl-4">
                                                 <div class="form-group mb-3">
-                                                    <label for="invoice_no"><strong>Invoice No</strong></label>
-                                                    <input type="text" class="form-control" name="invoice_no" v-model="formData.invoice_no">
-                                                    <div class="error-report text-danger "></div>
+                                                    <label for="invoice_no"><strong>Invoice Number</strong></label>
+                                                    <label for="invoice_no"><strong>{{ invoice_number }}</strong></label>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label for="invoice_date"><strong>Invoice Date</strong></label>
@@ -312,6 +311,7 @@ export default {
         return {
             loading: false,
             invoice_type: 1,
+            invoice_number: '',
             formData: {
                 client_id: '',
                 employee_id: '',
@@ -412,7 +412,8 @@ export default {
         getInvoiceNumber(type, id) {
             const param = type == 'client' ? {client_id: id} : {employee_id: id};
             apiService.POST(apiRoutes.invoiceNumber, param,(res) => {
-                this.formData.invoice_no = res.invoice_number;
+                this.formData.invoice_no = res.invoice_no;
+                this.invoice_number = res.invoice_number;
             })
         },
 
