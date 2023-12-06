@@ -141,7 +141,6 @@ class InvoicesController extends Controller
             $validator = Validator::make($requestData, [
                 'id' => 'required|integer',
                 'category_id' => 'required|integer',
-                //'invoice_no' => 'required|numeric',
                 'currency' => 'required|string',
                 'recurring' => 'nullable|integer',
                 'recurring_frequency' => 'nullable|required_if:recurring,1|integer|min:1',
@@ -149,8 +148,6 @@ class InvoicesController extends Controller
                 'invoice_items.*.description' => 'required',
                 'invoice_items.*.unit_frequency' => 'required|numeric',
                 'invoice_items.*.unit_value' => 'required|numeric',
-                //'client_id' => 'nullable|integer|required_without:employee_id|exists:clients,id',
-                //'employee_id' => 'nullable|integer|required_without:client_id|exists:employees,id',
                 'tax' => 'nullable|numeric',
                 'discount' => 'nullable|numeric',
                 'bonus' => 'nullable|numeric',
@@ -158,32 +155,15 @@ class InvoicesController extends Controller
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
             }
-            if (empty($requestData['client_id']) && empty($requestData['employee_id'])) {
-                return response()->json(['status' => 500, 'message' => 'Invalid request']);
-            }
-            if (!empty($requestData['client_id']) && !empty($requestData['employee_id'])) {
-                $requestData['employee_id'] = null;
-            }
             $invoice = Invoices::find($requestData['id']);
             if (!$invoice instanceof Invoices) {
                 return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
             }
-            $invoiceUserType = !empty($requestData['employee_id']) ? 'employee_id' : 'client_id';
-            $invoiceUserId = !empty($requestData['employee_id']) ? $requestData['employee_id'] : $requestData['client_id'];
-            $isInvoiceNoExist = InvoiceRepository::checkIfInvoiceNoExist($requestData['session_user'], $invoiceUserType, $invoiceUserId, $requestData['invoice_no'], true, $invoice->id);
-            if ($isInvoiceNoExist == true) {
-                return response()->json(['status' => 500, 'errors' => ['invoice_no' => ['Invoice no already exist']]]);
-            }
             $invoiceData = [
-                //'client_id' => $requestData['client_id'] ?? null,
-                //'employee_id' => $requestData['employee_id'] ?? null,
                 'category_id' => $requestData['category_id'],
-                //'invoice_no' => $requestData['invoice_no'],
                 'invoice_date' => $requestData['invoice_date'] ?? null,
                 'invoice_due_date' => $requestData['invoice_due_date'] ?? null,
                 'invoice_status' => $requestData['invoice_status'] ?? InvoiceStatus::Draft,
-                //'cancel_reason' => $requestData['cancel_reason'] ?? null,
-                //'overdue_reason' => $requestData['overdue_reason'] ?? null,
                 'currency' => $requestData['currency'],
                 'recurring' => $requestData['recurring'] ?? 0,
                 'recurring_frequency' => $requestData['recurring_frequency'] ?? null,
