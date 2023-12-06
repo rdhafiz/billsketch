@@ -210,7 +210,7 @@
                                                     <td>
                                                         <div class="form-group">
                                                             <input type="text" class="form-control"
-                                                                   :name="'invoice_items.' + index + '.unit_value'"
+                                                                   v-bind:name="'invoice_items.' + index + '.unit_value'"
                                                                    v-model="formData.invoice_items[index]['unit_value']"
                                                                    @keypress="checkNumber($event)"
                                                                    @keyup="calculateTotal(index)">

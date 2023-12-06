@@ -307,6 +307,38 @@ class InvoicesController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
+    public function updateStatus(Request $request): JsonResponse
+    {
+        try {
+            $requestData = $request->all();
+            $validator = Validator::make($requestData, [
+                'id' => 'required|integer',
+                'status_id' => 'required|integer',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
+            }
+            $invoice = Invoices::find($requestData['id']);
+            if (!$invoice instanceof Invoices) {
+                return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
+            }
+            $invoice->invoice_status = $requestData['status_id'];
+            $invoice->cancel_reason = $requestData['cancel_reason'] ?? null;
+            $invoice->overdue_reason = $requestData['overdue_reason'] ?? null;
+            if (!$invoice->save()) {
+                return response()->json(['status' => 500, 'message' => 'Cannot update invoice status'], 200);
+            }
+            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_update);
+            return response()->json(['status' => 200, 'message' => 'Invoice status updated successfully'], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function delete(Request $request): JsonResponse
     {
         try {
