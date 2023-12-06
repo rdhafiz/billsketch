@@ -53,16 +53,15 @@ const ApiService = {
         })
     },
     ErrorHandler(errors) {
-        console.log(errors)
         $('.is-invalid').removeClass('is-invalid');
         $('.error-report').html('');
         $('.error-report-g').html('');
-        $.each(errors, (i, v) => {
-            if (i === 'error') {
-                $('.error-report-g').html('<p class="alert alert-danger">' + v + '</p>')
-            } else {
-                $('[name=' + i + ']').addClass('is-invalid');
-                $('[name=' + i + ']').closest('.form-group').find('.error-report').html(v);
+        Object.entries(errors).forEach(([i, v]) => {
+            const inputElement = document.querySelector(`[name="${i}"]`);
+            const invalidFeedback = inputElement?.closest('.form-group')?.querySelector('.error-report');
+            if (invalidFeedback) {
+                invalidFeedback.textContent = v;
+                inputElement.classList.add('is-invalid')
             }
         });
     },

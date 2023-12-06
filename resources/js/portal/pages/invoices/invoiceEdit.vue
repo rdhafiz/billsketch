@@ -205,6 +205,7 @@
                                                                    v-model="formData.invoice_items[index]['unit_frequency']"
                                                                    @keypress="checkNumber($event)"
                                                                    @keyup="calculateInvoiceItemTotal(index)">
+                                                            <div class="error-report text-danger "></div>
                                                         </div>
                                                     </td>
                                                     <td>
@@ -214,6 +215,7 @@
                                                                    v-model="formData.invoice_items[index]['unit_value']"
                                                                    @keypress="checkNumber($event)"
                                                                    @keyup="calculateInvoiceItemTotal(index)">
+                                                            <div class="error-report text-danger "></div>
                                                         </div>
                                                     </td>
                                                     <td class="text-end">{{ each.total }}</td>
@@ -430,8 +432,6 @@ export default {
                     this.formData = {
                         ...res.data,
                         invoice_status: res.data.invoice_status,
-                        invoice_date: res.data.invoice_date_formatted,
-                        invoice_due_date: '23-12-23',
                         invoice_item_headings: res.data.invoice_item_headings_formatted
                     };
                     this.subTotal = res.data.sub_total,

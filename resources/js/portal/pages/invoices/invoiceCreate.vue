@@ -205,15 +205,17 @@
                                                                    v-model="formData.invoice_items[index]['unit_frequency']"
                                                                    @keypress="checkNumber($event)"
                                                                    @keyup="calculateInvoiceItemTotal(index)">
+                                                            <div class="error-report text-danger "></div>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="form-group">
                                                             <input type="text" class="form-control"
-                                                                   :name="'invoice_items.' + index + '.unit_value'"
+                                                                   v-bind:name="'invoice_items.' + index + '.unit_value'"
                                                                    v-model="formData.invoice_items[index]['unit_value']"
                                                                    @keypress="checkNumber($event)"
                                                                    @keyup="calculateInvoiceItemTotal(index)">
+                                                            <div class="error-report text-danger "></div>
                                                         </div>
                                                     </td>
                                                     <td class="text-end">{{ each.total }}</td>
@@ -349,7 +351,6 @@ export default {
                 altFormat: 'M j, Y',
                 altInput: true,
                 dateFormat: 'Y-m-d',
-                defaultDate: '14/12/2023',
                 disableMobile: true
             },
             employees: [],

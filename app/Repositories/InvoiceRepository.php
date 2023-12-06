@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Constants\InvoiceStatus;
 use App\Models\Invoices;
 use App\Models\User;
 
@@ -117,6 +118,10 @@ class InvoiceRepository
         $invoice = Invoices::where('id', $invoiceId)->with(['invoice_items', 'category', 'client', 'employee'])->first();
         if (!$invoice instanceof Invoices) {
             return ['message' => 'Cannot find invoice'];
+        }
+        if ($invoice->invoice_due_date < date('c')) {
+            $invoice->invoice_status = InvoiceStatus::Overdue;
+            $invoice->save();
         }
         return $invoice;
     }
