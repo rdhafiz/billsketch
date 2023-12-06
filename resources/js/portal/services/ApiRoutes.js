@@ -38,7 +38,7 @@ const ApiRoutes = {
     invoiceStatusList: ApiVersion + '/invoice/get/status',
     invoiceRecurring: ApiVersion + '/invoice/get/recurring',
     invoiceNumber: ApiVersion + '/invoice/get/number',
-    invoiceStatus: ApiVersion + '/invoice/update/status',
+    invoiceStatus: ApiVersion + '/invoice/update/activity',
     invoiceDelete: ApiVersion + '/invoice/delete',
 
 };
