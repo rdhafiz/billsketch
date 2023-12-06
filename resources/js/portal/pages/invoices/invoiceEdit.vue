@@ -93,7 +93,7 @@
                                                         <div class="form-check form-check-inline">
                                                             <input class="form-check-input" type="checkbox" :checked="formData.recurring"
                                                                    name="recurring"
-                                                                   id="recurring" @change="changeValue($event)">
+                                                                   id="recurring" @change="changeRecurring($event)">
                                                             <label class="form-check-label"
                                                                    for="recurring">Toggle</label>
                                                         </div>
@@ -121,7 +121,7 @@
                                                 <div class="form-group mb-3">
                                                     <label for="invoice_date"><strong>Invoice Date</strong></label>
                                                     <flat-pickr v-model="formData.invoice_date"
-                                                                :config="config"
+                                                                :config="date_config"
                                                                 class="form-control"
                                                                 name="invoice_date"
                                                                 placeholder="Select date"/>
@@ -130,7 +130,7 @@
                                                     <label for="invoice_due_date"><strong>Invoice Due
                                                         Date</strong></label>
                                                     <flat-pickr v-model="formData.invoice_due_date"
-                                                                :config="config"
+                                                                :config="due_date_config"
                                                                 class="form-control"
                                                                 name="invoice_due_date"
                                                                 placeholder="Select date"/>
@@ -345,11 +345,14 @@ export default {
                     total: 0,
                 }],
             },
-            isRecurringPeriod: false,
-            date: '',
-            due_date: '',
-            config: {
-                altFormat: 'M j, Y',
+            date_config: {
+                altFormat: "F j, Y",
+                altInput: true,
+                dateFormat: 'Y-m-d',
+                disableMobile: true
+            },
+            due_date_config: {
+                altFormat: "F j, Y",
                 altInput: true,
                 dateFormat: 'Y-m-d',
                 disableMobile: true
@@ -428,12 +431,13 @@ export default {
                         ...res.data,
                         invoice_status: res.data.invoice_status,
                         invoice_date: res.data.invoice_date_formatted,
-                        invoice_due_date: res.data.invoice_due_date_formatted,
+                        invoice_due_date: '23-12-23',
                         invoice_item_headings: res.data.invoice_item_headings_formatted
                     };
                     this.subTotal = res.data.sub_total,
                     this.total = res.data.sub_total
                     this.invoice_type = res.data.client ? 1 : 2;
+                    this.calculateTotal();
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }
@@ -455,7 +459,7 @@ export default {
             })
         },
 
-        changeValue() {
+        changeRecurring() {
             this.formData.recurring = this.formData.recurring == 0 ? 1 : 0;
         },
 
@@ -478,7 +482,6 @@ export default {
                 unit_value: '',
                 total: '',
             })
-            console.log(this.formData.invoice_items)
         },
 
         /* Check Tax */
@@ -496,7 +499,6 @@ export default {
         /*calculate invoice item total*/
         calculateInvoiceItemTotal(index) {
             const total = parseFloat(this.formData.invoice_items[index]['unit_frequency']) * parseFloat(this.formData.invoice_items[index]['unit_value']);
-            console.log(total)
             this.formData.invoice_items[index]['total'] = isNaN(total) ? 0 : total.toFixed(2);
             this.calculateSubtotal();
         },
@@ -504,7 +506,7 @@ export default {
         /*calculate total*/
         calculateTotal(){
             let taxAmount = 0;
-            if(this.formData.tax == ''){
+            if(this.formData.tax == '' || this.formData.tax == null){
                 taxAmount = 0;
             }else{
                 taxAmount = this.subTotal * (parseFloat(this.formData.tax) / 100);

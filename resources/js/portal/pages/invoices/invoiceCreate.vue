@@ -93,7 +93,7 @@
                                                         <div class="form-check form-check-inline">
                                                             <input class="form-check-input" type="checkbox" :checked="formData.recurring"
                                                                    name="recurring"
-                                                                   id="recurring" @change="changeValue($event)">
+                                                                   id="recurring" @change="changeRecurring($event)">
                                                             <label class="form-check-label"
                                                                    for="recurring">Toggle</label>
                                                         </div>
@@ -345,13 +345,11 @@ export default {
                     total: 0,
                 }],
             },
-            isRecurringPeriod: false,
-            date: '',
-            due_date: '',
             config: {
                 altFormat: 'M j, Y',
                 altInput: true,
                 dateFormat: 'Y-m-d',
+                defaultDate: '14/12/2023',
                 disableMobile: true
             },
             employees: [],
@@ -436,7 +434,7 @@ export default {
             })
         },
 
-        changeValue() {
+        changeRecurring() {
             this.formData.recurring = this.formData.recurring == 0 ? 1 : 0;
         },
 

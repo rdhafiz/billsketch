@@ -58,8 +58,6 @@ const ApiService = {
         $('.error-report').html('');
         $('.error-report-g').html('');
         $.each(errors, (i, v) => {
-            console.log(i)
-            console.log($('[name=' + i + ']'))
             if (i === 'error') {
                 $('.error-report-g').html('<p class="alert alert-danger">' + v + '</p>')
             } else {
