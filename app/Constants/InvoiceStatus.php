@@ -23,4 +23,13 @@ class InvoiceStatus
             ['value' => self::Canceled, 'name'=> 'Canceled'],
         ];
     }
+    public static function getMapValue(int $status_value)
+    {
+        $statusArr = self::getArray();
+        foreach ($statusArr as $item) {
+            if ($item['value'] == $status_value) {
+                return $item['name'];
+            }
+        }
+    }
 }

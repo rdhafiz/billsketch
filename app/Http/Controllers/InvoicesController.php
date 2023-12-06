@@ -11,6 +11,7 @@ use App\Models\Employees;
 use App\Models\InvoiceItems;
 use App\Models\Invoices;
 use App\Repositories\InvoiceRepository;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -526,6 +527,32 @@ class InvoicesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot generate QR code'], 200);
             }
             return response()->json(['status' => 200, 'message' => 'Qr code generated successfully'], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse|string
+     */
+    public function download(Request $request): JsonResponse|string
+    {
+        try {
+            $requestData = $request->all();
+            $validator = Validator::make($requestData, [
+                'id' => 'required|integer',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
+            }
+            $invoice = InvoiceRepository::single($requestData['id']);
+            if (!$invoice instanceof Invoices) {
+                return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
+            }
+
+            $pdf = Pdf::loadView('download.invoice', ['invoice' => $invoice]);
+            return $pdf->output();
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }

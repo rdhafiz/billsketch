@@ -70,6 +70,7 @@ Route::group(['prefix' => 'invoice', 'middleware' => ['auth:api']], function () 
     Route::post('share', [InvoicesController::class, 'share']);
     Route::post('generate/qrcode', [InvoicesController::class, 'generateQRCode']);
     Route::post('update/status', [InvoicesController::class, 'updateStatus']);
+    Route::post('download', [InvoicesController::class, 'download']);
     Route::group(['prefix' => 'item', 'middleware' => ['auth:api']], function () {
         Route::post('save', [InvoiceItemsController::class, 'save']);
         Route::post('update', [InvoiceItemsController::class, 'update']);

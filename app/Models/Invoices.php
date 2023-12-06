@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Constants\InvoiceRecurringStatus;
+use App\Constants\InvoiceStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +18,9 @@ class Invoices extends Model
         'created_at_formatted',
         'updated_at_formatted',
         'invoice_item_headings_formatted',
-        'qrcode_path'
+        'qrcode_path',
+        'recurring_frequency_name',
+        'invoice_status_name',
     ];
 
     protected $casts = [
@@ -29,6 +33,20 @@ class Invoices extends Model
     {
         if (!empty($this->qrcode)) {
             return asset('storage/uploads/'.$this->qrcode);
+        }
+        return null;
+    }
+    public function getRecurringFrequencyNameAttribute()
+    {
+        if (!empty($this->recurring_frequency)) {
+            return InvoiceRecurringStatus::getMapValue($this->recurring_frequency);
+        }
+        return null;
+    }
+    public function getInvoiceStatusNameAttribute()
+    {
+        if (!empty($this->invoice_status)) {
+            return InvoiceStatus::getMapValue($this->invoice_status);
         }
         return null;
     }
