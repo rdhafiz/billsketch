@@ -38,7 +38,7 @@
                                                 </div>
                                             </div>
                                             <div class="d-none d-md-block col-md-2 col-xl-4"></div>
-                                            <div class="col-sm-6 col-md-5 col-xl-4">
+                                            <div class="col-sm-6 col-md-5 col-xl-4 text-end">
                                                 <div class="mb-3">
                                                     <div><strong>Invoice No</strong></div>
                                                     <div>{{ invoice?.invoice_number }}</div>

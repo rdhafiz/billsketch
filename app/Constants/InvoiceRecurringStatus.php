@@ -34,4 +34,13 @@ class InvoiceRecurringStatus
             ['value' => self::Two_Year, 'name' => '2 Years'],
         ];
     }
+    public static function getMapValue(int $recurring_value)
+    {
+        $recurringArr = self::getArray();
+        foreach ($recurringArr as $item) {
+            if ($item['value'] == $recurring_value) {
+                return $item['name'];
+            }
+        }
+    }
 }
