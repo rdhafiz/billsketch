@@ -536,7 +536,7 @@ class InvoicesController extends Controller
      * @param Request $request
      * @return JsonResponse|string
      */
-    public function download(Request $request): JsonResponse|string
+    public function download(Request $request)
     {
         try {
             $requestData = $request->all();
@@ -552,7 +552,7 @@ class InvoicesController extends Controller
             }
 
             $pdf = Pdf::loadView('download.invoice', ['invoice' => $invoice]);
-            return $pdf->output();
+            return $pdf->stream();
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }

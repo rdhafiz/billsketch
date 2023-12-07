@@ -143,6 +143,8 @@ class InvoiceRepository
         }
         if (!empty($filter['recurring']) && $filter['recurring'] == true) {
             $result->where('recurring', 1);
+        } else{
+            $result->where('recurring', 0);
         }
         if (!empty($filter['start_date']) && !empty($filter['end_date'])) {
             $result->whereBetween('created_at', [$filter['start_date'].' 00:00:00', $filter['end_date'].' 23:59:59']);

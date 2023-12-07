@@ -165,7 +165,8 @@ export default {
         return {
             param: {
                 keyword: '',
-                list_type: ''
+                list_type: '',
+                recurring: false
             },
             tableData: [],
             loading: false,
