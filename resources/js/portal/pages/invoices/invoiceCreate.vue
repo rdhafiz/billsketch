@@ -34,7 +34,7 @@
                                                             <input class="form-check-input" type="radio"
                                                                    name="invoice_type"
                                                                    id="inlineCheckbox1" value="1"
-                                                                   v-model="invoice_type">
+                                                                   v-model="invoice_type" @change="changeInvoiceType">
                                                             <label class="form-check-label"
                                                                    for="inlineCheckbox1">Bill To</label>
                                                         </div>
@@ -42,7 +42,7 @@
                                                             <input class="form-check-input" type="radio"
                                                                    name="invoice_type"
                                                                    id="inlineCheckbox2" value="2"
-                                                                   v-model="invoice_type">
+                                                                   v-model="invoice_type" @change="changeInvoiceType">
                                                             <label class="form-check-label"
                                                                    for="inlineCheckbox2">Bill Pay</label>
                                                         </div>
@@ -93,7 +93,7 @@
                                                         <div class="form-check form-check-inline">
                                                             <input class="form-check-input" type="checkbox" :checked="formData.recurring"
                                                                    name="recurring"
-                                                                   id="recurring" @change="changeValue($event)">
+                                                                   id="recurring" @change="changeRecurring($event)">
                                                             <label class="form-check-label"
                                                                    for="recurring">Toggle</label>
                                                         </div>
@@ -115,7 +115,7 @@
                                             <div class="col-lg-2 col-xl-4"></div>
                                             <div class="col-lg-5 col-xl-4">
                                                 <div class="form-group mb-3">
-                                                    <label for="invoice_no"><strong>Invoice Number</strong></label>
+                                                    <label for="invoice_no" class="me-2"><strong>Invoice Number: </strong></label>
                                                     <label for="invoice_no"><strong>{{ invoice_number }}</strong></label>
                                                 </div>
                                                 <div class="form-group mb-3">
@@ -204,16 +204,18 @@
                                                                    :name="'invoice_items.' + index + '.unit_frequency'"
                                                                    v-model="formData.invoice_items[index]['unit_frequency']"
                                                                    @keypress="checkNumber($event)"
-                                                                   @keyup="calculateTotal(index)">
+                                                                   @keyup="calculateInvoiceItemTotal(index)">
+                                                            <div class="error-report text-danger "></div>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="form-group">
                                                             <input type="text" class="form-control"
-                                                                   :name="'invoice_items.' + index + '.unit_value'"
+                                                                   v-bind:name="'invoice_items.' + index + '.unit_value'"
                                                                    v-model="formData.invoice_items[index]['unit_value']"
                                                                    @keypress="checkNumber($event)"
-                                                                   @keyup="calculateTotal(index)">
+                                                                   @keyup="calculateInvoiceItemTotal(index)">
+                                                            <div class="error-report text-danger "></div>
                                                         </div>
                                                     </td>
                                                     <td class="text-end">{{ each.total }}</td>
@@ -255,15 +257,18 @@
                                                         Tax: </strong>
                                                     <input type="text"
                                                            class="form-control ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                           style="width: 200px;" v-model="formData.tax" @change="checkTax">
+                                                           style="width: 200px;" v-model="formData.tax"
+                                                           @keypress="checkNumber($event)" @keyup="checkTax">
                                                 </div>
+                                                <div class="valid-tax text-danger mb-2"></div>
                                                 <div
                                                     class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center h5 mb-3 mb-sm-2"
                                                     v-if="invoice_type == 1"><strong
                                                     class="text-start text-sm-end">Invoice Discount: </strong>
                                                     <input type="text"
                                                            class="form-control ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                           style="width: 200px;" v-model="formData.discount">
+                                                           style="width: 200px;" v-model="formData.discount"
+                                                           @keypress="checkNumber($event)" @keyup="calculateTotal">
                                                 </div>
                                                 <div
                                                     class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center h5 mb-3 mb-sm-2"
@@ -271,13 +276,14 @@
                                                     class="text-start text-sm-end">Invoice Bonus: </strong>
                                                     <input type="text"
                                                            class="form-control ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                           style="width: 200px;" v-model="formData.bonus">
+                                                           style="width: 200px;" v-model="formData.bonus"
+                                                           @keypress="checkNumber($event)" @keyup="calculateTotal">
                                                 </div>
                                                 <div class="d-flex flex-column flex-sm-row h5 mb-3 mb-sm-2">
                                                     <strong class="text-start text-sm-end">Invoice
                                                         Total: </strong> <span
                                                     class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                    style="width: 200px;">800</span></div>
+                                                    style="width: 200px;">{{ this.total }}</span></div>
                                             </div>
                                         </div>
                                     </div>
@@ -336,14 +342,11 @@ export default {
                 },
                 invoice_items: [{
                     description: '',
-                    unit_frequency: 0,
-                    unit_value: 0,
+                    unit_frequency: '',
+                    unit_value: '',
                     total: 0,
                 }],
             },
-            isRecurringPeriod: false,
-            date: '',
-            due_date: '',
             config: {
                 altFormat: 'M j, Y',
                 altInput: true,
@@ -356,7 +359,7 @@ export default {
             status: [],
             recurring: [],
             subTotal: 0,
-            total: 0,
+            total: 0
         }
     },
     methods: {
@@ -417,11 +420,6 @@ export default {
             })
         },
 
-        /* Check Tax */
-        checkTax(type, id) {
-            // if(parseInt(this.formData.tax > 100) || this.formData.tax < 0)
-        },
-
         /*Create Invoice*/
         invoiceCreate() {
             apiService.ClearErrorHandler();
@@ -437,8 +435,19 @@ export default {
             })
         },
 
-        changeValue() {
+        changeRecurring() {
             this.formData.recurring = this.formData.recurring == 0 ? 1 : 0;
+        },
+
+        /*change invoice type*/
+        changeInvoiceType(){
+            this.formData.invoice_no = '';
+            this.formData.client_id = '';
+            this.formData.employee_id = '';
+            this.invoice_number = '';
+            this.formData.discount = '';
+            this.formData.bonus = '';
+            this.calculateTotal();
         },
 
         /*insert table data*/
@@ -449,21 +458,46 @@ export default {
                 unit_value: '',
                 total: '',
             })
+        },
 
-            console.log(this.formData.invoice_items)
+        /* Check Tax */
+        checkTax() {
+            const validTax = document.querySelector('.valid-tax');
+            validTax.innerHTML = '';
+            if(parseFloat(this.formData.tax) > 100 || parseFloat(this.formData.tax) < 0){
+                this.formData.tax = '';
+                validTax.innerHTML = 'Tax can\'t be more than 100 and less than 0';
+               return this.calculateTotal();
+            }
+            this.calculateTotal();
+        },
+
+        /*calculate invoice item total*/
+        calculateInvoiceItemTotal(index) {
+            const total = parseFloat(this.formData.invoice_items[index]['unit_frequency']) * parseFloat(this.formData.invoice_items[index]['unit_value']);
+            this.formData.invoice_items[index]['total'] = isNaN(total) ? 0 : total.toFixed(2);
+            this.calculateSubtotal();
         },
 
         /*calculate total*/
-        calculateTotal(index) {
-            const total = parseInt(this.formData.invoice_items[index]['unit_frequency']) * parseInt(this.formData.invoice_items[index]['unit_value']);
-            this.formData.invoice_items[index]['total'] = isNaN(total) ? 0 : total;
-            this.calculateSubtotal();
+        calculateTotal(){
+            let taxAmount = 0;
+            if(this.formData.tax == ''){
+                taxAmount = 0;
+            }else{
+                taxAmount = this.subTotal * (parseFloat(this.formData.tax) / 100);
+            }
+            const discount = isNaN(parseFloat(this.formData.discount)) ? 0 : parseFloat(this.formData.discount);
+            const bonus = isNaN(parseFloat(this.formData.bonus)) ? 0 : parseFloat(this.formData.bonus);
+            this.total = (parseFloat(this.subTotal) - taxAmount - discount + bonus).toFixed(2);
+            this.total = isNaN(this.total) ? 0 : this.total
+            return this.total;
         },
 
         /*calculate subtotal*/
         calculateSubtotal(){
-            this.subTotal = this.formData.invoice_items.reduce((prev, current)=> (prev + parseInt(current.total)),0)
-            console.log(this.subTotal)
+            this.subTotal = this.formData.invoice_items.reduce((prev, current)=> (prev + parseFloat(current.total)),0).toFixed(2);
+            this.calculateTotal();
         },
 
         /*number validation*/

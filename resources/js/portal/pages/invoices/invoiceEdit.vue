@@ -93,7 +93,7 @@
                                                         <div class="form-check form-check-inline">
                                                             <input class="form-check-input" type="checkbox" :checked="formData.recurring"
                                                                    name="recurring"
-                                                                   id="recurring" @change="changeValue($event)">
+                                                                   id="recurring" @change="changeRecurring($event)">
                                                             <label class="form-check-label"
                                                                    for="recurring">Toggle</label>
                                                         </div>
@@ -115,14 +115,13 @@
                                             <div class="col-lg-2 col-xl-4"></div>
                                             <div class="col-lg-5 col-xl-4">
                                                 <div class="form-group mb-3">
-                                                    <label for="invoice_no"><strong>Invoice No</strong></label>
-                                                    <input type="text" class="form-control" name="invoice_no" v-model="formData.invoice_no">
-                                                    <div class="error-report text-danger "></div>
+                                                    <label for="invoice_no" class="me-2"><strong>Invoice Number: </strong></label>
+                                                    <label for="invoice_no"><strong>{{ formData.invoice_number }}</strong></label>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label for="invoice_date"><strong>Invoice Date</strong></label>
                                                     <flat-pickr v-model="formData.invoice_date"
-                                                                :config="config"
+                                                                :config="date_config"
                                                                 class="form-control"
                                                                 name="invoice_date"
                                                                 placeholder="Select date"/>
@@ -131,7 +130,7 @@
                                                     <label for="invoice_due_date"><strong>Invoice Due
                                                         Date</strong></label>
                                                     <flat-pickr v-model="formData.invoice_due_date"
-                                                                :config="config"
+                                                                :config="due_date_config"
                                                                 class="form-control"
                                                                 name="invoice_due_date"
                                                                 placeholder="Select date"/>
@@ -205,7 +204,8 @@
                                                                    :name="'invoice_items.' + index + '.unit_frequency'"
                                                                    v-model="formData.invoice_items[index]['unit_frequency']"
                                                                    @keypress="checkNumber($event)"
-                                                                   @keyup="calculateTotal(index)">
+                                                                   @keyup="calculateInvoiceItemTotal(index)">
+                                                            <div class="error-report text-danger "></div>
                                                         </div>
                                                     </td>
                                                     <td>
@@ -214,7 +214,8 @@
                                                                    :name="'invoice_items.' + index + '.unit_value'"
                                                                    v-model="formData.invoice_items[index]['unit_value']"
                                                                    @keypress="checkNumber($event)"
-                                                                   @keyup="calculateTotal(index)">
+                                                                   @keyup="calculateInvoiceItemTotal(index)">
+                                                            <div class="error-report text-danger "></div>
                                                         </div>
                                                     </td>
                                                     <td class="text-end">{{ each.total }}</td>
@@ -248,7 +249,7 @@
                                                     class="text-start text-sm-end">Invoice
                                                     Subtotal: </strong> <span
                                                     class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                    style="width: 200px;">{{ formData.sub_total }}</span></div>
+                                                    style="width: 200px;">{{ subTotal }}</span></div>
                                                 <div
                                                     class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center h5 mb-3 mb-sm-2">
                                                     <strong
@@ -256,15 +257,18 @@
                                                         Tax: </strong>
                                                     <input type="text"
                                                            class="form-control ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                           style="width: 200px;" v-model="formData.tax">
+                                                           style="width: 200px;" v-model="formData.tax"
+                                                           @keypress="checkNumber($event)" @keyup="checkTax">
                                                 </div>
+                                                <div class="valid-tax text-danger"></div>
                                                 <div
                                                     class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center h5 mb-3 mb-sm-2"
                                                     v-if="invoice_type == 1"><strong
                                                     class="text-start text-sm-end">Invoice Discount: </strong>
                                                     <input type="text"
                                                            class="form-control ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                           style="width: 200px;" v-model="formData.discount">
+                                                           style="width: 200px;" v-model="formData.discount"
+                                                           @keypress="checkNumber($event)" @keyup="calculateTotal">
                                                 </div>
                                                 <div
                                                     class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center h5 mb-3 mb-sm-2"
@@ -272,13 +276,14 @@
                                                     class="text-start text-sm-end">Invoice Bonus: </strong>
                                                     <input type="text"
                                                            class="form-control ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                           style="width: 200px;" v-model="formData.bonus">
+                                                           style="width: 200px;" v-model="formData.bonus"
+                                                           @keypress="checkNumber($event)" @keyup="calculateTotal">
                                                 </div>
                                                 <div class="d-flex flex-column flex-sm-row h5 mb-3 mb-sm-2">
                                                     <strong class="text-start text-sm-end">Invoice
                                                         Total: </strong> <span
                                                     class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                    style="width: 200px;">{{ formData.total }}</span></div>
+                                                    style="width: 200px;">{{ total }}</span></div>
                                             </div>
                                         </div>
                                     </div>
@@ -317,9 +322,10 @@ export default {
                 employee_id: '',
                 category_id: '',
                 invoice_no: '',
+                invoice_number: '',
                 invoice_due_date: '',
                 invoice_date: '',
-                invoice_status: 1,
+                invoice_status: '',
                 sub_total: '',
                 tax: '',
                 discount: '',
@@ -336,16 +342,19 @@ export default {
                 },
                 invoice_items: [{
                     description: '',
-                    unit_frequency: 0,
-                    unit_value: 0,
+                    unit_frequency: '',
+                    unit_value: '',
                     total: 0,
                 }],
             },
-            isRecurringPeriod: false,
-            date: '',
-            due_date: '',
-            config: {
-                altFormat: 'M j, Y',
+            date_config: {
+                altFormat: "F j, Y",
+                altInput: true,
+                dateFormat: 'Y-m-d',
+                disableMobile: true
+            },
+            due_date_config: {
+                altFormat: "F j, Y",
                 altInput: true,
                 dateFormat: 'Y-m-d',
                 disableMobile: true
@@ -355,6 +364,8 @@ export default {
             categories: [],
             recurring: [],
             status: [],
+            subTotal: 0,
+            total: 0
         }
     },
     methods: {
@@ -420,11 +431,13 @@ export default {
                 if (res.status === 200) {
                     this.formData = {
                         ...res.data,
-                        invoice_date: res.data.invoice_date_formatted,
-                        invoice_due_date: res.data.invoice_due_date_formatted,
+                        invoice_status: res.data.invoice_status,
                         invoice_item_headings: res.data.invoice_item_headings_formatted
                     };
+                    this.subTotal = res.data.sub_total,
+                    this.total = res.data.sub_total
                     this.invoice_type = res.data.client ? 1 : 2;
+                    this.calculateTotal();
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }
@@ -446,12 +459,23 @@ export default {
             })
         },
 
-        changeValue() {
+        changeRecurring() {
             this.formData.recurring = this.formData.recurring == 0 ? 1 : 0;
         },
 
+        /*change invoice type*/
+        changeInvoiceType(){
+            this.formData.invoice_no = '';
+            this.formData.client_id = '';
+            this.formData.employee_id = '';
+            this.invoice_number = '';
+            this.formData.discount = '';
+            this.formData.bonus = '';
+            this.calculateTotal();
+        },
+
         /*insert table data*/
-        insertData(index) {
+        insertData() {
             this.formData.invoice_items.push({
                 description: '',
                 unit_frequency: '',
@@ -460,10 +484,45 @@ export default {
             })
         },
 
+        /* Check Tax */
+        checkTax() {
+            const validTax = document.querySelector('.valid-tax');
+            validTax.innerHTML = '';
+            if(parseFloat(this.formData.tax) > 100 || parseFloat(this.formData.tax) < 0){
+                this.formData.tax = '';
+                validTax.innerHTML = 'Tax can\'t be more than 100 and less than 0';
+                return this.calculateTotal();
+            }
+            this.calculateTotal();
+        },
+
+        /*calculate invoice item total*/
+        calculateInvoiceItemTotal(index) {
+            const total = parseFloat(this.formData.invoice_items[index]['unit_frequency']) * parseFloat(this.formData.invoice_items[index]['unit_value']);
+            this.formData.invoice_items[index]['total'] = isNaN(total) ? 0 : total.toFixed(2);
+            this.calculateSubtotal();
+        },
+
         /*calculate total*/
-        calculateTotal(index) {
-            const total = parseInt(this.formData.invoice_items[index]['unit_frequency']) * parseInt(this.formData.invoice_items[index]['unit_value']);
-            this.formData.invoice_items[index]['total'] = isNaN(total) ? 0 : total;
+        calculateTotal(){
+            let taxAmount = 0;
+            if(this.formData.tax == '' || this.formData.tax == null){
+                taxAmount = 0;
+            }else{
+                taxAmount = this.subTotal * (parseFloat(this.formData.tax) / 100);
+            }
+            const discount = isNaN(parseFloat(this.formData.discount)) ? 0 : parseFloat(this.formData.discount);
+            const bonus = isNaN(parseFloat(this.formData.bonus)) ? 0 : parseFloat(this.formData.bonus);
+            this.total = (parseFloat(this.subTotal) - taxAmount - discount + bonus).toFixed(2);
+            this.total = isNaN(this.total) ? 0 : this.total
+            return this.total;
+        },
+
+        /*calculate subtotal*/
+        calculateSubtotal(){
+            console.log(this.formData.invoice_items)
+            this.subTotal = this.formData.invoice_items.reduce((prev, current)=> (prev + parseFloat(current.total)),0).toFixed(2);
+            this.calculateTotal();
         },
 
         /*number validation*/

@@ -98,12 +98,12 @@
                                                     class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
                                                     style="min-width: 120px;">{{ invoice?.tax }}</span></div>
                                                 <div class="d-flex flex-column flex-sm-row justify-content-end h6 mb-3 mb-sm-2"
-                                                     v-if="invoice_type == 1"><strong
+                                                     v-if="invoice?.client_id"><strong
                                                     class="text-start text-sm-end">Invoice Discount: </strong>
                                                     <span class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
                                                           style="min-width: 120px;">{{invoice?.discount}}</span></div>
                                                 <div class="d-flex flex-column flex-sm-row justify-content-end h6 mb-3 mb-sm-2"
-                                                     v-if="invoice_type == 2"><strong
+                                                     v-if="invoice?.employee_id"><strong
                                                     class="text-start text-sm-end">Invoice Bonus: </strong>
                                                     <span class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
                                                           style="min-width: 120px;">{{invoice?.bonus}}</span></div>
@@ -144,8 +144,7 @@ export default {
     data() {
         return {
             invoice: null,
-            tableData: [],
-            invoice_type: 1
+            tableData: []
         }
     },
     methods: {

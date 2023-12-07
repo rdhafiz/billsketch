@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Constants\InvoiceStatus;
 use App\Models\Invoices;
 use App\Models\User;
 
@@ -48,15 +49,10 @@ class InvoiceRepository
      */
     public static function update(Invoices $invoiceModel, array $invoiceData): array|Invoices
     {
-        $invoiceModel->client_id = $invoiceData['client_id'] ?? null;
-        $invoiceModel->employee_id = $invoiceData['employee_id'] ?? null;
         $invoiceModel->category_id = $invoiceData['category_id'];
-        //$invoiceModel->invoice_no = $invoiceData['invoice_no'];
         $invoiceModel->invoice_date = $invoiceData['invoice_date'] ?? null;
         $invoiceModel->invoice_due_date = $invoiceData['invoice_due_date'] ?? null;
         $invoiceModel->invoice_status = $invoiceData['invoice_status'] ?? null;
-        $invoiceModel->cancel_reason = $invoiceData['cancel_reason'] ?? null;
-        $invoiceModel->overdue_reason = $invoiceData['overdue_reason'] ?? null;
         $invoiceModel->currency = $invoiceData['currency'];
         $invoiceModel->recurring = $invoiceData['recurring'] ?? 0;
         $invoiceModel->recurring_frequency = $invoiceData['recurring_frequency'] ?? null;
@@ -122,6 +118,10 @@ class InvoiceRepository
         $invoice = Invoices::where('id', $invoiceId)->with(['invoice_items', 'category', 'client', 'employee'])->first();
         if (!$invoice instanceof Invoices) {
             return ['message' => 'Cannot find invoice'];
+        }
+        if ($invoice->invoice_due_date < date('c')) {
+            $invoice->invoice_status = InvoiceStatus::Overdue;
+            $invoice->save();
         }
         return $invoice;
     }
