@@ -38,8 +38,12 @@ const ApiRoutes = {
     invoiceStatusList: ApiVersion + '/invoice/get/status',
     invoiceRecurring: ApiVersion + '/invoice/get/recurring',
     invoiceNumber: ApiVersion + '/invoice/get/number',
-    invoiceStatus: ApiVersion + '/invoice/update/activity',
+    invoiceActivity: ApiVersion + '/invoice/update/activity',
     invoiceDelete: ApiVersion + '/invoice/delete',
+    invoiceDownload: ApiVersion + '/invoice/download',
+    invoiceShare: ApiVersion + '/invoice/share',
+    invoiceQRCode: ApiVersion + '/invoice/generate/qrcode',
+    invoiceStatusUpdate: ApiVersion + '/invoice/update/status',
 
 };
 export default ApiRoutes;

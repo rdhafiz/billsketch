@@ -52,6 +52,26 @@ const ApiService = {
             }
         })
     },
+
+    DOWNLOAD: (url, param, headersAxios, callback, auth = false) => {
+        axios.post(url, param, {
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'X-Authorization': AuthService.getAccessToken()
+            },
+            responseType: 'blob' }).then((response) => {
+            if (response.status === 200) {
+                callback(response.data);
+            }
+        }).catch(err => {
+            const error_code = parseInt(err.toLocaleString().replace(/\D/g, ""));
+            if (error_code === 401) {
+                AuthService.logout(() => {
+
+                })
+            }
+        })
+    },
     ErrorHandler(errors) {
         $('.is-invalid').removeClass('is-invalid');
         $('.error-report').html('');

@@ -60,4 +60,28 @@
             }
         }
     }
+
+    .page-title{
+        @media screen and (max-width: 1200px) {
+            font-size: 24px;
+        }
+    }
+
+    .page-title-view{
+        @media screen and (max-width: 1600px) {
+            font-size: 24px;
+        }
+    }
+
+    .mw-1450{
+        @media screen and (max-width: 1450px) {
+            flex-direction: column!important;
+            align-items: start!important;
+            .buttons{
+                margin-top: 10px;
+                width: 100%;
+            }
+        }
+    }
 }
+
