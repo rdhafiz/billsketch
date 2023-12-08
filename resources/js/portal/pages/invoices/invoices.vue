@@ -245,7 +245,7 @@ export default {
                 .then(willDelete => {
                     console.log(1)
                     if (willDelete) {
-                        apiService.POST(apiRoutes.invoiceStatus, {id}, (res) => {
+                        apiService.POST(apiRoutes.invoiceActivity, {id}, (res) => {
                             if (res.status === 200) {
                                 swal(`${!this.status ? 'Archived!' : 'Restored!'}`, `${!this.status ? 'Invoice has been archived!' : 'Invoice has been restored!!'}`, "success"
                                 );

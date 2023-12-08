@@ -5,9 +5,12 @@
                 <div class="row">
                     <div class="col-lg-12 mb-4">
                         <div class="d-flex justify-content-between flex-column flex-lg-row align-items-lg-center">
-                            <div class="h1 mb-2 mb-lg-0">Invoice Edit</div>
+                            <div class="h1 mb-2 mb-lg-0 page-title">{{isRecurring ? 'Recurring Invoice' : 'Invoice'}} Edit</div>
                             <div class="text-end">
-                                <router-link :to="{name: 'Invoices'}" class="btn btn-danger w-160 me-3">
+                                <router-link :to="{name: 'Invoices'}" class="btn btn-danger w-160 me-3" v-if="!isRecurring">
+                                    Cancel
+                                </router-link>
+                                <router-link :to="{name: 'RecurringInvoices'}" class="btn btn-danger w-160 me-3" v-if="isRecurring">
                                     Cancel
                                 </router-link>
                                 <button type="submit" class="btn btn-theme w-160" v-if="loading === false">
@@ -365,7 +368,8 @@ export default {
             recurring: [],
             status: [],
             subTotal: 0,
-            total: 0
+            total: 0,
+            isRecurring: false
         }
     },
     methods: {
@@ -553,6 +557,10 @@ export default {
         this.getRecurring();
         if(this.$route.params){
             this.getInvoice(this.$route.params.id);
+        }
+
+        if(window.location.pathname.includes('recurring')){
+            this.isRecurring = true;
         }
     },
     created() {

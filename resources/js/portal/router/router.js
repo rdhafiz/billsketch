@@ -24,6 +24,10 @@ import InvoiceCreate from "../pages/invoices/invoiceCreate.vue";
 import InvoiceEdit from "../pages/invoices/invoiceEdit.vue";
 import InvoiceView from "../pages/invoices/invoiceView.vue";
 
+import RecurringInvoiceCreate from "../pages/invoices/invoiceCreate.vue";
+import RecurringInvoiceEdit from "../pages/invoices/invoiceEdit.vue";
+import RecurringInvoiceView from "../pages/invoices/invoiceView.vue";
+
 //=====================
 // Routes
 //=====================
@@ -57,7 +61,13 @@ const routes = [
             {path: ROOT_URL + '/invoices/create', name: 'InvoiceCreate', component: InvoiceCreate},
             {path: ROOT_URL + '/invoices/edit/:id', name: 'InvoiceEdit', component: InvoiceEdit},
             {path: ROOT_URL + '/invoices/:id', name: 'InvoiceView', component: InvoiceView},
+
+            /*invoice routes*/
             {path: ROOT_URL + '/recurring-invoices', name: 'RecurringInvoices', component: RecurringInvoices},
+            {path: ROOT_URL + '/recurring-invoices/create', name: 'RecurringInvoiceCreate', component: RecurringInvoiceCreate},
+            {path: ROOT_URL + '/recurring-invoices/edit/:id', name: 'RecurringInvoiceEdit', component: RecurringInvoiceEdit},
+            {path: ROOT_URL + '/recurring-invoices/:id', name: 'RecurringInvoiceView', component: RecurringInvoiceView},
+            {path: ROOT_URL + '/recurring-invoices/:id', name: 'RecurringInvoiceView', component: RecurringInvoiceView},
 
             /* profile routes */
             {path: ROOT_URL + '/profile', name: 'Profile', component: Profile},
