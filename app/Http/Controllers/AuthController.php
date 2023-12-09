@@ -45,7 +45,7 @@ class AuthController extends Controller
             } else {
                 if (Hash::check($requestData['password'], $userInfo->password)) {
                     $access_token = $userInfo->createToken('authToken')->accessToken;
-                    Helpers::saveUserActivity($userInfo['id'],UserLogType::Login);
+                    Helpers::saveUserActivity($userInfo['id'],UserLogType::Login, $userInfo['first_name'].' '.$userInfo['first_name']. ' logged in');
                     return response()->json(['status' => 200, 'access_token' => $access_token, 'user' => User::parseData($userInfo)]);
                 }
             }
@@ -96,9 +96,9 @@ class AuthController extends Controller
             }
             $access_token = $userInfo->createToken('authToken')->accessToken;
             if($requestData['social_provider'] == 'facebook'){
-                Helpers::saveUserActivity($userInfo['id'],UserLogType::SocialLoginFb);
+                Helpers::saveUserActivity($userInfo['id'],UserLogType::SocialLoginFb, $userInfo['first_name'].' '.$userInfo['first_name']. ' logged in via facebook');
             } elseif ($requestData['social_provider'] == 'google'){
-                Helpers::saveUserActivity($userInfo['id'],UserLogType::SocialLoginGl);
+                Helpers::saveUserActivity($userInfo['id'],UserLogType::SocialLoginGl, $userInfo['first_name'].' '.$userInfo['first_name']. ' logged in via google');
             }
             return response()->json(['status' => 200, 'access_token' => $access_token, 'user' => User::parseData($userInfo)]);
         } catch (\Exception $exception) {
@@ -175,7 +175,7 @@ class AuthController extends Controller
             }
             AuthRepository::sendVerificationEmail($userInfo);
             DB::commit();
-            Helpers::saveUserActivity($userInfo['id'],UserLogType::Register);
+            Helpers::saveUserActivity($userInfo['id'],UserLogType::Register, $userInfo['first_name'].' '.$userInfo['first_name']. ' registered');
             return response()->json(['status' => 200, 'message' => 'A verification mail has been sent to your email, Please verify the email to login'], 200);
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -207,7 +207,7 @@ class AuthController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot verify user, Please try again'], 200);
             }
             $access_token = $userInfo->createToken('authToken')->accessToken;
-            Helpers::saveUserActivity($userInfo['id'],UserLogType::Account_Activation);
+            Helpers::saveUserActivity($userInfo['id'],UserLogType::Account_Activation, $userInfo['first_name'].' '.$userInfo['first_name']. ' verify his account');
             return response()->json(['status' => 200, 'access_token' => $access_token, 'user' => User::parseData($userInfo)]);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -272,7 +272,7 @@ class AuthController extends Controller
             if (!$userInfo->save()) {
                 return response()->json(['status' => 500, 'message' => 'Cannot reset password'], 200);
             }
-            Helpers::saveUserActivity($userInfo['id'],UserLogType::Reset_password);
+            Helpers::saveUserActivity($userInfo['id'],UserLogType::Reset_password, $userInfo['first_name'].' '.$userInfo['first_name']. ' reset his password');
             return response()->json(['status'=> 200, 'message' => 'Password reset successful']);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -288,7 +288,8 @@ class AuthController extends Controller
         $oauth_token = $request->get('oauth_token');
         $token_repository = app(TokenRepository::class);
         $token_repository->revokeAccessToken($oauth_token->id);
-        Helpers::saveUserActivity($request->session_user->id,UserLogType::Logout);
+        $userInfo = $request->get('session_user');
+        Helpers::saveUserActivity($request->session_user->id,UserLogType::Logout, $userInfo['first_name'].' '.$userInfo['first_name']. ' logged out');
         return response()->json(['status' => 200, 'message' => 'Logout Success'], 200);
     }
 }

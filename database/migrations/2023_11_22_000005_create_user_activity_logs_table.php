@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('user_id');
             $table->string('log_type');
+            $table->text('message');
             $table->string('ip_address');
             $table->string('device')->nullable();
             $table->string('os')->nullable();

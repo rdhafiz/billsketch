@@ -40,7 +40,7 @@ class CategoriesController extends Controller
             if (!$categoryInfo instanceof Categories) {
                 return response()->json(['status' => 500, 'message' => 'Cannot save category'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Category_create);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Category_create, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' created a category named: '.$categoryInfo['name']);
             return response()->json(['status' => 200, 'message' => 'Category has been created successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -79,7 +79,7 @@ class CategoriesController extends Controller
             if (!$categoryInfo instanceof Categories) {
                 return response()->json(['status' => 500, 'message' => 'Cannot update category'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Category_update);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Category_update, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' updated a category named: '.$categoryInfo['name']);
             return response()->json(['status' => 200, 'message' => 'Category has been updated successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -103,7 +103,7 @@ class CategoriesController extends Controller
             if (!$category instanceof Categories) {
                 return response()->json(['status' => 500, 'message' => 'Cannot find category'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Category_view);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Category_view, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' viewed a category named: '.$category['name']);
             return response()->json(['status' => 200, 'data' => $category], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -132,7 +132,7 @@ class CategoriesController extends Controller
             }
             Helpers::relationalDataAction($category->id, 'category_id', 'delete', new Invoices(), true, new InvoiceItems());
             Helpers::fileRemove($category, 'icon');
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Category_delete);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Category_delete, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' deleted a category named: '.$category['name']);
             return response()->json(['status' => 200, 'message' => 'Category deleted successfully '], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -189,7 +189,7 @@ class CategoriesController extends Controller
                 }
                 return response()->json(['status' => 500, 'message' => $message], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],$category->is_active == 1 ? UserLogType::Category_restore : UserLogType::Category_archive);
+            Helpers::saveUserActivity($requestData['session_user']['id'],$category->is_active == 1 ? UserLogType::Category_restore : UserLogType::Category_archive, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name'].' '.$category->is_active == 1 ? 'restored' : 'archived' .' a category named: '.$category['name']);
             $message = 'Category archive successfully';
             Helpers::relationalDataAction($category->id, 'category_id', 'archive', new Invoices());
             if ($category->is_active == 1) {

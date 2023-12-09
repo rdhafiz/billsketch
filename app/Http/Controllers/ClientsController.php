@@ -50,7 +50,7 @@ class ClientsController extends Controller
             if (!$clientInfo instanceof Clients) {
                 return response()->json(['status' => 500, 'message' => 'Cannot save client'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_create);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_create, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' created a client named: '.$clientInfo['name']);
             return response()->json(['status' => 200, 'message' => 'Client has been created successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -104,7 +104,7 @@ class ClientsController extends Controller
             if (!$clientInfo instanceof Clients) {
                 return response()->json(['status' => 500, 'message' => 'Cannot update client'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_update);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_update, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' updated a client named: '.$clientInfo['name']);
             return response()->json(['status' => 200, 'message' => 'Client has been updated successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -128,7 +128,7 @@ class ClientsController extends Controller
             if (!$client instanceof Clients) {
                 return response()->json(['status' => 500, 'message' => 'Cannot find client'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_view);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_view, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' viewed a client named: '.$client['name']);
             return response()->json(['status' => 200, 'data' => $client], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -158,7 +158,7 @@ class ClientsController extends Controller
 
             Helpers::relationalDataAction($client->id, 'client_id', 'delete', new Invoices(), true, new InvoiceItems());
             Helpers::fileRemove($client, 'logo');
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_delete);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Client_delete, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' deleted a client named: '.$client['name']);
             return response()->json(['status' => 200, 'message' => 'Client deleted successfully '], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -216,7 +216,7 @@ class ClientsController extends Controller
                 }
                 return response()->json(['status' => 500, 'message' => $message], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],$client->is_active == 1 ? UserLogType::Client_restore : UserLogType::Client_archive);
+            Helpers::saveUserActivity($requestData['session_user']['id'],$client->is_active == 1 ? UserLogType::Client_restore : UserLogType::Client_archive, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name'].' '.$client->is_active == 1 ? 'restored' : 'archived' .'  a client named: '.$client['name']);
             $message = 'Client archive successfully';
             Helpers::relationalDataAction($client->id, 'client_id', 'archive', new Invoices());
             if ($client->is_active == 1) {

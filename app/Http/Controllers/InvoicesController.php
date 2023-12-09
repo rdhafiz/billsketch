@@ -6,6 +6,7 @@ use App\Constants\InvoiceRecurringStatus;
 use App\Constants\InvoiceStatus;
 use App\Constants\UserLogType;
 use App\Helpers\Helpers;
+use App\Models\Categories;
 use App\Models\Clients;
 use App\Models\Employees;
 use App\Models\InvoiceItems;
@@ -121,7 +122,7 @@ class InvoicesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot save invoice'], 200);
             }
             DB::commit();
-            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_create);
+            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_create, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' created a invoice named: '.$invoice['invoice_number']);
             return response()->json(['status' => 200, 'message' => 'Invoice has been created successfully'], 200);
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -202,7 +203,7 @@ class InvoicesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot update invoice'], 200);
             }
             DB::commit();
-            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_update);
+            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_update, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' updated a invoice named: '.$invoice['invoice_number']);
             return response()->json(['status' => 200, 'message' => 'Invoice has been updated successfully'], 200);
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -297,7 +298,7 @@ class InvoicesController extends Controller
             if (!$invoice instanceof Invoices) {
                 return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_view);
+            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_view, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' viewed a invoice named: '.$invoice['invoice_number']);
             return response()->json(['status' => 200, 'data' => $invoice], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -329,7 +330,7 @@ class InvoicesController extends Controller
             if (!$invoice->save()) {
                 return response()->json(['status' => 500, 'message' => 'Cannot update invoice status'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_update);
+            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_update, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' updated status of a invoice named: '.$invoice['invoice_number']);
             return response()->json(['status' => 200, 'message' => 'Invoice status updated successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -358,7 +359,7 @@ class InvoicesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot delete invoice'], 200);
             }
             Helpers::relationalDataAction($invoice->id, 'invoice_id', 'delete', new InvoiceItems());
-            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_delete);
+            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_delete, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' deleted a invoice named: '.$invoice['invoice_number']);
             return response()->json(['status' => 200, 'message' => 'Invoice deleted successfully '], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -424,7 +425,7 @@ class InvoicesController extends Controller
                 }
                 return response()->json(['status' => 500, 'message' => $message], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'], $invoice->is_active == 1 ? UserLogType::Invoice_restore : UserLogType::Invoice_archive);
+            Helpers::saveUserActivity($requestData['session_user']['id'], $invoice->is_active == 1 ? UserLogType::Invoice_restore : UserLogType::Invoice_archive, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name'].' '.$invoice->is_active == 1 ? 'restored' : 'archive' .' updated a invoice named: '.$invoice['invoice_number']);
             $message = 'Invoice archive successfully';
             if ($invoice->is_active == 1) {
                 $message = 'Invoice restore successfully';
@@ -455,7 +456,7 @@ class InvoicesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
             }
             $shareInfo = [];
-            $shareInfo['link'] = env('APP_URL') . '/share/invoice/' . base64_encode($invoice->id);
+            $shareInfo['link'] = env('APP_URL') . '/portal/share/invoice/' . base64_encode($invoice->id);
             $shareInfo['email'] = $requestData['email'];
             if (!empty($shareInfo['subject'])) {
                 $shareInfo['subject'] = $requestData['subject'];
@@ -471,6 +472,7 @@ class InvoicesController extends Controller
                 $message->to($shareInfo['email'])->subject($shareInfo['subject']);
                 $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
             });
+            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Share_invoice, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' shared a invoice named: '.$invoice['invoice_number']);
             return response()->json(['status' => 200, 'message' => 'Invoice shared successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -520,12 +522,13 @@ class InvoicesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
             }
             // Generate QR code for a URL
-            $url = env('APP_URL') . '/share/invoice/' . base64_encode($invoice->id);
+            $url = env('APP_URL') . '/portal/share/invoice/' . base64_encode($invoice->id);
             QrCode::format('svg')->size(300)->generate($url, public_path('storage/uploads/qrcode_' . base64_encode($invoice->id) . '.svg'));
             $invoice->qrcode = 'qrcode_' . base64_encode($invoice->id) . '.svg';
             if (!$invoice->save()) {
                 return response()->json(['status' => 500, 'message' => 'Cannot generate QR code'], 200);
             }
+            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Qrcode_invoice, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' created QR code of a invoice named: '.$invoice['invoice_number']);
             return response()->json(['status' => 200, 'message' => 'Qr code generated successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -550,9 +553,111 @@ class InvoicesController extends Controller
             if (!$invoice instanceof Invoices) {
                 return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
             }
-
             $pdf = Pdf::loadView('download.invoice', ['invoice' => $invoice]);
+            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Download_invoice, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' downloaded a invoice named: '.$invoice['invoice_number']);
             return $pdf->output();
+        } catch (\Exception $exception) {
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function dashboardCount(Request $request): JsonResponse
+    {
+        try {
+            $data = [
+                'total_invoice'=> Invoices::count(),
+                'pending_invoice'=> Invoices::where('invoice_status', InvoiceStatus::Pending)->count(),
+                'paid_invoice'=> Invoices::where('invoice_status', InvoiceStatus::Paid)->count(),
+                'recurring_invoice'=> Invoices::where('recurring', 1)->count(),
+            ];
+            return response()->json(['status' => 200, 'data' => $data], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
+        }
+    }
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function dashboardChartByMonth(Request $request): JsonResponse
+    {
+        try {
+            $requestData = $request->all();
+            $validator = Validator::make($requestData, [
+                'start_month' => 'required|integer',
+                'end_month' => 'required|integer',
+                'year' => 'required|integer',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
+            }
+            $start_date = $requestData['year'].'-'.$requestData['start_month'].'-01';
+            $end_date = $requestData['year'].'-'.$requestData['end_month'].'-31';
+            $invoice = Invoices::select(DB::raw('COUNT(id) as total'), DB::raw('MONTH(created_at) as month'))
+                ->whereBetween(DB::raw('DATE(created_at)'), [$start_date, $end_date])
+                ->groupBy('month')
+                ->get()
+                ->keyBy('month')
+                ->toArray();
+            $label = [];
+            $data = [];
+            for ($i = $requestData['start_month']; $i <= $requestData['end_month']; $i++) {
+                $label[] = date('F', strtotime($requestData['year'].'-'.$i.'-01'));
+                $data[] = isset($invoice[$i]) ? $invoice[$i]['total'] : 0;
+            }
+            return response()->json(['status' => 200, 'label' => $label, 'data'=>$data], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
+        }
+    }
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function dashboardChartByStatus(Request $request): JsonResponse
+    {
+        try {
+            $invoice = Invoices::select(DB::raw('COUNT(id) as total'), 'invoice_status')
+                ->groupBy('invoice_status')
+                ->get()
+                ->keyBy('invoice_status')
+                ->toArray();
+            $label = [];
+            $data = [];
+            $invoiceStatus = self::getStatus();
+            foreach ($invoiceStatus as $status) {
+                $label[] = $status['name'];
+                $data[] = isset($invoice[$status['value']]) ? $invoice[$status['value']]['total'] : 0;
+            }
+            return response()->json(['status' => 200, 'label' => $label, 'data'=>$data], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
+        }
+    }
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function dashboardChartByCategory(Request $request): JsonResponse
+    {
+        try {
+            $invoice = Invoices::select(DB::raw('COUNT(id) as total'), 'category_id')
+                ->groupBy('category_id')
+                ->get()
+                ->keyBy('category_id')
+                ->toArray();
+            $categories = Categories::get()->toArray();
+            $label = [];
+            $data = [];
+            foreach ($categories as $category) {
+                $label[] = $category['name'];
+                $data[] = isset($invoice[$category['id']]) ? $invoice[$category['id']]['total'] : 0;
+            }
+            return response()->json(['status' => 200, 'label' => $label, 'data'=>$data], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }

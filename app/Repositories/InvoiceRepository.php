@@ -178,8 +178,22 @@ class InvoiceRepository
             });
         }
         if ($pagination['pagination'] === true) {
-            return $result->orderBy($pagination['order_by'], $pagination['order_mode'])->paginate($pagination['limit']);
+            $result = $result->orderBy($pagination['order_by'], $pagination['order_mode'])->paginate($pagination['limit']);
+            foreach ($result as $item) {
+                if ($item->invoice_due_date < date('c')) {
+                    $item->invoice_status = InvoiceStatus::Overdue;
+                    $item->save();
+                }
+            }
+            return $result;
         }
-        return $result->orderBy($pagination['order_by'], $pagination['order_mode'])->get()->toArray();
+        $result = $result->orderBy($pagination['order_by'], $pagination['order_mode'])->get()->toArray();
+        foreach ($result as $item) {
+            if ($item->invoice_due_date < date('c')) {
+                $item->invoice_status = InvoiceStatus::Overdue;
+                $item->save();
+            }
+        }
+        return $result;
     }
 }

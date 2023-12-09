@@ -57,6 +57,9 @@
 <body>
 <table class="w-100">
     <tr>
+        <td class="w-100 text-center">
+            <img src="{{public_path('assets/images/bilify.png')}}" height="150px" alt="">
+        </td>
         <td class="w-100">
             <div class="fw-bold">{{ $invoice->client ? 'Client' : 'Employee'}}</div>
             <div>{{ $invoice->client ? $invoice->client->name : $invoice->employee->name}}</div>
@@ -101,7 +104,7 @@
         <td class="w-100"></td>
         <td class="w-100 text-end">
             <div class="fw-bold">Invoice Status</div>
-            <div>{{ $invoice->invoice_status ?? '' }}</div>
+            <div>{{ $invoice->invoice_status_name ?? '' }}</div>
         </td>
     </tr>
     <tr>
