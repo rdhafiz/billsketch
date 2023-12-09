@@ -1,11 +1,11 @@
 <template>
-    <div class="row justify-content-center res">
+    <div class="row justify-content-center res" :class="{'mt-5' : publicView}">
         <div class="col-lg-10 col-xl-10 col-xxl-7">
             <div class="row">
                 <div class="col-lg-12 mb-3">
                     <div class="d-flex justify-content-between flex-column flex-xl-row align-items-xl-center" :class="{'mw-1450': isRecurring}">
                         <div class="h2 mb-2 mb-xl-0 page-title-view">{{isRecurring ? 'Recurring Invoice' : 'Invoice'}} Preview</div>
-                        <div class="text-end buttons">
+                        <div class="text-end buttons" v-if="!publicView">
                             <router-link :to="{name: 'Invoices'}" class="btn btn-danger w-160 me-3" v-if="!isRecurring">
                                 Cancel
                             </router-link>
@@ -14,9 +14,17 @@
                             </router-link>
                             <button class="btn btn-theme w-160" @click="updateStatus">Change Status</button>
                         </div>
+                        <div v-else class="text-end buttons">
+                            <button class="btn btn-theme me-2" @click="generatePdf" v-if="!downloadLoading">
+                                <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn btn-theme me-2" disabled v-if="downloadLoading">
+                                <i class="fa fa-spinner spin" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-12 mb-4">
+                <div class="col-lg-12 mb-4" v-if="!publicView">
                     <div class="text-end">
                         <button class="btn btn-theme me-2" @click="generatePdf" v-if="!downloadLoading">
                             <i class="fa fa-arrow-down" aria-hidden="true"></i>
@@ -24,12 +32,14 @@
                         <button class="btn btn-theme me-2" disabled v-if="downloadLoading">
                             <i class="fa fa-spinner spin" aria-hidden="true"></i>
                         </button>
-                        <button class="btn btn-primary me-2" @click="generateQRCode" v-if="!qrLoading">
-                            <i class="fa fa-qrcode" aria-hidden="true"></i>
-                        </button>
-                        <button class="btn btn-primary me-2" disabled v-if="qrLoading">
-                            <i class="fa fa-spinner spin" aria-hidden="true"></i>
-                        </button>
+                        <template v-if="invoice?.qrcode_path == null">
+                            <button class="btn btn-primary me-2" @click="generateQRCode" v-if="!qrLoading">
+                                <i class="fa fa-qrcode" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn btn-primary me-2" disabled v-if="qrLoading">
+                                <i class="fa fa-spinner spin" aria-hidden="true"></i>
+                            </button>
+                        </template>
                         <button class="btn btn-secondary" @click="shareModalOpen">
                             <i class="fa fa-share" aria-hidden="true"></i>
                         </button>
@@ -75,7 +85,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <div><strong>Invoice Status</strong></div>
-                                                <div>Draft</div>
+                                                <div>{{ invoice?.invoice_status_name }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -220,13 +230,23 @@ export default {
             qrLoading: false,
             downloadLoading: false,
             statusParam: '',
-            statusLoading: false
+            statusLoading: false,
+            publicView: false
         }
     },
     methods: {
         /*Get Invoice Data*/
         getInvoice(id){
             apiService.POST(apiRoutes.invoiceSingle, {id}, (res) => {
+                if (res.status === 200) {
+                    this.invoice = res.data;
+                } else {
+                    apiService.ErrorHandler(res.errors)
+                }
+            })
+        },
+        getInvoicePublic(id){
+            apiService.POST(apiRoutes.invoicePublicView, {invoice_code: id}, (res) => {
                 if (res.status === 200) {
                     this.invoice = res.data;
                 } else {
@@ -335,10 +355,15 @@ export default {
     },
     mounted() {
         if(this.$route.params){
-            this.getInvoice(this.$route.params.id);
-            this.shareParam = {
-                ...this.shareParam,
-                id: this.$route.params.id
+            if(window.location.pathname.includes('share')){
+                this.publicView = true;
+                this.getInvoicePublic(this.$route.params.id);
+            } else {
+                this.getInvoice(this.$route.params.id);
+                this.shareParam = {
+                    ...this.shareParam,
+                    id: this.$route.params.id
+                }
             }
         }
 

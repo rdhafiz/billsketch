@@ -75,6 +75,10 @@ const routes = [
             {path: ROOT_URL + '/profile/change-password', name: 'ChangePassword', component: ChangePassword},
         ],
     },
+    // invoice public view
+    {
+        path: ROOT_URL + '/share/invoice/:id', name: 'invoicePublicView', component: InvoiceView, meta: {requiresAuth: false},
+    }
 ];
 
 const router = createRouter({

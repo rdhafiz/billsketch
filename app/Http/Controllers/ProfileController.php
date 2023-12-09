@@ -114,7 +114,7 @@ class ProfileController extends Controller
                     return response()->json(['status' => 500, 'message' => 'Cannot update company'], 200);
                 }
             }
-            Helpers::saveUserActivity($userInfo['id'],UserLogType::Update_profile);
+            Helpers::saveUserActivity($userInfo['id'],UserLogType::Update_profile, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' updated profile');
             return response()->json(['status' => 200, 'message' => 'Profile updated successfully']);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -147,7 +147,7 @@ class ProfileController extends Controller
             if (!$user->save()) {
                 return response()->json(['status' => 500, 'message' => 'Cannot update password'], 200);
             }
-            Helpers::saveUserActivity($user['id'],UserLogType::Change_password);
+            Helpers::saveUserActivity($user['id'],UserLogType::Change_password, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' changed password');
             return response()->json(['status' => 200, 'message' => 'Password updated successfully']);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);

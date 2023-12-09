@@ -79,12 +79,13 @@ class Helpers
      * @param integer $userId
      * @param string $logType
      */
-    public static function saveUserActivity(int $userId, string $logType): void
+    public static function saveUserActivity(int $userId, string $logType, string $logMessage): void
     {
         try {
             $userLog = [
                 'user_id' => $userId,
                 'log_type' => $logType,
+                'message' => $logMessage,
                 'ip_address' => self::getIp(),
                 'device' => self::getAgent('device'),
                 'os' => self::getAgent('os'),

@@ -9,6 +9,7 @@ use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\InvoiceItemsController;
+use App\Http\Controllers\UserActivityLogsController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -70,14 +71,25 @@ Route::group(['prefix' => 'invoice', 'middleware' => ['auth:api']], function () 
     Route::post('share', [InvoicesController::class, 'share']);
     Route::post('generate/qrcode', [InvoicesController::class, 'generateQRCode']);
     Route::post('update/status', [InvoicesController::class, 'updateStatus']);
-    Route::post('download', [InvoicesController::class, 'download']);
-    Route::group(['prefix' => 'item', 'middleware' => ['auth:api']], function () {
+    Route::get('dashboard/count', [InvoicesController::class, 'dashboardCount']);
+    Route::post('dashboard/chart/month', [InvoicesController::class, 'dashboardChartByMonth']);
+    Route::post('dashboard/chart/status', [InvoicesController::class, 'dashboardChartByStatus']);
+    Route::post('dashboard/chart/category', [InvoicesController::class, 'dashboardChartByCategory']);
+   /* Route::group(['prefix' => 'item', 'middleware' => ['auth:api']], function () {
         Route::post('save', [InvoiceItemsController::class, 'save']);
         Route::post('update', [InvoiceItemsController::class, 'update']);
         Route::post('single', [InvoiceItemsController::class, 'single']);
         Route::post('delete', [InvoiceItemsController::class, 'delete']);
         Route::post('list', [InvoiceItemsController::class, 'list']);
-    });
+    });*/
+});
+Route::group(['prefix' => 'user/log', 'middleware' => ['auth:api']], function () {
+    Route::post('list', [UserActivityLogsController::class, 'list']);
+    Route::get('get/type', [UserActivityLogsController::class, 'getLogType']);
+});
+
+Route::group(['prefix' => 'invoice'], function () {
+    Route::post('download', [InvoicesController::class, 'download']);
 });
 Route::group(['prefix' => 'invoice/public'], function () {
     Route::post('view', [InvoicesController::class, 'viewInvoice']);

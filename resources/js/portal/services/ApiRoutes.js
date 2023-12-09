@@ -35,6 +35,7 @@ const ApiRoutes = {
     invoiceUpdate: ApiVersion + '/invoice/update',
     invoiceList: ApiVersion + '/invoice/list',
     invoiceSingle: ApiVersion + '/invoice/single',
+    invoicePublicView: ApiVersion + '/invoice/public/view',
     invoiceStatusList: ApiVersion + '/invoice/get/status',
     invoiceRecurring: ApiVersion + '/invoice/get/recurring',
     invoiceNumber: ApiVersion + '/invoice/get/number',

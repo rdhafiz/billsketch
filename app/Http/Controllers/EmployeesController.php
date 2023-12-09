@@ -50,7 +50,7 @@ class EmployeesController extends Controller
             if (!$employeeInfo instanceof Employees) {
                 return response()->json(['status' => 500, 'message' => 'Cannot save employee'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_create);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_create, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' created a employee named: '.$employeeInfo['name']);
             return response()->json(['status' => 200, 'message' => 'Employee has been created successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -104,7 +104,7 @@ class EmployeesController extends Controller
             if (!$employeeInfo instanceof Employees) {
                 return response()->json(['status' => 500, 'message' => 'Cannot update employee'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_update);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_update, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' updated a employee named: '.$employeeInfo['name']);
             return response()->json(['status' => 200, 'message' => 'Employee has been updated successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -128,7 +128,7 @@ class EmployeesController extends Controller
             if (!$employee instanceof Employees) {
                 return response()->json(['status' => 500, 'message' => 'Cannot find employee'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_view);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_view, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' viewed a employee named: '.$employee['name']);
             return response()->json(['status' => 200, 'data' => $employee], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -157,7 +157,7 @@ class EmployeesController extends Controller
             }
             Helpers::relationalDataAction($employee->id, 'employee_id', 'delete', new Invoices(), true, new InvoiceItems());
             Helpers::fileRemove($employee, 'logo');
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_delete);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_delete, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' deleted a employee named: '.$employee['name']);
             return response()->json(['status' => 200, 'message' => 'Employee deleted successfully '], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -214,7 +214,7 @@ class EmployeesController extends Controller
                 }
                 return response()->json(['status' => 500, 'message' => $message], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],$employee->is_active == 1 ? UserLogType::Employee_restore : UserLogType::Employee_archive);
+            Helpers::saveUserActivity($requestData['session_user']['id'],$employee->is_active == 1 ? UserLogType::Employee_restore : UserLogType::Employee_archive, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' '.$employee->is_active == 1 ? 'restored' : 'archived' .' a employee named: '.$employee['name']);
             $message = 'Employee archive successfully';
             Helpers::relationalDataAction($employee->id, 'employee_id', 'archive', new Invoices());
             if ($employee->is_active == 1) {
