@@ -83,5 +83,27 @@
             }
         }
     }
+
+    canvas{
+        height: 300px!important;
+        width: 500px!important;
+        object-fit: contain;
+        max-width: 100%;
+        &#chart-month{
+            width: 100%!important;
+            max-width: 100%!important;
+            object-fit: contain;
+        }
+    }
+    &.dashboard{
+        h3{
+            @media screen and (max-width: 1275px){
+                font-size: 20px;
+            }
+            @media screen and (max-width: 575px){
+                font-size: 17px;
+            }
+        }
+    }
 }
 

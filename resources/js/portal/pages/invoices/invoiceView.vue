@@ -203,9 +203,6 @@
 import apiService from "../../services/ApiService";
 import apiRoutes from "../../services/ApiRoutes";
 
-import flatPickr from 'vue-flatpickr-component';
-import 'flatpickr/dist/flatpickr.css';
-
 import {createToaster} from "@meforma/vue-toaster";
 import swal from "sweetalert";
 
@@ -214,7 +211,7 @@ const toaster = createToaster({
 });
 
 export default {
-    components: {createToaster, flatPickr},
+    components: {createToaster},
     data() {
         return {
             invoice: null,
