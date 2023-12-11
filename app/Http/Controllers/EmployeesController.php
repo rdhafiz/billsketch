@@ -33,9 +33,13 @@ class EmployeesController extends Controller
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
             }
+
+            preg_match_all('/(?<=\b)\w/iu', $requestData['name'], $matches);
+            $invoice_prefix = mb_strtoupper(implode('', $matches[0]));
+
             $employeeData = [
                 'user_id' => $requestData['session_user']['id'],
-                'invoice_prefix' => $requestData['invoice_prefix'] ?? preg_split("/[\s,_-]+/", $requestData['name']),
+                'invoice_prefix' => $requestData['invoice_prefix'] ?? $invoice_prefix,
                 'name' => $requestData['name'],
                 'email' => $requestData['email'],
                 'phone' => $requestData['phone'],
@@ -86,9 +90,13 @@ class EmployeesController extends Controller
             if (!$employee instanceof Employees) {
                 return response()->json(['status' => 500, 'message' => 'Cannot find employee'], 200);
             }
+
+            preg_match_all('/(?<=\b)\w/iu', $requestData['name'], $matches);
+            $invoice_prefix = mb_strtoupper(implode('', $matches[0]));
+
             $employeeData = [
                 'id' => $requestData['id'],
-                'invoice_prefix' => $requestData['invoice_prefix'] ?? preg_split("/[\s,_-]+/", $requestData['name']),
+                'invoice_prefix' => $requestData['invoice_prefix'] ?? $invoice_prefix,
                 'name' => $requestData['name'],
                 'email' => $requestData['email'],
                 'phone' => $requestData['phone'],

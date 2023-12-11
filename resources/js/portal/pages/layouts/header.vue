@@ -7,6 +7,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-3 shadow rounded-10" style="width: 250px;">
                 <li><router-link :to="{name: 'Profile'}" class="dropdown-item px-3 py-2 rounded-10 text-center">Profile</router-link></li>
+                <li><router-link :to="{name: 'UserLogs'}" class="dropdown-item px-3 py-2 rounded-10 text-center">User Logs</router-link></li>
                 <li><a class="btn btn-danger w-100 rounded-10 mt-2" @click="logout">Logout</a></li>
             </ul>
         </div>

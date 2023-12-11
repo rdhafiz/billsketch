@@ -39,11 +39,11 @@ class UserActivityLogRepository
         if (!empty($filter['keyword'])) {
             $result->where(function($q) use ($filter) {
                 $q->where('message', 'LIKE', '%'.$filter['keyword'].'%');
-                $q->orWhere('log_type', 'LIKE', '%'.$filter['log_type'].'%');
-                $q->orWhere('ip_address', 'LIKE', '%'.$filter['ip_address'].'%');
-                $q->orWhere('device', 'LIKE', '%'.$filter['device'].'%');
-                $q->orWhere('os', 'LIKE', '%'.$filter['os'].'%');
-                $q->orWhere('browser', 'LIKE', '%'.$filter['browser'].'%');
+                $q->orWhere('log_type', 'LIKE', '%'.$filter['keyword'].'%');
+                $q->orWhere('ip_address', 'LIKE', '%'.$filter['keyword'].'%');
+                $q->orWhere('device', 'LIKE', '%'.$filter['keyword'].'%');
+                $q->orWhere('os', 'LIKE', '%'.$filter['keyword'].'%');
+                $q->orWhere('browser', 'LIKE', '%'.$filter['keyword'].'%');
             });
         }
         if ($pagination['pagination'] === true) {

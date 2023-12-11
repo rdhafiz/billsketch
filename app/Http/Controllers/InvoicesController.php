@@ -553,8 +553,8 @@ class InvoicesController extends Controller
             if (!$invoice instanceof Invoices) {
                 return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
             }
-            $pdf = Pdf::loadView('download.invoice', ['invoice' => $invoice]);
             Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Download_invoice, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' downloaded a invoice named: '.$invoice['invoice_number']);
+            $pdf = Pdf::loadView('download.invoice', ['invoice' => $invoice]);
             return $pdf->output();
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -588,15 +588,13 @@ class InvoicesController extends Controller
         try {
             $requestData = $request->all();
             $validator = Validator::make($requestData, [
-                'start_month' => 'required|integer',
-                'end_month' => 'required|integer',
                 'year' => 'required|integer',
             ]);
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
             }
-            $start_date = $requestData['year'].'-'.$requestData['start_month'].'-01';
-            $end_date = $requestData['year'].'-'.$requestData['end_month'].'-31';
+            $start_date = $requestData['year'].'-01-01';
+            $end_date = $requestData['year'].'-12-31';
             $invoice = Invoices::select(DB::raw('COUNT(id) as total'), DB::raw('MONTH(created_at) as month'))
                 ->whereBetween(DB::raw('DATE(created_at)'), [$start_date, $end_date])
                 ->groupBy('month')
@@ -605,7 +603,7 @@ class InvoicesController extends Controller
                 ->toArray();
             $label = [];
             $data = [];
-            for ($i = $requestData['start_month']; $i <= $requestData['end_month']; $i++) {
+            for ($i = 1; $i <= 12; $i++) {
                 $label[] = date('F', strtotime($requestData['year'].'-'.$i.'-01'));
                 $data[] = isset($invoice[$i]) ? $invoice[$i]['total'] : 0;
             }

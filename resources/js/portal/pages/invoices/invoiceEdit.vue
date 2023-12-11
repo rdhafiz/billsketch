@@ -456,7 +456,8 @@ export default {
                 this.loading = false;
                 if (res.status === 200) {
                     toaster.info(res.message);
-                    this.$router.push({name: 'Invoices'})
+                    const route = this.isRecurring ? 'RecurringInvoices' : 'Invoices';
+                    this.$router.push({name: route})
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }
