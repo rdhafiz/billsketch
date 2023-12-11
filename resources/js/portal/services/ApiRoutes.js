@@ -46,5 +46,15 @@ const ApiRoutes = {
     invoiceQRCode: ApiVersion + '/invoice/generate/qrcode',
     invoiceStatusUpdate: ApiVersion + '/invoice/update/status',
 
+    // dashboard
+    dashboardCount: ApiVersion + '/invoice/dashboard/count',
+    dashboardMonth: ApiVersion + '/invoice/dashboard/chart/month',
+    dashboardStatus: ApiVersion + '/invoice/dashboard/chart/status',
+    dashboardCategory: ApiVersion + '/invoice/dashboard/chart/category',
+
+    // User Logs
+    userLogsList: ApiVersion + '/user/log/list',
+    userLogsTypes: ApiVersion + '/user/log/get/type',
+
 };
 export default ApiRoutes;

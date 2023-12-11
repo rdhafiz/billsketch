@@ -27,6 +27,7 @@ import InvoiceView from "../pages/invoices/invoiceView.vue";
 import RecurringInvoiceCreate from "../pages/invoices/invoiceCreate.vue";
 import RecurringInvoiceEdit from "../pages/invoices/invoiceEdit.vue";
 import RecurringInvoiceView from "../pages/invoices/invoiceView.vue";
+import UserLogs from "../pages/user-logs/user-logs.vue";
 
 //=====================
 // Routes
@@ -73,6 +74,9 @@ const routes = [
             {path: ROOT_URL + '/profile', name: 'Profile', component: Profile},
             {path: ROOT_URL + '/profile/edit', name: 'UpdateProfile', component: UpdateProfile},
             {path: ROOT_URL + '/profile/change-password', name: 'ChangePassword', component: ChangePassword},
+
+            /*user logs route*/
+            {path: ROOT_URL + '/user-logs', name: 'UserLogs', component: UserLogs}
         ],
     },
     // invoice public view

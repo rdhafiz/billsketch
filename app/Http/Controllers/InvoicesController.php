@@ -553,8 +553,8 @@ class InvoicesController extends Controller
             if (!$invoice instanceof Invoices) {
                 return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
             }
-            $pdf = Pdf::loadView('download.invoice', ['invoice' => $invoice]);
             Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Download_invoice, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' downloaded a invoice named: '.$invoice['invoice_number']);
+            $pdf = Pdf::loadView('download.invoice', ['invoice' => $invoice]);
             return $pdf->output();
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);

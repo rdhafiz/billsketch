@@ -9,9 +9,6 @@
                             <strong>Change Password</strong>
                         </h3>
                     </div>
-                    <div class="col-lg-12">
-                        <div v-if="message" class="alert alert-success text-center">{{message}}</div>
-                    </div>
                     <div class="cl col-lg-12">
                         <div class="card mb-4">
                             <div class="card-body">
@@ -71,9 +68,14 @@
 
 import apiService from "../../services/ApiService";
 import apiRoutes from "../../services/ApiRoutes";
+import {createToaster} from "@meforma/vue-toaster";
+const toaster = createToaster({
+    position: 'top-right'
+});
+
 
 export default {
-    components: {},
+    components: {createToaster},
     data() {
         return {
             formData: {
@@ -81,7 +83,6 @@ export default {
                 password: '',
                 password_confirmation: '',
             },
-            message: '',
             loading: false
         }
     },
@@ -97,10 +98,7 @@ export default {
                         new_password: '',
                         password_confirmation: '',
                     }
-                    this.message  = res.message;
-                    setTimeout(()=> {
-                        this.message = '';
-                    }, 3000)
+                    toaster.info(res.message);
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }
