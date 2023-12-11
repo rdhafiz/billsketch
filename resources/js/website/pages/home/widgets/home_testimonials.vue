@@ -3,7 +3,7 @@
     <!----------------------->
     <!-- Start Home Testimonials -->
     <!----------------------->
-    <div class="page_testimonials">
+    <div class="page_testimonials bg-light border-top border-bottom">
 
         <!-- Start Home Testimonials Content -->
         <div class="page_testimonials_content">
