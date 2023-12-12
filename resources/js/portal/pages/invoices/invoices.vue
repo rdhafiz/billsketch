@@ -37,9 +37,7 @@
                         <td v-if="each.client"><i class="fa fa-fw fa-arrow-down text-success"></i> {{ each.client.name }}</td>
                         <td v-if="each.employee"><i class="fa fa-fw fa-arrow-up text-warning"></i> {{ each.employee.name }}</td>
                         <td>{{ each.invoice_date_formatted ? each.invoice_date_formatted : 'N/A' }}</td>
-                        <td>
-                            {{ each.invoice_status == 1 && 'Draft' || each.invoice_status == 2 && 'Pending' || each.invoice_status == 3 && 'Processing' || each.invoice_status == 4 && 'Partially paid' || each.invoice_status == 5 && 'Paid' || each.invoice_status == 6 && 'Overdue' || 'Canceled' }}
-                        </td>
+                        <td>{{each.invoice_status_name}}</td>
                         <td>{{ each.total }}</td>
                         <td class="text-end">
                             <router-link class="btn btn-warning text-white"
@@ -165,8 +163,7 @@ export default {
         return {
             param: {
                 keyword: '',
-                list_type: '',
-                recurring: false
+                list_type: ''
             },
             tableData: [],
             loading: false,

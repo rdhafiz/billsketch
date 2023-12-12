@@ -3,17 +3,11 @@
     <div class="card">
         <div class="card-body">
             <div class="row mb-3 align-items-center">
-                <div class="col-sm-6 col-lg-4 col-xxl-3 mb-3 mb-lg-0">
+                <div class="col-sm-7 col-lg-5 col-xxl-3 mb-3 mb-sm-0">
                     <input type="text" class="form-control" placeholder="Search" v-model="param.keyword"
                            @keyup="searchData">
                 </div>
-                <div class="col-sm-6 col-lg-4 col-xxl-2 mb-3 mb-lg-0">
-                    <select name="status" class="form-select" v-model="param.list_type" @change="changeStatus">
-                        <option value="">Active</option>
-                        <option value="archive">Archive</option>
-                    </select>
-                </div>
-                <div class="col-lg-4 col-xxl-7 text-end">
+                <div class="col-sm-5 col-lg-7 col-xxl-9 text-end">
                     <router-link :to="{name: 'RecurringInvoiceCreate'}" class="btn btn-theme" style="width: 120px;">
                         Create
                     </router-link>
@@ -25,15 +19,16 @@
                     <tr>
                         <th style="min-width: 120px;">Invoice</th>
                         <th style="min-width: 180px;">Name</th>
-                        <th style="min-width: 180px;">Invoice Date</th>
+                        <th style="min-width: 180px;">Category</th>
                         <th style="min-width: 180px;">Invoice Status</th>
-                        <th style="min-width: 180px;">Invoice Total</th>
+                        <th style="min-width: 180px;">Start Date</th>
+                        <th style="min-width: 180px;">End Date</th>
                         <th style="min-width: 220px;"></th>
                     </tr>
                     </thead>
                     <tbody v-if="tableData.length > 0 && loading === false">
                     <tr v-for="(each, index) in tableData">
-                        <td>{{ each.invoice_number }}</td>
+                        <td>{{ each.uid }}</td>
                         <td v-if="each.client"><i class="fa fa-fw fa-arrow-down text-success"></i> {{
                                 each.client.name
                             }}
@@ -42,13 +37,10 @@
                                 each.employee.name
                             }}
                         </td>
-                        <td>{{ each.invoice_date_formatted ? each.invoice_date_formatted : 'N/A' }}</td>
-                        <td>
-                            {{
-                                each.invoice_status == 1 && 'Draft' || each.invoice_status == 2 && 'Pending' || each.invoice_status == 3 && 'Processing' || each.invoice_status == 4 && 'Partially paid' || each.invoice_status == 5 && 'Paid' || each.invoice_status == 6 && 'Overdue' || 'Canceled'
-                            }}
-                        </td>
-                        <td>{{ each.total }}</td>
+                        <td>{{each.category.name}}</td>
+                        <td>{{each.start_date_formatted}}</td>
+                        <td>{{ each.end_date_formatted ? each.end_date_formatted : 'N/A' }}</td>
+                        <td>{{each.status == 0 ? 'On-Hold' : 'Active'}}</td>
                         <td class="text-end">
                             <router-link class="btn btn-warning text-white"
                                          :to="{name: 'RecurringInvoiceView', params: {id: each.id}}">
@@ -58,10 +50,6 @@
                                          class="btn btn-theme ms-2">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                             </router-link>
-                            <button class="btn btn-secondary ms-2" @click="updateInvoiceStatus(each.id)">
-                                <i class="fa fa-archive" aria-hidden="true" v-if="!param.list_type"></i>
-                                <i class="fa fa-refresh" aria-hidden="true" v-if="param.list_type"></i>
-                            </button>
                             <button class="btn btn-danger ms-2" @click="deleteInvoice(each.id)">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </button>
@@ -174,8 +162,6 @@ export default {
         return {
             param: {
                 keyword: '',
-                list_type: '',
-                recurring: true
             },
             tableData: [],
             loading: false,
@@ -184,7 +170,7 @@ export default {
 
             /*Pagination Variables*/
             total_pages: 0,
-            current_page: 0,
+            current_page: 1,
             last_page: 0,
             buttons: [],
 
@@ -209,19 +195,19 @@ export default {
             this.getInvoices();
         },
 
-        /*Search Invoices*/
+        /*Search Recurring Invoices*/
         searchData() {
             clearTimeout(this.searchTimeout)
             this.searchTimeout = setTimeout(() => {
-                this.getInvoices()
+                this.getRecurringInvoices()
             }, 800)
         },
 
-        /*Get Invoices*/
-        getInvoices() {
+        /*Get Recurring Invoices*/
+        getRecurringInvoices() {
             this.loading = true;
             this.param.page = this.current_page;
-            apiService.POST(apiRoutes.invoiceList, this.param, (res) => {
+            apiService.POST(apiRoutes.recurringInvoiceList, this.param, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
                     this.tableData = res.data.data;
@@ -235,38 +221,6 @@ export default {
             })
         },
 
-        /*Change Status*/
-        changeStatus() {
-            this.current_page = 0;
-            this.status = this.param.list_type;
-            this.getInvoices();
-        },
-
-        /*Update Invoice Status*/
-        updateInvoiceStatus(id) {
-            swal({
-                title: "Are you sure?",
-                text: `Are you sure that you want to ${this.status === '' ? 'archive' : 'restore'} this recurring invoice?`,
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-                .then(willDelete => {
-                    console.log(1)
-                    if (willDelete) {
-                        apiService.POST(apiRoutes.invoiceActivity, {id}, (res) => {
-                            if (res.status === 200) {
-                                swal(`${!this.status ? 'Archived!' : 'Restored!'}`, `${!this.status ? 'Recurring Invoice has been archived!' : 'Recurring Invoice has been restored!!'}`, "success"
-                                );
-                                this.getInvoices();
-                            } else {
-                                swal("Error!", res.errors?.id[0], "error");
-                            }
-                        })
-                    }
-                });
-        },
-
         /*Delete Invoice*/
         deleteInvoice(id) {
             swal({
@@ -277,12 +231,11 @@ export default {
                 dangerMode: true,
             })
                 .then(willDelete => {
-                    console.log(1)
                     if (willDelete) {
-                        apiService.POST(apiRoutes.invoiceDelete, {id}, (res) => {
+                        apiService.POST(apiRoutes.recurringInvoiceDelete, {id}, (res) => {
                             if (res.status === 200) {
                                 swal("Deleted!", "Recurring Invoice has been deleted!", "success");
-                                this.getInvoices();
+                                this.getRecurringInvoices();
                             } else if (res.message == 'Cannot find invoice') {
                                 swal("Error!", res.message, "error");
                             } else {
@@ -294,7 +247,7 @@ export default {
         },
     },
     mounted() {
-        this.getInvoices();
+        this.getRecurringInvoices();
     },
     created() {
         window.scroll(0, 0);
