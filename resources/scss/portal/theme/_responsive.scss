@@ -63,24 +63,13 @@
 
     .page-title{
         @media screen and (max-width: 1200px) {
-            font-size: 24px;
+            font-size: 22px;
         }
     }
 
     .page-title-view{
         @media screen and (max-width: 1600px) {
             font-size: 24px;
-        }
-    }
-
-    .mw-1450{
-        @media screen and (max-width: 1450px) {
-            flex-direction: column!important;
-            align-items: start!important;
-            .buttons{
-                margin-top: 10px;
-                width: 100%;
-            }
         }
     }
 
@@ -102,6 +91,17 @@
             }
             @media screen and (max-width: 575px){
                 font-size: 17px;
+            }
+        }
+    }
+    .invoice-type-btn{
+        @media screen and (max-width: 440px) {
+            display: flex;
+            flex-direction: column;
+            .btn-light{
+                &:last-child{
+                    margin-top: 10px;
+                }
             }
         }
     }

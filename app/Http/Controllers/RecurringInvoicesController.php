@@ -150,7 +150,7 @@ class RecurringInvoicesController extends Controller
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
             }
             $invoice = RecurringInvoices::find($requestData['id']);
-            if (!$invoice instanceof Invoices) {
+            if (!$invoice instanceof RecurringInvoices) {
                 return response()->json(['status' => 500, 'message' => 'Cannot find recurring invoice'], 200);
             }
             $invoiceData = [
@@ -185,11 +185,11 @@ class RecurringInvoicesController extends Controller
             if (!$invoiceResponse instanceof RecurringInvoices) {
                 return response()->json(['status' => 500, 'message' => 'Cannot update recurring invoice'], 200);
             }
-            InvoiceItems::where('invoice_id', $invoice->id)->forceDelete();
+            RecurringInvoiceItems::where('invoice_id', $invoice->id)->forceDelete();
             foreach ($invoiceItems as &$item) {
                 $item['invoice_id'] = $invoice->id;
             }
-            if (!RecurringInvoices::insert($invoiceItems)) {
+            if (!RecurringInvoiceItems::insert($invoiceItems)) {
                 DB::rollBack();
                 return response()->json(['status' => 500, 'message' => 'Cannot update recurring invoice'], 200);
             }
@@ -213,7 +213,7 @@ class RecurringInvoicesController extends Controller
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
             }
             $invoice = RecurringInvoiceRepository::single($requestData['id']);
-            if (!$invoice instanceof Invoices) {
+            if (!$invoice instanceof RecurringInvoices) {
                 return response()->json(['status' => 500, 'message' => 'Cannot find invoice'], 200);
             }
             Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Invoice_view, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' viewed a invoice named: '.$invoice['invoice_number']);

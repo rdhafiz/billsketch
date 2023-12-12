@@ -38,7 +38,7 @@ class RecurringInvoiceRepository
         }
         return $invoiceModel;
     }
-    public static function update(Invoices $invoiceModel, array $invoiceData): array|Invoices
+    public static function update(RecurringInvoices $invoiceModel, array $invoiceData): array|RecurringInvoices
     {
         $invoiceModel->category_id = $invoiceData['category_id'];
         $invoiceModel->due_days = $invoiceData['due_days'];
@@ -60,7 +60,7 @@ class RecurringInvoiceRepository
     public static function single(int $invoiceId): array|RecurringInvoices
     {
         $invoice = RecurringInvoices::where('id', $invoiceId)->with(['invoice_items', 'category', 'client', 'employee'])->first();
-        if (!$invoice instanceof Invoices) {
+        if (!$invoice instanceof RecurringInvoices) {
             return ['message' => 'Cannot find recurring invoice'];
         }
         return $invoice;

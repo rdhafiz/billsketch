@@ -1,47 +1,17 @@
 <template>
 <div class="w-100">
     <div class="container-lg">
-        <div class="row justify-content-center res" :class="{'mt-5' : publicView}">
+        <div class="row justify-content-center res">
             <div class="w-100">
                 <div class="row">
                     <div class="col-lg-12 mb-3">
-                        <div class="d-flex justify-content-between flex-column flex-xl-row align-items-xl-center" :class="{'mw-1450': isRecurring}">
-                            <div class="h2 mb-2 mb-xl-0 page-title-view">Invoice Preview</div>
-                            <div class="text-end buttons" v-if="!publicView">
-                                <router-link :to="{name: 'Invoices'}" class="btn btn-danger w-160 me-3">
+                        <div class="d-flex justify-content-between flex-column flex-lg-row align-items-xl-center">
+                            <div class="h2 mb-2 mb-xl-0 page-title-view">Recurring Invoice Preview</div>
+                            <div class="text-end buttons">
+                                <router-link :to="{name: 'RecurringInvoices'}" class="btn btn-danger w-160">
                                     Cancel
                                 </router-link>
-                                <button class="btn btn-theme w-160" @click="updateStatus">Change Status</button>
                             </div>
-                            <div v-else class="text-end buttons">
-                                <button class="btn btn-theme me-2" @click="generatePdf" v-if="!downloadLoading">
-                                    <i class="fa fa-arrow-down" aria-hidden="true"></i>
-                                </button>
-                                <button class="btn btn-theme me-2" disabled v-if="downloadLoading">
-                                    <i class="fa fa-spinner spin" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-12 mb-4" v-if="!publicView">
-                        <div class="text-end">
-                            <button class="btn btn-theme me-2" @click="generatePdf" v-if="!downloadLoading">
-                                <i class="fa fa-arrow-down" aria-hidden="true"></i>
-                            </button>
-                            <button class="btn btn-theme me-2" disabled v-if="downloadLoading">
-                                <i class="fa fa-spinner spin" aria-hidden="true"></i>
-                            </button>
-                            <template v-if="invoice?.qrcode_path == null">
-                                <button class="btn btn-primary me-2" @click="generateQRCode" v-if="!qrLoading">
-                                    <i class="fa fa-qrcode" aria-hidden="true"></i>
-                                </button>
-                                <button class="btn btn-primary me-2" disabled v-if="qrLoading">
-                                    <i class="fa fa-spinner spin" aria-hidden="true"></i>
-                                </button>
-                            </template>
-                            <button class="btn btn-secondary" @click="shareModalOpen">
-                                <i class="fa fa-share" aria-hidden="true"></i>
-                            </button>
                         </div>
                     </div>
                     <div class="cl col-lg-12">
@@ -60,31 +30,31 @@
                                                     <div>{{ invoice?.category.name }}</div>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <div><strong>Recurring Periods</strong></div>
-                                                    <div>{{ invoice?.recurring_frequency ? invoice.recurring_frequency : 'N/A' }}</div>
-                                                </div>
-                                                <div class="mb-3">
                                                     <div><strong>Currency</strong></div>
                                                     <div>{{ invoice?.currency }}</div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div><strong>Frequency</strong></div>
+                                                    <div>{{ invoice?.frequency }}</div>
                                                 </div>
                                             </div>
                                             <div class="d-none d-md-block col-md-2 col-xl-4"></div>
                                             <div class="col-sm-6 col-md-5 col-xl-4 text-sm-end">
                                                 <div class="mb-3">
-                                                    <div><strong>Invoice No</strong></div>
-                                                    <div>{{ invoice?.invoice_number }}</div>
+                                                    <div><strong>Start Date</strong></div>
+                                                    <div>{{ invoice?.start_date_formatted }}</div>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <div><strong>Invoice Date</strong></div>
-                                                    <div>{{ invoice?.invoice_date_formatted }}</div>
+                                                    <div><strong>End Date</strong></div>
+                                                    <div>{{ invoice?.end_date_formatted ? invoice?.end_date_formatted : 'N/A'}}</div>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <div><strong>Invoice Due Date</strong></div>
-                                                    <div>{{ invoice?.invoice_due_date_formatted }}</div>
+                                                    <div><strong>Due Days</strong></div>
+                                                    <div>{{ invoice?.due_days}}</div>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <div><strong>Invoice Status</strong></div>
-                                                    <div>{{ invoice?.invoice_status_name }}</div>
+                                                    <div><strong>Status</strong></div>
+                                                    <div>{{ invoice?.status == 0 ? 'On-Hold' : 'Active'}}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -122,7 +92,7 @@
                                                     class="text-start text-sm-end">Invoice
                                                     Subtotal: </strong> <span
                                                     class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                    style="min-width: 120px;">{{ invoice?.sub_total }}</span></div>
+                                                    style="min-width: 120px;">{{ subTotal }}</span></div>
                                                 <div class="d-flex flex-column flex-sm-row justify-content-end h6 mb-3 mb-sm-2"><strong
                                                     class="text-start text-sm-end">Invoice
                                                     Tax: </strong> <span
@@ -142,55 +112,13 @@
                                                     class="text-start text-sm-end">Invoice
                                                     Total: </strong> <span
                                                     class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
-                                                    style="min-width: 120px;">{{ invoice?.total }}</span></div>
+                                                    style="min-width: 120px;">{{ total }}</span></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12 mt-3" v-if="invoice?.qrcode_path">
-                                        <div class="qr-img text-end">
-                                            <img :src="invoice?.qrcode_path" height="100" width="100" alt="">
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Modal -->
-            <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-3" id="exampleModalLabel">Share Invoice</h1>
-                        </div>
-                        <form @submit.prevent="shareInvoice">
-                            <div class="modal-body">
-                                <div class="form-group mb-3">
-                                    <label for="email">Email</label>
-                                    <input type="text" name="email" id="email" class="form-control" placeholder="Email" v-model="shareParam.email">
-                                    <div class="error-report text-danger"></div>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="subject">Subject</label>
-                                    <input type="text" name="subject" id="subject" class="form-control" placeholder="Subject" v-model="shareParam.subject">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="message">Message</label>
-                                    <textarea name="message" id="message" class="form-control" placeholder="Message" v-model="shareParam.message" cols="30" rows="5"></textarea>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" @click="shareModalClose" style="width: 120px;">Close</button>
-                                <button type="submit" class="btn btn-theme" v-if="shareLoading === false" style="width: 120px;">
-                                    Send
-                                </button>
-                                <button type="button" disabled v-if="shareLoading === true"
-                                        class="btn btn-theme" style="width: 120px;">
-                                    <i class="fa fa-spinner spin" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -216,7 +144,6 @@ export default {
         return {
             invoice: null,
             tableData: [],
-            isRecurring: false,
             shareParam: {
                 id: '',
                 email: '',
@@ -228,15 +155,18 @@ export default {
             downloadLoading: false,
             statusParam: '',
             statusLoading: false,
-            publicView: false
+            publicView: false,
+            subTotal: 0,
+            total: 0
         }
     },
     methods: {
         /*Get Invoice Data*/
         getInvoice(id){
-            apiService.POST(apiRoutes.invoiceSingle, {id}, (res) => {
+            apiService.POST(apiRoutes.recurringInvoiceSingle, {id}, (res) => {
                 if (res.status === 200) {
                     this.invoice = res.data;
+                    this.calculateSubtotal();
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }
@@ -252,120 +182,29 @@ export default {
             })
         },
 
-        /*Update Status*/
-        updateStatus(){
-            this.statusLoading = true;
-            swal({
-                title: "Are you sure?",
-                text: `Are you sure that you want to change status?`,
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-                .then(willDelete => {
-                    console.log(1)
-                    if (willDelete) {
-                        const param = {
-                            id: this.invoice?.id,
-                            status_id: this.invoice?.invoice_status
-                        }
-                        apiService.POST(apiRoutes.invoiceStatusUpdate, param, (res) => {
-                            if (res.status === 200) {
-                                swal('Updated!', 'Invoice status has been updated successfully.', "success");
-                                this.getInvoice(this.invoice?.id);
-                            }
-                        })
-                    }
-                });
+
+        /*calculate total*/
+        calculateTotal(){
+            if(this.invoice.tax == ''){
+                this.tax = 0;
+            }else{
+                this.tax = (this.subTotal * (parseFloat(this.invoice.tax) / 100)).toFixed(2);
+            }
+            this.total = (parseFloat(this.subTotal) - this.tax).toFixed(2);
+            this.total = isNaN(this.total) ? 0 : this.total
+            return this.total;
         },
 
-        /*generate pdf*/
-        generatePdf(){
-            this.downloadLoading = true;
-            apiService.DOWNLOAD(apiRoutes.invoiceDownload, {id: this.invoice?.id}, '' , (res) => {
-                this.downloadLoading = false;
-                // Create a Blob object from the PDF data
-                const blob = new Blob([res], { type: 'application/pdf' });
+        /*calculate subtotal*/
+        calculateSubtotal(){
+            this.subTotal = this.invoice.invoice_items.reduce((prev, current)=> (prev + parseFloat(current.total)),0).toFixed(2);
 
-                // Create a URL for the Blob object
-                const url = URL.createObjectURL(blob);
-
-                // Create a link element
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'invoice'; // Set the filename for the downloaded file
-
-                // Append the link to the body
-                document.body.appendChild(a);
-
-                // Click the link programmatically to trigger the download
-                a.click();
-
-                // Clean up - remove the link and revoke the URL
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            })
+            this.calculateTotal();
         },
-
-        /*generate qrcode*/
-        generateQRCode(){
-            apiService.ClearErrorHandler();
-            this.qrLoading = true;
-            apiService.POST(apiRoutes.invoiceQRCode, {id: this.invoice?.id}, (res) => {
-                this.qrLoading = false;
-                if (res.status === 200) {
-                    toaster.info(res.message);
-                    this.getInvoice(this.invoice?.id);
-                } else {
-                    apiService.ErrorHandler(res.errors)
-                }
-            })
-        },
-
-        /*share invoice*/
-        shareInvoice(){
-            apiService.ClearErrorHandler();
-            this.shareLoading = true;
-            apiService.POST(apiRoutes.invoiceShare, this.shareParam, (res) => {
-                this.shareLoading = false;
-                if (res.status === 200) {
-                    toaster.info(res.message);
-                    this.shareModalClose();
-                } else {
-                    apiService.ErrorHandler(res.errors)
-                }
-            })
-        },
-
-        /*share modal open*/
-        shareModalOpen(){
-            let myModal = new bootstrap.Modal(document.getElementById('shareModal'));
-            myModal.show();
-        },
-
-        /*share modal open*/
-        shareModalClose(){
-            let myModalEl = document.getElementById('shareModal');
-            let modal = bootstrap.Modal.getInstance(myModalEl);
-            modal.hide();
-        }
     },
     mounted() {
         if(this.$route.params){
-            if(window.location.pathname.includes('share')){
-                this.publicView = true;
-                this.getInvoicePublic(this.$route.params.id);
-            } else {
-                this.getInvoice(this.$route.params.id);
-                this.shareParam = {
-                    ...this.shareParam,
-                    id: this.$route.params.id
-                }
-            }
-        }
-
-        if(window.location.pathname.includes('recurring')){
-            this.isRecurring = true;
+            this.getInvoice(this.$route.params.id);
         }
     },
     created() {

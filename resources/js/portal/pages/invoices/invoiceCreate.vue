@@ -294,7 +294,6 @@ export default {
                 invoice_due_date: '',
                 invoice_date: '',
                 invoice_status: 1,
-                sub_total: '',
                 tax: 0,
                 discount: '',
                 bonus: '',

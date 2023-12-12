@@ -9,7 +9,7 @@
                                 <div class="d-flex justify-content-between flex-column flex-lg-row align-items-lg-center">
                                     <div class="h1 mb-2 mb-lg-0 page-title">Recurring Invoice Edit</div>
                                     <div class="text-end">
-                                        <router-link :to="{name: 'Invoices'}" class="btn btn-danger w-160 me-3">Cancel</router-link>
+                                        <router-link :to="{name: 'RecurringInvoices'}" class="btn btn-danger w-160 me-3">Cancel</router-link>
                                         <button type="submit" class="btn btn-theme w-160" v-if="loading === false"> Save Changes</button>
                                         <button type="button" disabled v-if="loading === true" class="btn btn-theme w-160">
                                             <i class="fa fa-spinner spin" aria-hidden="true"></i>
@@ -23,14 +23,58 @@
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="row mb-4">
-                                                    <div class="col-lg-5 col-xl-4">
+                                                    <div class="col-lg-6 col-xxl-4">
                                                         <div class="form-group mb-3">
-                                                            <div class="btn btn-light border">
-                                                                <label for="invoice_no" class="me-2"><strong>Invoice Number: </strong></label>
-                                                                <label for="invoice_no" class="text-theme"><strong>{{ formData.invoice_number }}</strong></label>
+                                                            <div>
+                                                                <div class="btn btn-light me-2 border">
+                                                                    <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                               name="invoice_type"
+                                                                               id="inlineCheckbox1" value="1"
+                                                                               v-model="invoice_type" @change="changeInvoiceType">
+                                                                        <label class="form-check-label"
+                                                                               for="inlineCheckbox1">Bill To</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="btn btn-light me-2 border">
+                                                                    <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                               name="invoice_type"
+                                                                               id="inlineCheckbox2" value="2"
+                                                                               v-model="invoice_type" @change="changeInvoiceType">
+                                                                        <label class="form-check-label"
+                                                                               for="inlineCheckbox2">Bill Pay</label>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="form-group bg-light border p-3">
+                                                            <div class="form-group mb-3" v-if="invoice_type == 1">
+                                                                <label for="client"><strong>Client</strong></label>
+                                                                <select name="client_id" id="client" class="form-select"
+                                                                        v-model="formData.client_id">
+                                                                    <option value="" disabled>Select</option>
+                                                                    <template v-if="clients.length > 0">
+                                                                        <option :value="each.id" v-for="(each) in clients">
+                                                                            {{ each.name }}
+                                                                        </option>
+                                                                    </template>
+                                                                </select>
+                                                                <div class="error-report text-danger "></div>
+                                                            </div>
+                                                            <div class="form-group mb-3" v-if="invoice_type == 2">
+                                                                <label for="employee"><strong>Employee</strong></label>
+                                                                <select name="employee_id" id="employee" class="form-select"
+                                                                        v-model="formData.employee_id">
+                                                                    <option value="" disabled>Select</option>
+                                                                    <template v-if="employees.length > 0">
+                                                                        <option :value="each.id" v-for="(each) in employees">
+                                                                            {{ each.name }}
+                                                                        </option>
+                                                                    </template>
+                                                                </select>
+                                                                <div class="error-report text-danger "></div>
+                                                            </div>
                                                             <div class="form-group mb-3">
                                                                 <label for="category"><strong>Category</strong></label>
                                                                 <select name="category_id" id="category" class="form-select"
@@ -52,34 +96,52 @@
                                                                     <option value="USA">USA</option>
                                                                 </select>
                                                             </div>
+                                                            <div class="form-group mb-3">
+                                                                <label for="frequency"><strong>Frequency</strong></label>
+                                                                <select name="frequency" id="frequency"
+                                                                        class="form-select" v-model="formData.frequency">
+                                                                    <option value="" disabled>Select</option>
+                                                                    <option :value="each.value" v-for="(each) in frequency">{{ each.name }}</option>
+                                                                </select>
+                                                                <div class="error-report text-danger "></div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-2 col-xl-4"></div>
-                                                    <div class="col-lg-5 col-xl-4">
+                                                    <div class="col-lg-2 col-xxl-4">&nbsp;</div>
+                                                    <div class="col-lg-6 col-xxl-4">
                                                         <div class="form-group bg-light border p-3">
                                                             <div class="form-group mb-3">
-                                                                <label for="invoice_date"><strong>Invoice Date</strong></label>
-                                                                <flat-pickr v-model="formData.invoice_date"
-                                                                            :config="date_config"
+                                                                <label for="start_date"><strong>Start Date</strong></label>
+                                                                <flat-pickr v-model="formData.start_date"
+                                                                            :config="config"
                                                                             class="form-control"
-                                                                            name="invoice_date"
+                                                                            name="start_date"
+                                                                            id="start_date"
+                                                                            placeholder="Select date"/>
+                                                                <div class="error-report text-danger "></div>
+                                                            </div>
+                                                            <div class="form-group mb-3">
+                                                                <label for="end_date"><strong>End Date</strong></label>
+                                                                <flat-pickr v-model="formData.end_date"
+                                                                            :config="config"
+                                                                            class="form-control"
+                                                                            name="end_date"
+                                                                            id="end_date"
                                                                             placeholder="Select date"/>
                                                             </div>
                                                             <div class="form-group mb-3">
-                                                                <label for="invoice_due_date"><strong>Invoice Due
-                                                                    Date</strong></label>
-                                                                <flat-pickr v-model="formData.invoice_due_date"
-                                                                            :config="due_date_config"
-                                                                            class="form-control"
-                                                                            name="invoice_due_date"
-                                                                            placeholder="Select date"/>
+                                                                <label for="due_days"><strong>Due Days</strong></label>
+                                                                <input type="text" class="form-control" id="due_days" name="due_days" placeholder="Due Days" v-model="formData.due_days" @keypress="checkNumber($event)">
+                                                                <div class="error-report text-danger "></div>
                                                             </div>
                                                             <div class="form-group mb-3">
-                                                                <label for="invoice_status"><strong>Invoice Status</strong></label>
-                                                                <select name="invoice_status" id="invoice_status"
-                                                                        class="form-select" v-model="formData.invoice_status">
-                                                                    <option :value="each.value" v-for="(each) in status">{{ each.name }}</option>
+                                                                <label for="status"><strong>Status</strong></label>
+                                                                <select name="status" id="status"
+                                                                        class="form-select" v-model="formData.status">
+                                                                    <option value="0">On Hold</option>
+                                                                    <option value="1">Active</option>
                                                                 </select>
+                                                                <div class="error-report text-danger "></div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -240,13 +302,13 @@ export default {
                 client_id: '',
                 employee_id: '',
                 category_id: '',
-                invoice_no: '',
-                invoice_number: '',
-                invoice_due_date: '',
-                invoice_date: '',
-                invoice_status: '',
+                start_date: '',
+                end_date: '',
+                due_days: '',
+                frequency: '',
+                status: 0,
                 sub_total: '',
-                tax: '',
+                tax: 0,
                 note: '',
                 currency: 'BDT',
                 invoice_item_headings: {
@@ -306,6 +368,26 @@ export default {
             })
         },
 
+        /*Get Recurring Invoice Data*/
+        getRecurringInvoice(id) {
+            apiService.POST(apiRoutes.recurringInvoiceSingle, {id}, (res) => {
+                if (res.status === 200) {
+                    this.formData = {
+                        ...res.data,
+                        invoice_status: res.data.invoice_status,
+                        invoice_item_headings: res.data.invoice_item_headings_formatted
+                    };
+                    console.log(this.formData, 'ss')
+                    this.subTotal = res.data.sub_total,
+                    this.total = res.data.sub_total
+                    this.invoice_type = res.data.client ? 1 : 2;
+                    this.calculateSubtotal();
+                } else {
+                    apiService.ErrorHandler(res.errors)
+                }
+            })
+        },
+
         /*Get Categories*/
         getCategories() {
             apiService.POST(apiRoutes.categoryList, {pagination: false}, (res) => {
@@ -317,26 +399,14 @@ export default {
             })
         },
 
-        /*Get Invoice Data*/
-        getInvoice(id) {
-            apiService.POST(apiRoutes.invoiceSingle, {id}, (res) => {
-                if (res.status === 200) {
-                    this.formData = {
-                        ...res.data,
-                        invoice_status: res.data.invoice_status,
-                        invoice_item_headings: res.data.invoice_item_headings_formatted
-                    };
-                    this.subTotal = res.data.sub_total,
-                        this.total = res.data.sub_total
-                    this.invoice_type = res.data.client ? 1 : 2;
-                    this.calculateTotal();
-                } else {
-                    apiService.ErrorHandler(res.errors)
-                }
+        /*Get Frequency*/
+        getFrequency() {
+            apiService.GET(apiRoutes.recurringInvoiceFrequency, (res) => {
+                this.frequency = res;
             })
         },
 
-        /*Create Invoice*/
+        /*Update Recurring Invoice*/
         recurringInvoiceUpdate() {
             apiService.ClearErrorHandler();
             this.loading = true;
@@ -344,8 +414,7 @@ export default {
                 this.loading = false;
                 if (res.status === 200) {
                     toaster.info(res.message);
-                    const route = this.isRecurring ? 'RecurringInvoices' : 'Invoices';
-                    this.$router.push({name: route})
+                    this.$router.push({name: 'RecurringInvoices'})
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }
@@ -353,13 +422,10 @@ export default {
         },
 
         /*change invoice type*/
-        changeInvoiceType() {
+        changeInvoiceType(){
             this.formData.invoice_no = '';
             this.formData.client_id = '';
             this.formData.employee_id = '';
-            this.invoice_number = '';
-            this.formData.discount = '';
-            this.formData.bonus = '';
             this.calculateTotal();
         },
 
@@ -386,11 +452,12 @@ export default {
         },
 
         /*calculate total*/
-        calculateTotal() {
-            if (this.formData.tax == '' || this.formData.tax == null) {
+        calculateTotal(){
+            console.log(this.formData)
+            if(this.formData.tax == ''){
                 this.tax = 0;
-            } else {
-                this.tax = this.subTotal * (parseFloat(this.formData.tax) / 100);
+            }else{
+                this.tax = (this.subTotal * (parseFloat(this.formData.tax) / 100)).toFixed(2);
             }
             this.total = (parseFloat(this.subTotal) - this.tax).toFixed(2);
             this.total = isNaN(this.total) ? 0 : this.total
@@ -398,8 +465,8 @@ export default {
         },
 
         /*calculate subtotal*/
-        calculateSubtotal() {
-            this.subTotal = this.formData.invoice_items.reduce((prev, current) => (prev + parseFloat(current.total)), 0).toFixed(2);
+        calculateSubtotal(){
+            this.subTotal = this.formData.invoice_items.reduce((prev, current)=> (prev + parseFloat(current.total)),0).toFixed(2);
             this.calculateTotal();
         },
 
@@ -427,9 +494,9 @@ export default {
         this.getEmployees();
         this.getClients();
         this.getCategories();
-        this.getStatus();
+        this.getFrequency();
         if (this.$route.params) {
-            this.getInvoice(this.$route.params.id);
+            this.getRecurringInvoice(this.$route.params.id);
         }
     },
     created() {

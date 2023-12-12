@@ -23,9 +23,9 @@
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="row mb-4">
-                                                    <div class="col-lg-5 col-xl-4">
+                                                    <div class="col-lg-6 col-xxl-4">
                                                         <div class="form-group mb-3">
-                                                            <div>
+                                                            <div class="invoice-type-btn">
                                                                 <div class="btn btn-light me-2 border">
                                                                     <div class="form-check form-check-inline">
                                                                         <input class="form-check-input" type="radio"
@@ -52,7 +52,7 @@
                                                             <div class="form-group mb-3" v-if="invoice_type == 1">
                                                                 <label for="client"><strong>Client</strong></label>
                                                                 <select name="client_id" id="client" class="form-select"
-                                                                        v-model="formData.client_id" @change="getInvoiceNumber('client', formData.client_id)">
+                                                                        v-model="formData.client_id">
                                                                     <option value="" disabled>Select</option>
                                                                     <template v-if="clients.length > 0">
                                                                         <option :value="each.id" v-for="(each) in clients">
@@ -65,7 +65,7 @@
                                                             <div class="form-group mb-3" v-if="invoice_type == 2">
                                                                 <label for="employee"><strong>Employee</strong></label>
                                                                 <select name="employee_id" id="employee" class="form-select"
-                                                                        v-model="formData.employee_id"  @change="getInvoiceNumber('employee', formData.employee_id)">
+                                                                        v-model="formData.employee_id">
                                                                     <option value="" disabled>Select</option>
                                                                     <template v-if="employees.length > 0">
                                                                         <option :value="each.id" v-for="(each) in employees">
@@ -107,8 +107,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-2 col-xl-4">&nbsp;</div>
-                                                    <div class="col-lg-5 col-xl-4">
+                                                    <div class="d-lg-none d-xxl-block col-xxl-4">&nbsp;</div>
+                                                    <div class="col-lg-6 col-xxl-4">
                                                         <div class="form-group bg-light border p-3">
                                                             <div class="form-group mb-3">
                                                                 <label for="start_date"><strong>Start Date</strong></label>
@@ -297,7 +297,6 @@ export default {
         return {
             loading: false,
             invoice_type: 1,
-            invoice_number: '',
             formData: {
                 client_id: '',
                 employee_id: '',

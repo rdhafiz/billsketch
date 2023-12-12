@@ -3,17 +3,11 @@
     <div class="card">
         <div class="card-body">
             <div class="row mb-3 align-items-center">
-                <div class="col-sm-6 col-lg-4 col-xxl-3 mb-3 mb-lg-0">
+                <div class="col-sm-7 col-lg-5 col-xxl-3 mb-3 mb-sm-0">
                     <input type="text" class="form-control" placeholder="Search" v-model="param.keyword"
                            @keyup="searchData">
                 </div>
-                <div class="col-sm-6 col-lg-4 col-xxl-2 mb-3 mb-lg-0">
-                    <select name="status" class="form-select" v-model="param.list_type" @change="changeStatus">
-                        <option value="">Active</option>
-                        <option value="archive">Archive</option>
-                    </select>
-                </div>
-                <div class="col-lg-4 col-xxl-7 text-end">
+                <div class="col-sm-5 col-lg-7 col-xxl-9 text-end">
                     <router-link :to="{name: 'RecurringInvoiceCreate'}" class="btn btn-theme" style="width: 120px;">
                         Create
                     </router-link>
@@ -56,10 +50,6 @@
                                          class="btn btn-theme ms-2">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                             </router-link>
-                            <button class="btn btn-secondary ms-2" @click="updateInvoiceStatus(each.id)">
-                                <i class="fa fa-archive" aria-hidden="true" v-if="!param.list_type"></i>
-                                <i class="fa fa-refresh" aria-hidden="true" v-if="param.list_type"></i>
-                            </button>
                             <button class="btn btn-danger ms-2" @click="deleteInvoice(each.id)">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </button>
@@ -172,7 +162,6 @@ export default {
         return {
             param: {
                 keyword: '',
-                list_type: ''
             },
             tableData: [],
             loading: false,
@@ -206,11 +195,11 @@ export default {
             this.getInvoices();
         },
 
-        /*Search Invoices*/
+        /*Search Recurring Invoices*/
         searchData() {
             clearTimeout(this.searchTimeout)
             this.searchTimeout = setTimeout(() => {
-                this.getInvoices()
+                this.getRecurringInvoices()
             }, 800)
         },
 
@@ -232,38 +221,6 @@ export default {
             })
         },
 
-        /*Change Status*/
-        changeStatus() {
-            this.current_page = 0;
-            this.status = this.param.list_type;
-            this.getInvoices();
-        },
-
-        /*Update Invoice Status*/
-        updateInvoiceStatus(id) {
-            swal({
-                title: "Are you sure?",
-                text: `Are you sure that you want to ${this.status === '' ? 'archive' : 'restore'} this recurring invoice?`,
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-                .then(willDelete => {
-                    console.log(1)
-                    if (willDelete) {
-                        apiService.POST(apiRoutes.invoiceActivity, {id}, (res) => {
-                            if (res.status === 200) {
-                                swal(`${!this.status ? 'Archived!' : 'Restored!'}`, `${!this.status ? 'Recurring Invoice has been archived!' : 'Recurring Invoice has been restored!!'}`, "success"
-                                );
-                                this.getInvoices();
-                            } else {
-                                swal("Error!", res.errors?.id[0], "error");
-                            }
-                        })
-                    }
-                });
-        },
-
         /*Delete Invoice*/
         deleteInvoice(id) {
             swal({
@@ -274,12 +231,11 @@ export default {
                 dangerMode: true,
             })
                 .then(willDelete => {
-                    console.log(1)
                     if (willDelete) {
-                        apiService.POST(apiRoutes.invoiceDelete, {id}, (res) => {
+                        apiService.POST(apiRoutes.recurringInvoiceDelete, {id}, (res) => {
                             if (res.status === 200) {
                                 swal("Deleted!", "Recurring Invoice has been deleted!", "success");
-                                this.getInvoices();
+                                this.getRecurringInvoices();
                             } else if (res.message == 'Cannot find invoice') {
                                 swal("Error!", res.message, "error");
                             } else {

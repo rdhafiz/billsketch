@@ -14,6 +14,7 @@ class RecurringInvoices extends Model
     protected $appends = [
         'start_date_formatted',
         'end_date_formatted',
+        'invoice_item_headings_formatted',
     ];
 
     protected $casts = [
@@ -48,6 +49,13 @@ class RecurringInvoices extends Model
     {
         if (!empty($this->end_date)) {
             return $this->end_date->format('d/m/Y');
+        }
+        return null;
+    }
+    public function getInvoiceItemHeadingsFormattedAttribute()
+    {
+        if (!empty($this->invoice_item_headings)) {
+            return json_decode($this->invoice_item_headings);
         }
         return null;
     }

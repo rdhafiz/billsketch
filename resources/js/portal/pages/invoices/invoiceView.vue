@@ -5,7 +5,7 @@
             <div class="w-100">
                 <div class="row">
                     <div class="col-lg-12 mb-3">
-                        <div class="d-flex justify-content-between flex-column flex-xl-row align-items-xl-center" :class="{'mw-1450': isRecurring}">
+                        <div class="d-flex justify-content-between flex-column flex-xl-row align-items-xl-center">
                             <div class="h2 mb-2 mb-xl-0 page-title-view">Invoice Preview</div>
                             <div class="text-end buttons" v-if="!publicView">
                                 <router-link :to="{name: 'Invoices'}" class="btn btn-danger w-160 me-3">
@@ -216,7 +216,6 @@ export default {
         return {
             invoice: null,
             tableData: [],
-            isRecurring: false,
             shareParam: {
                 id: '',
                 email: '',
@@ -362,10 +361,6 @@ export default {
                     id: this.$route.params.id
                 }
             }
-        }
-
-        if(window.location.pathname.includes('recurring')){
-            this.isRecurring = true;
         }
     },
     created() {
