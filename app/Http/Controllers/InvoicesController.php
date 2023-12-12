@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\InvoiceRecurringStatus;
 use App\Constants\InvoiceStatus;
 use App\Constants\UserLogType;
 use App\Helpers\Helpers;
@@ -36,8 +35,6 @@ class InvoicesController extends Controller
                 'category_id' => 'required|integer',
                 'invoice_no' => 'required|numeric',
                 'currency' => 'required|string',
-                'recurring' => 'nullable|integer',
-                'recurring_frequency' => 'nullable|required_if:recurring,1|integer|min:1',
                 'invoice_items' => 'required|array',
                 'invoice_items.*.description' => 'required',
                 'invoice_items.*.unit_frequency' => 'required|numeric',
@@ -87,9 +84,6 @@ class InvoicesController extends Controller
                 'cancel_reason' => $requestData['cancel_reason'] ?? null,
                 'overdue_reason' => $requestData['overdue_reason'] ?? null,
                 'currency' => $requestData['currency'],
-                'recurring' => $requestData['recurring'] ?? 0,
-                'recurring_frequency' => $requestData['recurring_frequency'] ?? null,
-                'recurring_end_date' => $requestData['recurring_end_date'] ?? null,
                 'tax' => $requestData['tax'] ?? null,
                 'discount' => $requestData['discount'] ?? null,
                 'bonus' => $requestData['bonus'] ?? null,
@@ -144,8 +138,6 @@ class InvoicesController extends Controller
                 'id' => 'required|integer',
                 'category_id' => 'required|integer',
                 'currency' => 'required|string',
-                'recurring' => 'nullable|integer',
-                'recurring_frequency' => 'nullable|required_if:recurring,1|integer|min:1',
                 'invoice_items' => 'required|array',
                 'invoice_items.*.description' => 'required',
                 'invoice_items.*.unit_frequency' => 'required|numeric',
@@ -167,9 +159,6 @@ class InvoicesController extends Controller
                 'invoice_due_date' => $requestData['invoice_due_date'] ?? null,
                 'invoice_status' => $requestData['invoice_status'] ?? InvoiceStatus::Draft,
                 'currency' => $requestData['currency'],
-                'recurring' => $requestData['recurring'] ?? 0,
-                'recurring_frequency' => $requestData['recurring_frequency'] ?? null,
-                'recurring_end_date' => $requestData['recurring_end_date'] ?? null,
                 'tax' => $requestData['tax'] ?? null,
                 'discount' => $requestData['discount'] ?? null,
                 'bonus' => $requestData['bonus'] ?? null,
@@ -232,14 +221,6 @@ class InvoicesController extends Controller
     public function getStatus(): array
     {
         return InvoiceStatus::getArray();
-    }
-
-    /**
-     * @return array
-     */
-    public function getRecurringValue(): array
-    {
-        return InvoiceRecurringStatus::getArray();
     }
 
     /**
@@ -382,8 +363,7 @@ class InvoicesController extends Controller
                 'invoice_status' => $requestData['invoice_status'] ?? null,
                 'category_id' => $requestData['category_id'] ?? null,
                 'employee_id' => $requestData['employee_id'] ?? null,
-                'client_id' => $requestData['client_id'] ?? null,
-                'recurring' => $requestData['recurring'] ?? false,
+                'client_id' => $requestData['client_id'] ?? null
             ];
             $paginatedData = [
                 'limit' => $requestData['limit'] ?? 15,
@@ -572,7 +552,7 @@ class InvoicesController extends Controller
                 'total_invoice'=> Invoices::count(),
                 'pending_invoice'=> Invoices::where('invoice_status', InvoiceStatus::Pending)->count(),
                 'paid_invoice'=> Invoices::where('invoice_status', InvoiceStatus::Paid)->count(),
-                'recurring_invoice'=> Invoices::where('recurring', 1)->count(),
+                'recurring_invoice'=> 0,
             ];
             return response()->json(['status' => 200, 'data' => $data], 200);
         } catch (\Exception $exception) {

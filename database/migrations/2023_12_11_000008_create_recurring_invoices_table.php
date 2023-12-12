@@ -11,29 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invoices', function (Blueprint $table) {
+        Schema::create('recurring_invoices', function (Blueprint $table) {
             $table->id();
+            $table->integer('uid');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('client_id')->nullable();
             $table->unsignedInteger('employee_id')->nullable();
             $table->unsignedInteger('category_id');
-            $table->integer('invoice_no');
-            $table->string('invoice_number');
-            $table->timestamp('invoice_date')->nullable();
-            $table->timestamp('invoice_due_date')->nullable();
-            $table->tinyInteger('invoice_status')->nullable();
-            $table->text('cancel_reason')->nullable();
-            $table->text('overdue_reason')->nullable();
+            $table->timestamp('due_days');
             $table->string('currency');
-            $table->float('sub_total')->nullable();
             $table->float('tax')->nullable();
             $table->float('discount')->nullable();
             $table->float('bonus')->nullable();
-            $table->float('total')->nullable();
             $table->text('note')->nullable();
-            $table->tinyInteger('is_active')->default(1);
             $table->text('invoice_item_headings')->nullable();
-            $table->string('qrcode')->nullable();
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
+            $table->integer('frequency')->nullable();
+            $table->tinyInteger('status')->nullable();
+            $table->tinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -44,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invoices');
+        Schema::dropIfExists('recurring_invoices');
     }
 };

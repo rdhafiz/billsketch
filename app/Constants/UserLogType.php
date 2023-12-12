@@ -32,9 +32,12 @@ class UserLogType
     const Category_archive = 'Category archive';
     const Category_restore = 'Category restore';
     const Invoice_create = 'Invoice create';
+    const Recurring_Invoice_create = 'Recurring Invoice create';
     const Invoice_view = 'Invoice view';
     const Invoice_update = 'Invoice update';
+    const Recurring_Invoice_update = 'Recurring Invoice update';
     const Invoice_delete = 'Invoice delete';
+    const Recurring_Invoice_delete = 'Recurring Invoice delete';
     const Invoice_archive = 'Invoice archive';
     const Invoice_restore = 'Invoice restore';
     const Share_invoice = 'Share invoice';
