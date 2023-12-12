@@ -18,14 +18,13 @@ return new class extends Migration
             $table->unsignedInteger('client_id')->nullable();
             $table->unsignedInteger('employee_id')->nullable();
             $table->unsignedInteger('category_id');
-            $table->timestamp('due_days')->nullable();
+            $table->timestamp('due_days');
             $table->string('currency');
             $table->float('tax')->nullable();
             $table->float('discount')->nullable();
             $table->float('bonus')->nullable();
             $table->text('note')->nullable();
             $table->text('invoice_item_headings')->nullable();
-
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->integer('frequency')->nullable();

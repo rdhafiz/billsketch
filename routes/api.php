@@ -8,7 +8,7 @@ use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\InvoicesController;
-use App\Http\Controllers\InvoiceItemsController;
+use App\Http\Controllers\RecurringInvoicesController;
 use App\Http\Controllers\UserActivityLogsController;
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +58,14 @@ Route::group(['prefix' => 'category', 'middleware' => ['auth:api']], function ()
     Route::post('list', [CategoriesController::class, 'list']);
     Route::post('update/status', [CategoriesController::class, 'archiveOrRestore']);
 });
+Route::group(['prefix' => 'recurring_invoice', 'middleware' => ['auth:api']], function () {
+    Route::get('get/frequency', [RecurringInvoicesController::class, 'getRecurringValue']);
+    Route::post('save', [RecurringInvoicesController::class, 'save']);
+    Route::post('update', [RecurringInvoicesController::class, 'update']);
+    Route::post('single', [RecurringInvoicesController::class, 'single']);
+    Route::post('delete', [RecurringInvoicesController::class, 'delete']);
+    Route::post('list', [RecurringInvoicesController::class, 'list']);
+});
 Route::group(['prefix' => 'invoice', 'middleware' => ['auth:api']], function () {
     Route::post('save', [InvoicesController::class, 'save']);
     Route::post('update', [InvoicesController::class, 'update']);
@@ -66,7 +74,6 @@ Route::group(['prefix' => 'invoice', 'middleware' => ['auth:api']], function () 
     Route::post('list', [InvoicesController::class, 'list']);
     Route::post('update/activity', [InvoicesController::class, 'archiveOrRestore']);
     Route::get('get/status', [InvoicesController::class, 'getStatus']);
-    Route::get('get/recurring', [InvoicesController::class, 'getRecurringValue']);
     Route::post('get/number', [InvoicesController::class, 'getLatestNumber']);
     Route::post('share', [InvoicesController::class, 'share']);
     Route::post('generate/qrcode', [InvoicesController::class, 'generateQRCode']);
