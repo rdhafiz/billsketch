@@ -12,9 +12,13 @@ class RecurringInvoices extends Model
 {
     use HasFactory, SoftDeletes;
     protected $appends = [
+        'start_date_formatted',
+        'end_date_formatted',
     ];
 
     protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
     ];
 
     public function invoice_items()
@@ -32,5 +36,19 @@ class RecurringInvoices extends Model
     public function employee()
     {
         return $this->hasOne(Employees::class, 'id', 'employee_id')->select('id', 'name', 'avatar');
+    }
+    public function getStartDateFormattedAttribute()
+    {
+        if (!empty($this->start_date)) {
+            return $this->start_date->format('d/m/Y');
+        }
+        return null;
+    }
+    public function getEndDateFormattedAttribute()
+    {
+        if (!empty($this->end_date)) {
+            return $this->end_date->format('d/m/Y');
+        }
+        return null;
     }
 }

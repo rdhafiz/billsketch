@@ -46,6 +46,11 @@ const ApiRoutes = {
     invoiceQRCode: ApiVersion + '/invoice/generate/qrcode',
     invoiceStatusUpdate: ApiVersion + '/invoice/update/status',
 
+    // Recurring Invoice
+    recurringInvoiceList: ApiVersion + '/recurring_invoice/list',
+    recurringInvoiceCreate: ApiVersion + '/recurring_invoice/save',
+    recurringInvoiceFrequency: ApiVersion + '/recurring_invoice/get/frequency',
+
     // dashboard
     dashboardCount: ApiVersion + '/invoice/dashboard/count',
     dashboardMonth: ApiVersion + '/invoice/dashboard/chart/month',

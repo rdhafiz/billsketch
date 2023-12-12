@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('client_id')->nullable();
             $table->unsignedInteger('employee_id')->nullable();
             $table->unsignedInteger('category_id');
-            $table->timestamp('due_days');
+            $table->integer('due_days');
             $table->string('currency');
             $table->float('tax')->nullable();
             $table->float('discount')->nullable();

@@ -105,7 +105,7 @@ class RecurringInvoiceRepository
                 $q->where('uid', 'LIKE', '%'.$filter['keyword'].'%');
             });
         }
-        $result = $result->orderBy($pagination['order_by'], $pagination['order_mode'])->paginate($pagination['limit']);
+        $result = $result->orderBy($pagination['sort_by'], $pagination['order_by'])->paginate($pagination['limit']);
         return $result;
     }
 }

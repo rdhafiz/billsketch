@@ -25,15 +25,16 @@
                     <tr>
                         <th style="min-width: 120px;">Invoice</th>
                         <th style="min-width: 180px;">Name</th>
-                        <th style="min-width: 180px;">Invoice Date</th>
+                        <th style="min-width: 180px;">Category</th>
                         <th style="min-width: 180px;">Invoice Status</th>
-                        <th style="min-width: 180px;">Invoice Total</th>
+                        <th style="min-width: 180px;">Start Date</th>
+                        <th style="min-width: 180px;">End Date</th>
                         <th style="min-width: 220px;"></th>
                     </tr>
                     </thead>
                     <tbody v-if="tableData.length > 0 && loading === false">
                     <tr v-for="(each, index) in tableData">
-                        <td>{{ each.invoice_number }}</td>
+                        <td>{{ each.uid }}</td>
                         <td v-if="each.client"><i class="fa fa-fw fa-arrow-down text-success"></i> {{
                                 each.client.name
                             }}
@@ -42,13 +43,10 @@
                                 each.employee.name
                             }}
                         </td>
-                        <td>{{ each.invoice_date_formatted ? each.invoice_date_formatted : 'N/A' }}</td>
-                        <td>
-                            {{
-                                each.invoice_status == 1 && 'Draft' || each.invoice_status == 2 && 'Pending' || each.invoice_status == 3 && 'Processing' || each.invoice_status == 4 && 'Partially paid' || each.invoice_status == 5 && 'Paid' || each.invoice_status == 6 && 'Overdue' || 'Canceled'
-                            }}
-                        </td>
-                        <td>{{ each.total }}</td>
+                        <td>{{each.category.name}}</td>
+                        <td>{{each.start_date_formatted}}</td>
+                        <td>{{ each.end_date_formatted ? each.end_date_formatted : 'N/A' }}</td>
+                        <td>{{each.status == 0 ? 'On-Hold' : 'Active'}}</td>
                         <td class="text-end">
                             <router-link class="btn btn-warning text-white"
                                          :to="{name: 'RecurringInvoiceView', params: {id: each.id}}">
@@ -174,8 +172,7 @@ export default {
         return {
             param: {
                 keyword: '',
-                list_type: '',
-                recurring: true
+                list_type: ''
             },
             tableData: [],
             loading: false,
@@ -184,7 +181,7 @@ export default {
 
             /*Pagination Variables*/
             total_pages: 0,
-            current_page: 0,
+            current_page: 1,
             last_page: 0,
             buttons: [],
 
@@ -217,11 +214,11 @@ export default {
             }, 800)
         },
 
-        /*Get Invoices*/
-        getInvoices() {
+        /*Get Recurring Invoices*/
+        getRecurringInvoices() {
             this.loading = true;
             this.param.page = this.current_page;
-            apiService.POST(apiRoutes.invoiceList, this.param, (res) => {
+            apiService.POST(apiRoutes.recurringInvoiceList, this.param, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
                     this.tableData = res.data.data;
@@ -294,7 +291,7 @@ export default {
         },
     },
     mounted() {
-        this.getInvoices();
+        this.getRecurringInvoices();
     },
     created() {
         window.scroll(0, 0);

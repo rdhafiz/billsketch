@@ -44,7 +44,7 @@ class RecurringInvoicesController extends Controller
                 'client_id' => 'nullable|integer|required_without:employee_id|exists:clients,id',
                 'employee_id' => 'nullable|integer|required_without:client_id|exists:employees,id',
                 'category_id' => 'required|integer',
-                'due_days' => 'required|integer',
+                'due_days' => 'required|numeric',
                 'currency' => 'required|string',
                 'tax' => 'nullable|numeric',
                 'discount' => 'nullable|numeric',
@@ -132,7 +132,7 @@ class RecurringInvoicesController extends Controller
             $validator = Validator::make($requestData, [
                 'id' => 'required|integer',
                 'category_id' => 'required|integer',
-                'due_days' => 'required|integer',
+                'due_days' => 'required|numeric',
                 'currency' => 'required|string',
                 'tax' => 'nullable|numeric',
                 'discount' => 'nullable|numeric',
