@@ -3,154 +3,55 @@
 namespace App\Http\Controllers;
 
 use App\Constants\UserLogType;
-use App\Constants\UserType;
 use App\Helpers\Helpers;
-use App\Models\Companies;
 use App\Models\User;
-use App\Repositories\CompaniesRepository;
-use App\Repositories\ProfileRepository;
+use App\Services\Auth\Profile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Jenssegers\Agent\Agent;
 
 class ProfileController extends Controller
 {
     /**
-     * @param Request $request
-     * @return array|JsonResponse
+     * Handles the user data retrieval endpoint.
+     *
+     * This function invokes the static 'get' method of the 'Profile' class to retrieve user data
+     * based on the session user's ID. It then returns a JSON response containing the result of the
+     * user data retrieval operation.
+     *
+     * @param Request $request The HTTP request object containing the session user information.
+     *
+     * @return JsonResponse A JSON response containing the result of the user data retrieval operation.
      */
-    public function get(Request $request): array|JsonResponse
+    public function get(Request $request): JsonResponse
     {
-        try {
-            $requestData = $request->all();
-            $sessionUser = $requestData['session_user'];
-            $userData = ProfileRepository::get($sessionUser['id']);
-            if (!$userData instanceof User) {
-                return response()->json(['status' => 500, 'message' => 'Cannot find user'], 200);
-            }
-            if ($userData['user_type'] == UserType::Company) {
-                $companyData = CompaniesRepository::get($userData['company_id']);
-                if (!$companyData instanceof Companies) {
-                    return response()->json(['status' => 500, 'message' => 'Cannot find company'], 200);
-                }
-                $userData['company_info'] = $companyData;
-            }
-            return response()->json(['status' => 200, 'data' => $userData]);
-        } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
-        }
+        $rv = Profile::get($request);
+        return response()->json($rv, 200);
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
+     * Handles the user profile update endpoint and returns a JsonResponse.
+     *
+     * @param Request $request The HTTP request object containing the updated profile information.
+     *
+     * @return JsonResponse The JSON response containing the status and a message indicating the success or failure of the profile update operation.
      */
     public function update(Request $request): JsonResponse
     {
-        try {
-            $requestData = $request->all();
-            $validator = Validator::make($requestData, [
-                'first_name' => 'required|string',
-                'last_name' => 'nullable|string',
-                'email' => 'required|email',
-                'user_type' => 'required|integer',
-                'company_name' =>'required_if:user_type,2',
-                'company_size' =>'required_if:user_type,2',
-                'company_address' =>'required_if:user_type,2',
-                'company_city' =>'required_if:user_type,2',
-                'company_country' =>'required_if:user_type,2',
-            ]);
-            if ($validator->fails()) {
-                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
-            }
-            //check if email already has been taken
-            $user = User::where('email', $requestData['email'])->where('id', '!=', $requestData['session_user']['id'])->first();
-            if ($user instanceof User) {
-                return response()->json(['status' => 500, 'errors' => ['email' => ['Email already has been taken']]]);
-            }
-            $user = User::find($requestData['session_user']['id']);
-            if (!$user instanceof User) {
-                return response()->json(['status' => 500, 'message' => 'Cannot find user'], 200);
-            }
-            $userData = [
-                'first_name' => $requestData['first_name'],
-                'last_name' => $requestData['last_name'] ?? null,
-                'email' => $requestData['email'],
-                'phone' => $requestData['phone'] ?? null,
-                'gender' => $requestData['gender'] ?? null,
-                'address' => $requestData['address'] ?? null,
-                'city' => $requestData['city'] ?? null,
-                'country' => $requestData['country'] ?? null,
-                'user_type' => $requestData['user_type'],
-            ];
-            if ($request->file('avatar')) {
-                Helpers::fileRemove($user, 'avatar');
-                $userData['avatar'] = Helpers::fileUpload($request->file('avatar'));
-            }
-            $userInfo = ProfileRepository::update($user, $userData);
-            if (!$userInfo instanceof User) {
-                return response()->json(['status' => 500, 'message' => 'Cannot update profile'], 200);
-            }
-            if ($userInfo['user_type'] == UserType::Company) {
-                $company = Companies::find($userInfo['company_id']);
-                if (!$company instanceof Companies) {
-                    return response()->json(['status' => 500, 'message' => 'Cannot find company'], 200);
-                }
-                $companyData = [
-                    'company_name' => $requestData['company_name'],
-                    'company_size' => $requestData['company_size'],
-                    'company_address' => $requestData['company_address'],
-                    'company_city' => $requestData['company_city'],
-                    'company_country' => $requestData['company_country'],
-                ];
-                if ($request->file('company_logo')) {
-                    Helpers::fileRemove($company, 'logo');
-                    $companyData['company_logo'] = Helpers::fileUpload($request->file('company_logo'));
-                }
-                $companyInfo = CompaniesRepository::update($company, $companyData);
-                if (!$companyInfo instanceof Companies) {
-                    return response()->json(['status' => 500, 'message' => 'Cannot update company'], 200);
-                }
-            }
-            Helpers::saveUserActivity($userInfo['id'],UserLogType::Update_profile, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' updated profile');
-            return response()->json(['status' => 200, 'message' => 'Profile updated successfully']);
-        } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
-        }
+        $rv = Profile::update($request);
+        return response()->json($rv, 200);
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
+     * Update the user's password.
+     *
+     * @param Request $request The HTTP request containing user data.
+     * @return JsonResponse The JSON response indicating the status of the password update.
      */
     public function updatePassword(Request $request): JsonResponse
     {
-        try {
-            $requestData = $request->all();
-            $validator = Validator::make($requestData, [
-                'old_password' => 'required|string',
-                'password' => 'required|confirmed',
-            ]);
-            if ($validator->fails()) {
-                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
-            }
-            $user = User::find($requestData['session_user']['id']);
-            if (!$user instanceof User) {
-                return response()->json(['status' => 500, 'message' => 'Cannot find user'], 200);
-            }
-            if (!Hash::check($requestData['old_password'], $user->password)) {
-                return response()->json(['status' => 500, 'errors' => ['old_password' => ['Current password does not match']]], 200);
-            }
-            $user->password = bcrypt($requestData['password']);
-            if (!$user->save()) {
-                return response()->json(['status' => 500, 'message' => 'Cannot update password'], 200);
-            }
-            Helpers::saveUserActivity($user['id'],UserLogType::Change_password, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' changed password');
-            return response()->json(['status' => 200, 'message' => 'Password updated successfully']);
-        } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
-        }
+        $response = Profile::updatePassword($request);
+        return response()->json($response, $response['status']);
     }
 }
