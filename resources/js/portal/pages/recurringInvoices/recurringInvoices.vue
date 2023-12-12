@@ -20,7 +20,7 @@
                         <th style="min-width: 120px;">Invoice</th>
                         <th style="min-width: 180px;">Name</th>
                         <th style="min-width: 180px;">Category</th>
-                        <th style="min-width: 180px;">Invoice Status</th>
+                        <th style="min-width: 180px;">Status</th>
                         <th style="min-width: 180px;">Start Date</th>
                         <th style="min-width: 180px;">End Date</th>
                         <th style="min-width: 220px;"></th>
@@ -38,9 +38,9 @@
                             }}
                         </td>
                         <td>{{each.category.name}}</td>
+                        <td>{{each.status == 0 ? 'On-Hold' : 'Active'}}</td>
                         <td>{{each.start_date_formatted}}</td>
                         <td>{{ each.end_date_formatted ? each.end_date_formatted : 'N/A' }}</td>
-                        <td>{{each.status == 0 ? 'On-Hold' : 'Active'}}</td>
                         <td class="text-end">
                             <router-link class="btn btn-warning text-white"
                                          :to="{name: 'RecurringInvoiceView', params: {id: each.id}}">

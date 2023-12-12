@@ -27,9 +27,6 @@ class InvoiceRepository
         $invoiceModel->cancel_reason = $invoiceData['cancel_reason'] ?? null;
         $invoiceModel->overdue_reason = $invoiceData['overdue_reason'] ?? null;
         $invoiceModel->currency = $invoiceData['currency'];
-        $invoiceModel->recurring = $invoiceData['recurring'] ?? 0;
-        $invoiceModel->recurring_frequency = $invoiceData['recurring_frequency'] ?? null;
-        $invoiceModel->recurring_end_date = $invoiceData['recurring_end_date'] ?? null;
         $invoiceModel->sub_total = $invoiceData['sub_total'] ?? null;
         $invoiceModel->tax = $invoiceData['tax'] ?? null;
         $invoiceModel->discount = $invoiceData['discount'] ?? null;
@@ -54,9 +51,6 @@ class InvoiceRepository
         $invoiceModel->invoice_due_date = $invoiceData['invoice_due_date'] ?? null;
         $invoiceModel->invoice_status = $invoiceData['invoice_status'] ?? null;
         $invoiceModel->currency = $invoiceData['currency'];
-        $invoiceModel->recurring = $invoiceData['recurring'] ?? 0;
-        $invoiceModel->recurring_frequency = $invoiceData['recurring_frequency'] ?? null;
-        $invoiceModel->recurring_end_date = $invoiceData['recurring_end_date'] ?? null;
         $invoiceModel->sub_total = $invoiceData['sub_total'] ?? null;
         $invoiceModel->tax = $invoiceData['tax'] ?? null;
         $invoiceModel->discount = $invoiceData['discount'] ?? null;
@@ -141,11 +135,7 @@ class InvoiceRepository
         } else {
             $result->where('is_active', 1);
         }
-        if (!empty($filter['recurring']) && $filter['recurring'] == true) {
-            $result->where('recurring', 1);
-        } else{
-            $result->where('recurring', 0);
-        }
+
         if (!empty($filter['start_date']) && !empty($filter['end_date'])) {
             $result->whereBetween('created_at', [$filter['start_date'].' 00:00:00', $filter['end_date'].' 23:59:59']);
         } else {
