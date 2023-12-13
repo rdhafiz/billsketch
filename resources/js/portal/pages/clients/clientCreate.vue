@@ -3,9 +3,8 @@
         <div class="col-xxl-8">
             <form @submit.prevent="clientCreate" id="clientCreate" enctype="multipart/form-data">
                 <div class="row">
-
                     <div class="col-lg-12">
-                        <h1>New Client</h1>
+                        <h1 class="fs-24">New Client</h1>
                     </div>
                     <div class="col-lg-12">
                         <div class="card">
@@ -75,17 +74,12 @@
                                             <div class="error-report text-danger "></div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12">
-                                        <div class="text-end">
-
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="card-footer py-3 text-end">
                                 <router-link :to="{name: 'Clients'}" class="btn btn-outline-secondary px-3 me-2">Cancel</router-link>
                                 <button type="submit" class="btn btn-theme px-3" v-if="loading === false">Submit</button>
-                                <button type="button" disabled v-if="loading === true" class="btn btn-theme">
+                                <button type="button" disabled v-if="loading === true" class="btn btn-theme" style="width: 86px;">
                                     <i class="fa fa-spinner spin" aria-hidden="true"></i>
                                 </button>
                             </div>
