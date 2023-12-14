@@ -30,7 +30,7 @@
     "css": [
       "assets/app-9ec9a6ef.css"
     ],
-    "file": "assets/app-017c6a83.js",
+    "file": "assets/app-d112f409.js",
     "imports": [
       "_vue-router-2faa746d.js"
     ],
@@ -53,7 +53,7 @@
     "src": "resources/js/website/app.js"
   },
   "resources/scss/portal/app.scss": {
-    "file": "assets/app-a1431ae3.css",
+    "file": "assets/app-feb8db5a.css",
     "isEntry": true,
     "src": "resources/scss/portal/app.scss"
   },
