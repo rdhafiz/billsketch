@@ -14,13 +14,13 @@ const ApiRoutes = {
     clientUpdate: ApiVersion + '/client/update',
     clientDelete: ApiVersion + '/client/delete',
 
-    // Employee
-    employeeCreate: ApiVersion + '/employee/save',
-    employeeList: ApiVersion + '/employee/list',
-    employeeSingle: ApiVersion + '/employee/single',
-    employeeStatus: ApiVersion + '/employee/update/status',
-    employeeUpdate: ApiVersion + '/employee/update',
-    employeeDelete: ApiVersion + '/employee/delete',
+    // Payee
+    payeeCreate: ApiVersion + '/payee/save',
+    payeeList: ApiVersion + '/payee/list',
+    payeeSingle: ApiVersion + '/payee/single',
+    payeeStatus: ApiVersion + '/payee/update/status',
+    payeeUpdate: ApiVersion + '/payee/update',
+    payeeDelete: ApiVersion + '/payee/delete',
 
     // Category
     categoryCreate: ApiVersion + '/category/save',

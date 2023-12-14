@@ -1,10 +1,10 @@
 <template>
     <div class="row justify-content-center res">
         <div class="col-xxl-8">
-            <form @submit.prevent="updateEmployee" id="employeeEdit" enctype="multipart/form-data">
+            <form @submit.prevent="updatePayee" id="payeeEdit" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="fs-24">Edit Employee</h1>
+                        <h1 class="fs-24">Edit Payee</h1>
                     </div>
                     <div class="cl col-lg-12">
                         <div class="card">
@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                             <div class="card-footer text-end">
-                                <router-link :to="{name: 'Employees'}" class="btn btn-outline-secondary px-3 me-2">Cancel</router-link>
+                                <router-link :to="{name: 'Payees'}" class="btn btn-outline-secondary px-3 me-2">Cancel</router-link>
                                 <button type="submit" class="btn btn-theme px-3" v-if="loading === false">Update</button>
                                 <button type="button" disabled v-if="loading === true"
                                         class="btn btn-theme" style="width: 87px;">
@@ -126,9 +126,9 @@ export default {
         }
     },
     methods: {
-        /*Get Employee Data*/
+        /*Get Payee Data*/
         getSingle(id){
-            apiService.POST(apiRoutes.employeeSingle, {id} , (res) => {
+            apiService.POST(apiRoutes.payeeSingle, {id} , (res) => {
                 if (res.status === 200) {
                     this.formData = res.data;
                     this.avatar = res.data.avatar_path ?? this.avatar;
@@ -138,17 +138,17 @@ export default {
             })
         },
 
-        /*Update Employee*/
-            updateEmployee(){
+        /*Update Payee*/
+            updatePayee(){
             apiService.ClearErrorHandler();
             this.loading = true;
-            const formData = new FormData(document.getElementById('employeeEdit'));
+            const formData = new FormData(document.getElementById('payeeEdit'));
             formData.append('id', this.formData.id);
-            apiService.POST_FORMDATA(apiRoutes.employeeUpdate, formData, (res) => {
+            apiService.POST_FORMDATA(apiRoutes.payeeUpdate, formData, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
                     toaster.info(res.message);
-                    this.$router.push({name: 'Employees'})
+                    this.$router.push({name: 'Payees'})
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }

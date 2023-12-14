@@ -34,6 +34,7 @@ class GenerateUsers extends Command
                 ['first_name' => 'User', 'last_name' => 'four', 'email' => 'user.four@mailinator.com', 'password' => bcrypt('123asd123'), 'user_type' => 1],
                 ['first_name' => 'User', 'last_name' => 'five', 'email' => 'user.five@mailinator.com', 'password' => bcrypt('123asd123'), 'user_type' => 1],
             ];
+            User::truncate();
             User::insert($Users);
             print_r(PHP_EOL.'Test users are generated.'.PHP_EOL);
         } catch (\Exception $e) {

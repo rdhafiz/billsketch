@@ -29,6 +29,6 @@ class GenerateTestData extends Command
         Artisan::call('app:generate-users');
         Artisan::call('app:generate-category');
         Artisan::call('app:generate-clients');
-        Artisan::call('app:generate-employees');
+        Artisan::call('app:generate-payees');
     }
 }

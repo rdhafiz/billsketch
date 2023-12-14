@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('uid');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('client_id')->nullable();
-            $table->unsignedInteger('employee_id')->nullable();
+            $table->unsignedInteger('payee_id')->nullable();
             $table->unsignedInteger('category_id');
             $table->integer('due_days');
             $table->string('currency');

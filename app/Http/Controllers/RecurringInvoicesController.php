@@ -8,7 +8,7 @@ use App\Constants\UserLogType;
 use App\Helpers\Helpers;
 use App\Models\Categories;
 use App\Models\Clients;
-use App\Models\Employees;
+use App\Models\Payees;
 use App\Models\InvoiceItems;
 use App\Models\Invoices;
 use App\Models\RecurringInvoiceItems;
@@ -41,8 +41,8 @@ class RecurringInvoicesController extends Controller
             DB::beginTransaction();
             $requestData = $request->all();
             $validator = Validator::make($requestData, [
-                'client_id' => 'nullable|integer|required_without:employee_id|exists:clients,id',
-                'employee_id' => 'nullable|integer|required_without:client_id|exists:employees,id',
+                'client_id' => 'nullable|integer|required_without:payee_id|exists:clients,id',
+                'payee_id' => 'nullable|integer|required_without:client_id|exists:payees,id',
                 'category_id' => 'required|integer',
                 'due_days' => 'required|numeric',
                 'currency' => 'required|string',
@@ -61,14 +61,14 @@ class RecurringInvoicesController extends Controller
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
             }
-            if (empty($requestData['client_id']) && empty($requestData['employee_id'])) {
+            if (empty($requestData['client_id']) && empty($requestData['payee_id'])) {
                 return response()->json(['status' => 500, 'message' => 'Invalid request']);
             }
-            if (!empty($requestData['client_id']) && !empty($requestData['employee_id'])) {
-                $requestData['employee_id'] = null;
+            if (!empty($requestData['client_id']) && !empty($requestData['payee_id'])) {
+                $requestData['payee_id'] = null;
             }
-            $invoiceUserType = !empty($requestData['employee_id']) ? 'employee_id' : 'client_id';
-            $invoiceUserId = !empty($requestData['employee_id']) ? $requestData['employee_id'] : $requestData['client_id'];
+            $invoiceUserType = !empty($requestData['payee_id']) ? 'payee_id' : 'client_id';
+            $invoiceUserId = !empty($requestData['payee_id']) ? $requestData['payee_id'] : $requestData['client_id'];
             $recurringUid = RecurringInvoiceRepository::RecurringUid($requestData['session_user'], $invoiceUserType, $invoiceUserId);
 
 
@@ -76,7 +76,7 @@ class RecurringInvoicesController extends Controller
                 'uid' => $recurringUid,
                 'user_id' => $requestData['session_user']['id'],
                 'client_id' => $requestData['client_id'] ?? null,
-                'employee_id' => $requestData['employee_id'] ?? null,
+                'payee_id' => $requestData['payee_id'] ?? null,
                 'category_id' => $requestData['category_id'],
                 'due_days' => $requestData['due_days'],
                 'currency' => $requestData['currency'],

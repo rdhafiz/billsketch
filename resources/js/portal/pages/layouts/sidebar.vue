@@ -17,7 +17,7 @@
             <ul>
                 <li><router-link :to="{name: 'Dashboard'}"><img :src="'/assets/images/portal/menu/dashboard.png'" alt=""> <span>Dashboard</span></router-link></li>
                 <li><router-link :to="{name: 'Clients'}"><img :src="'/assets/images/portal/menu/clients.png'" alt=""> <span>Clients</span></router-link></li>
-                <li><router-link :to="{name: 'Employees'}"><img :src="'/assets/images/portal/menu/employee.png'" alt=""> <span>Employees</span></router-link></li>
+                <li><router-link :to="{name: 'Payees'}"><img :src="'/assets/images/portal/menu/payee.png'" alt=""> <span>Payees</span></router-link></li>
                 <li><router-link :to="{name: 'Categories'}"><img :src="'/assets/images/portal/menu/category.png'" alt=""> <span>Categories</span></router-link></li>
                 <li><router-link :to="{name: 'Invoices'}"><img :src="'/assets/images/portal/menu/invoice.png'" alt="">  <span>Invoices</span></router-link></li>
                 <li><router-link :to="{name: 'RecurringInvoices'}"><img :src="'/assets/images/portal/menu/recurring.png'" alt=""> <span>Recurring Invoices</span></router-link></li>

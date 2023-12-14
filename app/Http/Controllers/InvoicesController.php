@@ -7,7 +7,7 @@ use App\Constants\UserLogType;
 use App\Helpers\Helpers;
 use App\Models\Categories;
 use App\Models\Clients;
-use App\Models\Employees;
+use App\Models\Payees;
 use App\Models\InvoiceItems;
 use App\Models\Invoices;
 use App\Repositories\InvoiceRepository;
@@ -39,8 +39,8 @@ class InvoicesController extends Controller
                 'invoice_items.*.description' => 'required',
                 'invoice_items.*.unit_frequency' => 'required|numeric',
                 'invoice_items.*.unit_value' => 'required|numeric',
-                'client_id' => 'nullable|integer|required_without:employee_id|exists:clients,id',
-                'employee_id' => 'nullable|integer|required_without:client_id|exists:employees,id',
+                'client_id' => 'nullable|integer|required_without:Payee_id|exists:clients,id',
+                'payee_id' => 'nullable|integer|required_without:client_id|exists:payees,id',
                 'tax' => 'nullable|numeric',
                 'discount' => 'nullable|numeric',
                 'bonus' => 'nullable|numeric',
@@ -48,13 +48,13 @@ class InvoicesController extends Controller
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
             }
-            if (empty($requestData['client_id']) && empty($requestData['employee_id'])) {
+            if (empty($requestData['client_id']) && empty($requestData['payee_id'])) {
                 return response()->json(['status' => 500, 'message' => 'Invalid request']);
             }
-            if (!empty($requestData['client_id']) && !empty($requestData['employee_id'])) {
-                $requestData['employee_id'] = null;
+            if (!empty($requestData['client_id']) && !empty($requestData['payee_id'])) {
+                $requestData['payee_id'] = null;
             }
-            $invoiceUserType = !empty($requestData['employee_id']) ? 'employee_id' : 'client_id';
+            $invoiceUserType = !empty($requestData['payee_id']) ? 'payee_id' : 'client_id';
             $invoiceUserId = !empty($requestData['employee_id']) ? $requestData['employee_id'] : $requestData['client_id'];
             $isInvoiceNoExist = InvoiceRepository::checkIfInvoiceNoExist($requestData['session_user'], $invoiceUserType, $invoiceUserId, $requestData['invoice_no']);
             if ($isInvoiceNoExist == true) {
