@@ -1,5 +1,5 @@
 <template>
-    <h1>Employees</h1>
+    <h1>Payees</h1>
     <div class="card">
         <div class="card-body">
             <div class="row mb-3 align-items-center">
@@ -14,7 +14,7 @@
                     </select>
                 </div>
                 <div class="col-lg-4 col-xxl-7 text-end">
-                    <router-link :to="{name: 'EmployeeCreate'}" class="btn btn-theme" style="width: 120px;">Create</router-link>
+                    <router-link :to="{name: 'PayeeCreate'}" class="btn btn-theme" style="width: 120px;">Create</router-link>
                 </div>
             </div>
             <div class="table-data table-responsive">
@@ -47,14 +47,14 @@
                             <td>{{ each.city }}</td>
                             <td>{{ each.country }}</td>
                             <td class="text-end" style="min-width: 180px;">
-                                <router-link :to="{name: 'EmployeeEdit', params: {id: each.id}}" class="btn btn-theme">
+                                <router-link :to="{name: 'PayeeEdit', params: {id: each.id}}" class="btn btn-theme">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                 </router-link>
-                                <button class="btn btn-secondary ms-2" @click="updateEmployeeStatus(each.id)">
+                                <button class="btn btn-secondary ms-2" @click="updatePayeeStatus(each.id)">
                                     <i class="fa fa-archive" aria-hidden="true" v-if="!param.list_type"></i>
                                     <i class="fa fa-refresh" aria-hidden="true" v-if="param.list_type"></i>
                                 </button>
-                                <button class="btn btn-danger ms-2" @click="deleteEmployee(each.id)">
+                                <button class="btn btn-danger ms-2" @click="deletePayee(each.id)">
                                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                                 </button>
                             </td>
@@ -185,33 +185,33 @@ export default {
         prevPage() {
             if (this.current_page > 1) {
                 this.current_page = this.current_page - 1;
-                this.getEmployees()
+                this.getPayees()
             }
         },
         nextPage() {
             if (this.current_page < this.total_pages) {
                 this.current_page = this.current_page + 1;
-                this.getEmployees()
+                this.getPayees()
             }
         },
         pageChange(page) {
             this.current_page = page;
-            this.getEmployees();
+            this.getPayees();
         },
 
-        /*Search Employees*/
+        /*Search Payees*/
         searchData() {
             clearTimeout(this.searchTimeout)
             this.searchTimeout = setTimeout(() => {
-                this.getEmployees()
+                this.getPayees()
             }, 800)
         },
 
-        /*Get Employees*/
-        getEmployees() {
+        /*Get Payees*/
+        getPayees() {
             this.loading = true;
             this.param.page = this.current_page;
-            apiService.POST(apiRoutes.employeeList, this.param, (res) => {
+            apiService.POST(apiRoutes.payeeList, this.param, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
                     this.tableData = res.data.data;
@@ -225,11 +225,11 @@ export default {
             })
         },
 
-        /*Delete Employee*/
-        deleteEmployee(id) {
+        /*Delete Payee*/
+        deletePayee(id) {
             swal({
                 title: "Are you sure?",
-                text: "If you delete a employee, all associated data, such as invoices related to that employee, will be permanently removed from the system.",
+                text: "If you delete a Payee, all associated data, such as invoices related to that Payee, will be permanently removed from the system.",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -237,10 +237,10 @@ export default {
                 .then(willDelete => {
                     console.log(1)
                     if (willDelete) {
-                        apiService.POST(apiRoutes.employeeDelete, {id}, (res) => {
+                        apiService.POST(apiRoutes.PayeeDelete, {id}, (res) => {
                             if (res.status === 200) {
-                                swal("Deleted!", "Employee has been deleted!", "success");
-                                this.getEmployees();
+                                swal("Deleted!", "Payee has been deleted!", "success");
+                                this.getPayees();
                             } else {
                                 swal("Error!", res.errors?.id[0], "error");
                             }
@@ -253,14 +253,14 @@ export default {
         changeStatus(){
             this.current_page = 0;
             this.status = this.param.list_type;
-            this.getEmployees();
+            this.getPayees();
         },
 
-        /*Update Employee Status*/
-        updateEmployeeStatus(id) {
+        /*Update Payee Status*/
+        updatePayeeStatus(id) {
             swal({
                 title: "Are you sure?",
-                text: `Are you sure that you want to ${this.status === '' ? 'archive' : 'restore'} this employee?`,
+                text: `Are you sure that you want to ${this.status === '' ? 'archive' : 'restore'} this payee?`,
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -268,11 +268,11 @@ export default {
                 .then(willDelete => {
                     console.log(1)
                     if (willDelete) {
-                        apiService.POST(apiRoutes.employeeStatus, {id}, (res) => {
+                        apiService.POST(apiRoutes.payeeStatus, {id}, (res) => {
                             if (res.status === 200) {
-                                swal(`${!this.status ? 'Archived!' : 'Restored!'}`, `${!this.status ? 'Employee has been archived!' : 'Employee has been restored!!'}`, "success"
+                                swal(`${!this.status ? 'Archived!' : 'Restored!'}`, `${!this.status ? 'Payee has been archived!' : 'Payee has been restored!!'}`, "success"
                                 );
-                                this.getEmployees();
+                                this.getPayees();
                             } else {
                                 swal("Error!", res.errors?.id[0], "error");
                             }
@@ -282,7 +282,7 @@ export default {
         }
     },
     mounted() {
-        this.getEmployees();
+        this.getPayees();
     },
     created() {
         window.scroll(0, 0);

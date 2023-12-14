@@ -1,11 +1,10 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ClientsController;
-use App\Http\Controllers\EmployeesController;
+use App\Http\Controllers\PayeesController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\RecurringInvoicesController;
@@ -68,13 +67,13 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:api']], function () {
 
 
 
-Route::group(['prefix' => 'employee', 'middleware' => ['auth:api']], function () {
-    Route::post('save', [EmployeesController::class, 'save']);
-    Route::post('update', [EmployeesController::class, 'update']);
-    Route::post('single', [EmployeesController::class, 'single']);
-    Route::post('delete', [EmployeesController::class, 'delete']);
-    Route::post('list', [EmployeesController::class, 'list']);
-    Route::post('update/status', [EmployeesController::class, 'archiveOrRestore']);
+Route::group(['prefix' => 'payee', 'middleware' => ['auth:api']], function () {
+    Route::post('save', [PayeesController::class, 'save']);
+    Route::post('update', [PayeesController::class, 'update']);
+    Route::post('single', [PayeesController::class, 'single']);
+    Route::post('delete', [PayeesController::class, 'delete']);
+    Route::post('list', [PayeesController::class, 'list']);
+    Route::post('update/status', [PayeesController::class, 'archiveOrRestore']);
 });
 Route::group(['prefix' => 'category', 'middleware' => ['auth:api']], function () {
     Route::post('save', [CategoriesController::class, 'save']);

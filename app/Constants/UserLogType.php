@@ -19,12 +19,12 @@ class UserLogType
     const Client_delete = 'Client delete';
     const Client_archive = 'Client archive';
     const Client_restore = 'Client restore';
-    const Employee_create = 'Employee create';
-    const Employee_view = 'Employee view';
-    const Employee_update = 'Employee update';
-    const Employee_delete = 'Employee delete';
-    const Employee_archive = 'Employee archive';
-    const Employee_restore = 'Employee restore';
+    const Payee_create = 'Payee create';
+    const Payee_view = 'Payee view';
+    const Payee_update = 'Payee update';
+    const Payee_delete = 'Payee delete';
+    const Payee_archive = 'Payee archive';
+    const Payee_restore = 'Payee restore';
     const Category_create = 'Category create';
     const Category_view = 'Category view';
     const Category_update = 'Category update';
@@ -66,8 +66,8 @@ class UserLogType
             ['value' => self::Client_delete, 'name'=> self::Client_delete],
             ['value' => self::Client_archive, 'name'=> self::Client_archive],
             ['value' => self::Client_restore, 'name'=> self::Client_restore],
-            ['value' => self::Employee_create, 'name'=> self::Employee_create],
-            ['value' => self::Employee_view, 'name'=> self::Employee_view],
+            ['value' => self::Payee_create, 'name'=> self::Payee_create],
+            ['value' => self::Payee_view, 'name'=> self::Employee_view],
             ['value' => self::Employee_update, 'name'=> self::Employee_update],
             ['value' => self::Employee_delete, 'name'=> self::Employee_delete],
             ['value' => self::Employee_archive, 'name'=> self::Employee_archive],

@@ -104,9 +104,9 @@ class Invoices extends Model
     {
         return $this->hasOne(Clients::class, 'id', 'client_id')->select('id', 'name', 'logo');
     }
-    public function employee()
+    public function payee()
     {
-        return $this->hasOne(Employees::class, 'id', 'employee_id')->select('id', 'name', 'avatar');
+        return $this->hasOne(Payees::class, 'id', 'payee_id')->select('id', 'name', 'avatar');
     }
 
     public static function generateInvoiceNumber($prefix, $number){

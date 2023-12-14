@@ -39,6 +39,7 @@ class GenerateCategory extends Command
                 ['user_id' => '5', 'name' => 'Cost', 'color' => '#d1ca00'],
                 ['user_id' => '5', 'name' => 'Income', 'color' => '#149f1d'],
             ];
+            Categories::truncate();
             Categories::insert($Categories);
             print_r(PHP_EOL.'Test Categories are generated.'.PHP_EOL);
         } catch (\Exception $e) {

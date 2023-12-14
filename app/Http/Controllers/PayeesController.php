@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Constants\UserLogType;
 use App\Helpers\Helpers;
-use App\Models\Employees;
+use App\Models\Payees;
 use App\Models\InvoiceItems;
 use App\Models\Invoices;
-use App\Repositories\EmployeesRepositories;
+use App\Repositories\PayeesRepositories;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class EmployeesController extends Controller
+class PayeesController extends Controller
 {
     /**
      * @param Request $request
@@ -24,7 +24,7 @@ class EmployeesController extends Controller
             $requestData = $request->all();
             $validator = Validator::make($requestData, [
                 'name' => 'required|string',
-                'email' => 'required|email|unique:employees,email',
+                'email' => 'required|email|unique:payees,email',
                 'phone' => 'required|string',
                 'address' => 'required|string',
                 'city' => 'required|string',
@@ -37,7 +37,7 @@ class EmployeesController extends Controller
             preg_match_all('/(?<=\b)\w/iu', $requestData['name'], $matches);
             $invoice_prefix = mb_strtoupper(implode('', $matches[0]));
 
-            $employeeData = [
+            $payeeData = [
                 'user_id' => $requestData['session_user']['id'],
                 'invoice_prefix' => $requestData['invoice_prefix'] ?? $invoice_prefix,
                 'name' => $requestData['name'],
@@ -48,13 +48,13 @@ class EmployeesController extends Controller
                 'country' => $requestData['country'],
             ];
             if ($request->file('avatar')) {
-                $employeeData['avatar'] = Helpers::fileUpload($request->file('avatar'));
+                $payeeData['avatar'] = Helpers::fileUpload($request->file('avatar'));
             }
-            $employeeInfo = EmployeesRepositories::save($employeeData);
-            if (!$employeeInfo instanceof Employees) {
-                return response()->json(['status' => 500, 'message' => 'Cannot save employee'], 200);
+            $payeeInfo = PayeesRepositories::save($payeeData);
+            if (!$payeeInfo instanceof Payees) {
+                return response()->json(['status' => 500, 'message' => 'Cannot save Payee'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_create, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' created a employee named: '.$employeeInfo['name']);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Payee_create, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' created a Payee named: '.$payeeInfo['name']);
             return response()->json(['status' => 200, 'message' => 'Employee has been created successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -82,19 +82,19 @@ class EmployeesController extends Controller
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
             }
             //check if email already has been taken
-            $employee = Employees::where('email', $requestData['email'])->where('id', '!=', $requestData['id'])->first();
-            if ($employee instanceof Employees) {
+            $payee = Payees::where('email', $requestData['email'])->where('id', '!=', $requestData['id'])->first();
+            if ($payee instanceof Payees) {
                 return response()->json(['status' => 500, 'errors' => ['email' => ['Email already has been taken']]]);
             }
-            $employee = Employees::find($requestData['id']);
-            if (!$employee instanceof Employees) {
-                return response()->json(['status' => 500, 'message' => 'Cannot find employee'], 200);
+            $payee = Payees::find($requestData['id']);
+            if (!$payee instanceof Payees) {
+                return response()->json(['status' => 500, 'message' => 'Cannot find payee'], 200);
             }
 
             preg_match_all('/(?<=\b)\w/iu', $requestData['name'], $matches);
             $invoice_prefix = mb_strtoupper(implode('', $matches[0]));
 
-            $employeeData = [
+            $payeeData = [
                 'id' => $requestData['id'],
                 'invoice_prefix' => $requestData['invoice_prefix'] ?? $invoice_prefix,
                 'name' => $requestData['name'],
@@ -105,14 +105,14 @@ class EmployeesController extends Controller
                 'country' => $requestData['country'],
             ];
             if ($request->file('avatar')) {
-                Helpers::fileRemove($employee, 'avatar');
-                $employeeData['avatar'] = Helpers::fileUpload($request->file('avatar'));
+                Helpers::fileRemove($payee, 'avatar');
+                $payeeData['avatar'] = Helpers::fileUpload($request->file('avatar'));
             }
-            $employeeInfo = EmployeesRepositories::update($employee, $employeeData);
-            if (!$employeeInfo instanceof Employees) {
-                return response()->json(['status' => 500, 'message' => 'Cannot update employee'], 200);
+            $payeeInfo = PayeesRepositories::update($payee, $payeeData);
+            if (!$payeeInfo instanceof Payees) {
+                return response()->json(['status' => 500, 'message' => 'Cannot update payee'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_update, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' updated a employee named: '.$employeeInfo['name']);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Payee_update, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' updated a payee named: '.$payeeInfo['name']);
             return response()->json(['status' => 200, 'message' => 'Employee has been updated successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -132,12 +132,12 @@ class EmployeesController extends Controller
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
             }
-            $employee = EmployeesRepositories::single($requestData['id']);
-            if (!$employee instanceof Employees) {
-                return response()->json(['status' => 500, 'message' => 'Cannot find employee'], 200);
+            $payee = PayeesRepositories::single($requestData['id']);
+            if (!$payee instanceof Payees) {
+                return response()->json(['status' => 500, 'message' => 'Cannot find payee'], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_view, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' viewed a employee named: '.$employee['name']);
-            return response()->json(['status' => 200, 'data' => $employee], 200);
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Payee_view, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' viewed a payee named: '.$payee['name']);
+            return response()->json(['status' => 200, 'data' => $payee], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
@@ -156,16 +156,16 @@ class EmployeesController extends Controller
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
             }
-            $employee = Employees::find($requestData['id']);
-            if (!$employee instanceof Employees) {
-                return response()->json(['status' => 500, 'message' => 'Cannot find employee'], 200);
+            $payee = Payees::find($requestData['id']);
+            if (!$payee instanceof Payees) {
+                return response()->json(['status' => 500, 'message' => 'Cannot find payee'], 200);
             }
-            if (!$employee->delete()) {
-                return response()->json(['status' => 500, 'message' => 'Cannot delete employee'], 200);
+            if (!$payee->delete()) {
+                return response()->json(['status' => 500, 'message' => 'Cannot delete payee'], 200);
             }
-            Helpers::relationalDataAction($employee->id, 'employee_id', 'delete', new Invoices(), true, new InvoiceItems());
-            Helpers::fileRemove($employee, 'logo');
-            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Employee_delete, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' deleted a employee named: '.$employee['name']);
+            Helpers::relationalDataAction($payee->id, 'payee_id', 'delete', new Invoices(), true, new InvoiceItems());
+            Helpers::fileRemove($payee, 'logo');
+            Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Payee_delete, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' deleted a payee named: '.$payee['name']);
             return response()->json(['status' => 200, 'message' => 'Employee deleted successfully '], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -190,7 +190,7 @@ class EmployeesController extends Controller
                 'pagination' => $requestData['pagination'] ?? true,
             ];
             $user = $requestData['session_user'];
-            $result = EmployeesRepositories::list($filter, $paginatedData, $user);
+            $result = PayeesRepositories::list($filter, $paginatedData, $user);
             return response()->json(['status' => 200, 'data' => $result]);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
@@ -210,23 +210,23 @@ class EmployeesController extends Controller
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
             }
-            $employee = Employees::find($requestData['id']);
-            if (!$employee instanceof Employees) {
-                return response()->json(['status' => 500, 'message' => 'Cannot find employee'], 200);
+            $payee = Payees::find($requestData['id']);
+            if (!$payee instanceof Payees) {
+                return response()->json(['status' => 500, 'message' => 'Cannot find payee'], 200);
             }
-            $employee->is_active = $employee->is_active == 0 ? 1 : 0;
-            if (!$employee->save()) {
-                $message = 'Cannot restore employee';
-                if ($employee->is_active == 0) {
-                    $message = 'Cannot archive employee';
+            $payee->is_active = $payee->is_active == 0 ? 1 : 0;
+            if (!$payee->save()) {
+                $message = 'Cannot restore payee';
+                if ($payee->is_active == 0) {
+                    $message = 'Cannot archive payee';
                 }
                 return response()->json(['status' => 500, 'message' => $message], 200);
             }
-            Helpers::saveUserActivity($requestData['session_user']['id'],$employee->is_active == 1 ? UserLogType::Employee_restore : UserLogType::Employee_archive, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' '.$employee->is_active == 1 ? 'restored' : 'archived' .' a employee named: '.$employee['name']);
+            Helpers::saveUserActivity($requestData['session_user']['id'],$payee->is_active == 1 ? UserLogType::Payee_restore : UserLogType::Payee_archive, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' '.$payee->is_active == 1 ? 'restored' : 'archived' .' a payee named: '.$payee['name']);
             $message = 'Employee archive successfully';
-            Helpers::relationalDataAction($employee->id, 'employee_id', 'archive', new Invoices());
-            if ($employee->is_active == 1) {
-                Helpers::relationalDataAction($employee->id, 'employee_id', 'restore', new Invoices());
+            Helpers::relationalDataAction($payee->id, 'payee_id', 'archive', new Invoices());
+            if ($payee->is_active == 1) {
+                Helpers::relationalDataAction($payee->id, 'payee_id', 'restore', new Invoices());
                 $message = 'Employee restore successfully';
             }
             return response()->json(['status' => 200, 'message' => $message], 200);

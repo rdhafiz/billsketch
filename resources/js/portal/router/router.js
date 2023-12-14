@@ -6,28 +6,33 @@ import {createRouter, createWebHistory} from "vue-router";
 //=====================
 import Layout from "../pages/layouts/layout.vue";
 import Dashboard from "../pages/dashboard/dashboard.vue";
+
 import Clients from "../pages/clients/clients.vue";
-import Employees from "../pages/employees/employees.vue";
-import Invoices from "../pages/invoices/invoices.vue";
-import Profile from "../pages/profile/Profile.vue";
-import UpdateProfile from "../pages/profile/UpdateProfile.vue";
-import ChangePassword from "../pages/profile/ChangePassword.vue";
 import ClientEdit from "../pages/clients/clientEdit.vue";
 import ClientCreate from "../pages/clients/clientCreate.vue";
-import EmployeeCreate from "../pages/employees/employeeCreate.vue";
-import EmployeeEdit from "../pages/employees/employeeEdit.vue";
+
 import Categories from "../pages/category/categories.vue";
 import CategoryCreate from "../pages/category/categoryCreate.vue";
 import CategoryEdit from "../pages/category/categoryEdit.vue";
+
+import Payees from "../pages/payees/payees.vue";
+import PayeeCreate from "../pages/payees/payeeCreate.vue";
+import PayeeEdit from "../pages/payees/payeeEdit.vue";
+
+import Invoices from "../pages/invoices/invoices.vue";
 import InvoiceCreate from "../pages/invoices/invoiceCreate.vue";
 import InvoiceEdit from "../pages/invoices/invoiceEdit.vue";
 import InvoiceView from "../pages/invoices/invoiceView.vue";
 
 import RecurringInvoices from "../pages/recurringInvoices/recurringInvoices.vue";
 import RecurringInvoiceCreate from "../pages/recurringInvoices/recurringInvoiceCreate.vue";
-import UserLogs from "../pages/user-logs/user-logs.vue";
 import RecurringInvoiceEdit from "../pages/recurringInvoices/recurringInvoiceEdit.vue";
 import RecurringInvoiceView from "../pages/recurringInvoices/recurringInvoiceView.vue";
+
+import Profile from "../pages/profile/Profile.vue";
+import UpdateProfile from "../pages/profile/UpdateProfile.vue";
+import ChangePassword from "../pages/profile/ChangePassword.vue";
+import UserLogs from "../pages/user-logs/user-logs.vue";
 
 //=====================
 // Routes
@@ -47,10 +52,10 @@ const routes = [
             {path: ROOT_URL + '/clients/create', name: 'ClientCreate', component: ClientCreate},
             {path: ROOT_URL + '/clients/edit/:id', name: 'ClientEdit', component: ClientEdit},
 
-            /*employee routes*/
-            {path: ROOT_URL + '/employees', name: 'Employees', component: Employees},
-            {path: ROOT_URL + '/employees/create', name: 'EmployeeCreate', component: EmployeeCreate},
-            {path: ROOT_URL + '/employees/edit/:id', name: 'EmployeeEdit', component: EmployeeEdit},
+            /*payee routes*/
+            {path: ROOT_URL + '/payees', name: 'Payees', component: Payees},
+            {path: ROOT_URL + '/payees/create', name: 'PayeeCreate', component: PayeeCreate},
+            {path: ROOT_URL + '/payees/edit/:id', name: 'PayeeEdit', component: PayeeEdit},
 
             /*category routes*/
             {path: ROOT_URL + '/categories', name: 'Categories', component: Categories},
