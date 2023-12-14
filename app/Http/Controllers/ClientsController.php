@@ -2,241 +2,108 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\UserLogType;
-use App\Helpers\Helpers;
-use App\Models\Clients;
-use App\Models\InvoiceItems;
-use App\Models\Invoices;
-use App\Repositories\ClientsRepositories;
+use App\Services\Client\ClientGet;
+use App\Services\Client\ClientRule;
+use App\Services\Client\ClientUpsert;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class ClientsController extends Controller
 {
     /**
-     * @param Request $request
-     * @return JsonResponse
+     * Handles the list endpoint for retrieving a paginated list of clients.
+     *
+     * This function invokes the 'list' method of the 'ClientGet' class to process
+     * the request for fetching a paginated list of clients and returns a JSON response based on the result.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request object containing parameters for client listing.
+     *
+     * @return \Illuminate\Http\JsonResponse A JSON response containing the result of fetching the client list.
      */
-    public function save(Request $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        try {
-            $requestData = $request->all();
-            $validator = Validator::make($requestData, [
-                'name' => 'required|string',
-                'email' => 'required|email|unique:clients,email',
-                'phone' => 'required|string',
-                'address' => 'required|string',
-                'city' => 'required|string',
-                'country' => 'required|string',
-            ]);
-            if ($validator->fails()) {
-                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
-            }
-
-            preg_match_all('/(?<=\b)\w/iu', $requestData['name'], $matches);
-            $invoice_prefix = mb_strtoupper(implode('', $matches[0]));
-
-            $clientData = [
-                'user_id' => $requestData['session_user']['id'],
-                'invoice_prefix' => $requestData['invoice_prefix'] ?? $invoice_prefix,
-                'name' => $requestData['name'],
-                'email' => $requestData['email'],
-                'phone' => $requestData['phone'],
-                'address' => $requestData['address'],
-                'city' => $requestData['city'],
-                'country' => $requestData['country'],
-            ];
-            if ($request->file('logo')) {
-                $clientData['logo'] = Helpers::fileUpload($request->file('logo'));
-            }
-            $clientInfo = ClientsRepositories::save($clientData);
-            if (!$clientInfo instanceof Clients) {
-                return response()->json(['status' => 500, 'message' => 'Cannot save client'], 200);
-            }
-            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Client_create, $requestData['session_user']['first_name'] . ' ' . $requestData['session_user']['last_name'] . ' created a client named: ' . $clientInfo['name']);
-            return response()->json(['status' => 200, 'message' => 'Client has been created successfully'], 200);
-        } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
-        }
+        $rv = ClientGet::list($request);
+        return response()->json($rv, 200);
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
+     * Handles the store endpoint for creating a new client.
+     *
+     * This function invokes the 'store' method of the 'ClientUpsert' class to process
+     * the request for creating a new client and returns a JSON response based on the result.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request object containing client data.
+     *
+     * @return \Illuminate\Http\JsonResponse A JSON response containing the result of the client creation attempt.
+     */
+    public function store(Request $request): JsonResponse
+    {
+        $rv = ClientUpsert::store($request);
+        return response()->json($rv, 200);
+    }
+
+    /**
+     * Handles the update endpoint for modifying an existing client.
+     *
+     * This function invokes the 'update' method of the 'ClientUpsert' class to process
+     * the request for updating an existing client and returns a JSON response based on the result.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request object containing updated client data.
+     *
+     * @return \Illuminate\Http\JsonResponse A JSON response containing the result of the client update attempt.
      */
     public function update(Request $request): JsonResponse
     {
-        try {
-            $requestData = $request->all();
-            $validator = Validator::make($requestData, [
-                'id' => 'required|integer',
-                'name' => 'required|string',
-                'email' => 'required|email',
-                'phone' => 'required|string',
-                'address' => 'required|string',
-                'city' => 'required|string',
-                'country' => 'required|string',
-            ]);
-            if ($validator->fails()) {
-                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
-            }
-            //check if email already has been taken
-            $client = Clients::where('email', $requestData['email'])->where('id', '!=', $requestData['id'])->first();
-            if ($client instanceof Clients) {
-                return response()->json(['status' => 500, 'errors' => ['email' => ['Email already has been taken']]]);
-            }
-            $client = Clients::find($requestData['id']);
-            if (!$client instanceof Clients) {
-                return response()->json(['status' => 500, 'message' => 'Cannot find client'], 200);
-            }
-
-            preg_match_all('/(?<=\b)\w/iu', $requestData['name'], $matches);
-            $invoice_prefix = mb_strtoupper(implode('', $matches[0]));
-
-            $clientData = [
-                'id' => $requestData['id'],
-                'invoice_prefix' => $requestData['invoice_prefix'] ?? $invoice_prefix,
-                'name' => $requestData['name'],
-                'email' => $requestData['email'],
-                'phone' => $requestData['phone'],
-                'address' => $requestData['address'],
-                'city' => $requestData['city'],
-                'country' => $requestData['country'],
-            ];
-            if ($request->file('logo')) {
-                Helpers::fileRemove($client, 'logo');
-                $clientData['logo'] = Helpers::fileUpload($request->file('logo'));
-            }
-            $clientInfo = ClientsRepositories::update($client, $clientData);
-            if (!$clientInfo instanceof Clients) {
-                return response()->json(['status' => 500, 'message' => 'Cannot update client'], 200);
-            }
-            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Client_update, $requestData['session_user']['first_name'] . ' ' . $requestData['session_user']['last_name'] . ' updated a client named: ' . $clientInfo['name']);
-            return response()->json(['status' => 200, 'message' => 'Client has been updated successfully'], 200);
-        } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
-        }
+        $rv = ClientUpsert::update($request);
+        return response()->json($rv, 200);
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
+     * Handles the show endpoint for retrieving information about a single client.
+     *
+     * This function invokes the 'single' method of the 'ClientGet' class to process
+     * the request for fetching details of a single client and returns a JSON response based on the result.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request object containing the client ID.
+     *
+     * @return \Illuminate\Http\JsonResponse A JSON response containing the result of fetching client details.
      */
-    public function single(Request $request): JsonResponse
+    public function show(Request $request): JsonResponse
     {
-        try {
-            $requestData = $request->all();
-            $validator = Validator::make($requestData, [
-                'id' => 'required|integer',
-            ]);
-            if ($validator->fails()) {
-                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
-            }
-            $client = ClientsRepositories::single($requestData['id']);
-            if (!$client instanceof Clients) {
-                return response()->json(['status' => 500, 'message' => 'Cannot find client'], 200);
-            }
-            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Client_view, $requestData['session_user']['first_name'] . ' ' . $requestData['session_user']['last_name'] . ' viewed a client named: ' . $client['name']);
-            return response()->json(['status' => 200, 'data' => $client], 200);
-        } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
-        }
+        $rv = ClientGet::single($request);
+        return response()->json($rv, 200);
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
+     * Handles delete endpoint for removing an existing client.
+     *
+     * This function invokes the 'destroy' method of the 'ClientRule' class to process
+     * the request for deleting an existing client and returns a JSON response based on the result.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request object containing the client ID for deletion.
+     *
+     * @return \Illuminate\Http\JsonResponse A JSON response containing the result of the client deletion attempt.
      */
-    public function delete(Request $request): JsonResponse
+    public function destroy(Request $request): JsonResponse
     {
-        try {
-            $requestData = $request->all();
-            $validator = Validator::make($requestData, [
-                'id' => 'required|integer',
-            ]);
-            if ($validator->fails()) {
-                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
-            }
-            $client = Clients::find($requestData['id']);
-            if (!$client instanceof Clients) {
-                return response()->json(['status' => 500, 'message' => 'Cannot find client'], 200);
-            }
-            if (!$client->delete()) {
-                return response()->json(['status' => 500, 'message' => 'Cannot delete client'], 200);
-            }
-
-            Helpers::relationalDataAction($client->id, 'client_id', 'delete', new Invoices(), true, new InvoiceItems());
-            Helpers::fileRemove($client, 'logo');
-            Helpers::saveUserActivity($requestData['session_user']['id'], UserLogType::Client_delete, $requestData['session_user']['first_name'] . ' ' . $requestData['session_user']['last_name'] . ' deleted a client named: ' . $client['name']);
-            return response()->json(['status' => 200, 'message' => 'Client deleted successfully '], 200);
-        } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
-        }
+        $rv = ClientRule::destroy($request);
+        return response()->json($rv, 200);
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function list(Request $request): JsonResponse
-    {
-        try {
-            $requestData = $request->all();
-            $filter = [
-                'keyword' => $requestData['keyword'] ?? '',
-                'list_type' => $requestData['list_type'] ?? 'active',
-            ];
-            $paginatedData = [
-                'limit' => $requestData['limit'] ?? 15,
-                'order_by' => $requestData['order_by'] ?? 'id',
-                'order_mode' => $requestData['order_mode'] ?? 'DESC',
-                'pagination' => $requestData['pagination'] ?? true,
-            ];
-            $user = $requestData['session_user'];
-            $result = ClientsRepositories::list($filter, $paginatedData, $user);
-            return response()->json(['status' => 200, 'data' => $result]);
-        } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
+     * Handles the archive or restore endpoint for changing the active status of a client.
+     *
+     * This function invokes the 'archiveOrRestore' method of the 'ClientRule' class to process
+     * the request for archiving or restoring a client and returns a JSON response based on the result.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request object containing the client ID.
+     *
+     * @return \Illuminate\Http\JsonResponse A JSON response containing the result of the archive or restore attempt.
      */
     public function archiveOrRestore(Request $request): JsonResponse
     {
-        try {
-            $requestData = $request->all();
-            $validator = Validator::make($requestData, [
-                'id' => 'required|integer',
-            ]);
-            if ($validator->fails()) {
-                return response()->json(['status' => 500, 'errors' => $validator->errors()]);
-            }
-            $client = Clients::find($requestData['id']);
-            if (!$client instanceof Clients) {
-                return response()->json(['status' => 500, 'message' => 'Cannot find client'], 200);
-            }
-            $client->is_active = $client->is_active == 0 ? 1 : 0;
-            if (!$client->save()) {
-                $message = 'Cannot restore client';
-                if ($client->is_active == 0) {
-                    $message = 'Cannot archive client';
-                }
-                return response()->json(['status' => 500, 'message' => $message], 200);
-            }
-            Helpers::saveUserActivity($requestData['session_user']['id'], $client->is_active == 1 ? UserLogType::Client_restore : UserLogType::Client_archive, $requestData['session_user']['first_name'] . ' ' . $requestData['session_user']['last_name'] . ' ' . $client->is_active == 1 ? 'restored' : 'archived' . '  a client named: ' . $client['name']);
-            $message = 'Client archive successfully';
-            Helpers::relationalDataAction($client->id, 'client_id', 'archive', new Invoices());
-            if ($client->is_active == 1) {
-                Helpers::relationalDataAction($client->id, 'client_id', 'restore', new Invoices());
-                $message = 'Client restore successfully';
-            }
-            return response()->json(['status' => 200, 'message' => $message], 200);
-        } catch (\Exception $exception) {
-            return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
-        }
+        $rv = ClientRule::archiveOrRestore($request);
+        return response()->json($rv, 200);
     }
+
 }
