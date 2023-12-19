@@ -200,7 +200,7 @@ class InvoicesController extends Controller
         }
     }
 
-    public function calculateInvoiceTotal($invoiceData, $totalItemsValue)
+    public static function calculateInvoiceTotal($invoiceData, $totalItemsValue)
     {
         if (!empty($invoiceData['tax'])) {
             $taxAmount = ($totalItemsValue * $invoiceData['tax']) / 100;

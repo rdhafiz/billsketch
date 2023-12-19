@@ -18,6 +18,7 @@ class InvoiceRepository
         $invoiceModel->user_id = $invoiceData['user_id'];
         $invoiceModel->client_id = $invoiceData['client_id'] ?? null;
         $invoiceModel->payee_id = $invoiceData['payee_id'] ?? null;
+        $invoiceModel->recurring_id = $invoiceData['recurring_id'] ?? 0;
         $invoiceModel->category_id = $invoiceData['category_id'];
         $invoiceModel->invoice_no = $invoiceData['invoice_no'];
         $invoiceModel->invoice_number = $invoiceData['invoice_number'];
