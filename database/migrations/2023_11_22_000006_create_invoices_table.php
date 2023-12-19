@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('client_id')->nullable();
             $table->unsignedInteger('payee_id')->nullable();
+            $table->unsignedInteger('recurring_id')->default(0);
             $table->unsignedInteger('category_id');
             $table->integer('invoice_no');
             $table->string('invoice_number');

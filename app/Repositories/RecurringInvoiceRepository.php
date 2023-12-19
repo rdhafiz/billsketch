@@ -13,7 +13,6 @@ class RecurringInvoiceRepository
         $uid = RecurringInvoices::where('user_id', $user['id'])->where($invoiceUserType, $invoiceUserId)->count();
         return $uid + 1;
     }
-
     public static function save(array $invoiceData): array|RecurringInvoices
     {
         $invoiceModel = new RecurringInvoices();
@@ -29,8 +28,9 @@ class RecurringInvoiceRepository
         $invoiceModel->bonus = $invoiceData['bonus'] ?? 0;
         $invoiceModel->invoice_item_headings = $invoiceData['invoice_item_headings'] ?? null;
         $invoiceModel->start_date = $invoiceData['start_date'];
-        $invoiceModel->end_date = $invoiceData['end_date'] ?? null;
         $invoiceModel->frequency = $invoiceData['frequency'];
+        $invoiceModel->next_schedule_date = null;
+        $invoiceModel->end_date = $invoiceData['end_date'] ?? null;
         $invoiceModel->status = $invoiceData['status'];
         $invoiceModel->note = $invoiceData['note'] ?? null;
         if (!$invoiceModel->save()) {
@@ -48,8 +48,9 @@ class RecurringInvoiceRepository
         $invoiceModel->bonus = $invoiceData['bonus'] ?? 0;
         $invoiceModel->invoice_item_headings = $invoiceData['invoice_item_headings'] ?? null;
         $invoiceModel->start_date = $invoiceData['start_date'];
-        $invoiceModel->end_date = $invoiceData['end_date'] ?? null;
         $invoiceModel->frequency = $invoiceData['frequency'];
+        $invoiceModel->next_schedule_date = null;
+        $invoiceModel->end_date = $invoiceData['end_date'] ?? null;
         $invoiceModel->status = $invoiceData['status'];
         $invoiceModel->note = $invoiceData['note'] ?? null;
         if (!$invoiceModel->save()) {
@@ -65,7 +66,6 @@ class RecurringInvoiceRepository
         }
         return $invoice;
     }
-
     public static function list(array $filter, array $pagination, User $user): mixed
     {
         $result = RecurringInvoices::where('user_id', $user['id'])->with(['invoice_items', 'category', 'client', 'payee']);

@@ -26,8 +26,9 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->text('invoice_item_headings')->nullable();
             $table->timestamp('start_date')->nullable();
-            $table->timestamp('end_date')->nullable();
             $table->integer('frequency')->nullable();
+            $table->timestamp('next_schedule_date')->nullable();
+            $table->timestamp('end_date')->nullable();
             $table->tinyInteger('status')->nullable();
             $table->tinyInteger('is_active')->default(1);
             $table->timestamps();
