@@ -55,7 +55,7 @@ class PayeesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot save Payee'], 200);
             }
             Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Payee_create, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' created a Payee named: '.$payeeInfo['name']);
-            return response()->json(['status' => 200, 'message' => 'Employee has been created successfully'], 200);
+            return response()->json(['status' => 200, 'message' => 'Payee has been created successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
@@ -113,7 +113,7 @@ class PayeesController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Cannot update payee'], 200);
             }
             Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Payee_update, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' updated a payee named: '.$payeeInfo['name']);
-            return response()->json(['status' => 200, 'message' => 'Employee has been updated successfully'], 200);
+            return response()->json(['status' => 200, 'message' => 'Payee has been updated successfully'], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
@@ -166,7 +166,7 @@ class PayeesController extends Controller
             Helpers::relationalDataAction($payee->id, 'payee_id', 'delete', new Invoices(), true, new InvoiceItems());
             Helpers::fileRemove($payee, 'logo');
             Helpers::saveUserActivity($requestData['session_user']['id'],UserLogType::Payee_delete, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' deleted a payee named: '.$payee['name']);
-            return response()->json(['status' => 200, 'message' => 'Employee deleted successfully '], 200);
+            return response()->json(['status' => 200, 'message' => 'Payee deleted successfully '], 200);
         } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => $exception->getMessage(), 'error_code' => $exception->getCode(), 'code_line' => $exception->getLine()], 200);
         }
@@ -223,11 +223,11 @@ class PayeesController extends Controller
                 return response()->json(['status' => 500, 'message' => $message], 200);
             }
             Helpers::saveUserActivity($requestData['session_user']['id'],$payee->is_active == 1 ? UserLogType::Payee_restore : UserLogType::Payee_archive, $requestData['session_user']['first_name'].' '.$requestData['session_user']['last_name']. ' '.$payee->is_active == 1 ? 'restored' : 'archived' .' a payee named: '.$payee['name']);
-            $message = 'Employee archive successfully';
+            $message = 'Payee archive successfully';
             Helpers::relationalDataAction($payee->id, 'payee_id', 'archive', new Invoices());
             if ($payee->is_active == 1) {
                 Helpers::relationalDataAction($payee->id, 'payee_id', 'restore', new Invoices());
-                $message = 'Employee restore successfully';
+                $message = 'Payee restore successfully';
             }
             return response()->json(['status' => 200, 'message' => $message], 200);
         } catch (\Exception $exception) {

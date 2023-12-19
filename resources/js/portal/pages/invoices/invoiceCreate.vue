@@ -63,12 +63,12 @@
                                                                 <div class="error-report text-danger "></div>
                                                             </div>
                                                             <div class="form-group mb-3" v-if="invoice_type == 2">
-                                                                <label for="employee"><strong>Employee</strong></label>
-                                                                <select name="employee_id" id="employee" class="form-select"
-                                                                        v-model="formData.employee_id"  @change="getInvoiceNumber('employee', formData.employee_id)">
+                                                                <label for="payee"><strong>Payee</strong></label>
+                                                                <select name="payee_id" id="payee" class="form-select"
+                                                                        v-model="formData.payee_id"  @change="getInvoiceNumber('payee', formData.payee_id)">
                                                                     <option value="" disabled>Select</option>
-                                                                    <template v-if="employees.length > 0">
-                                                                        <option :value="each.id" v-for="(each) in employees">
+                                                                    <template v-if="payees.length > 0">
+                                                                        <option :value="each.id" v-for="(each) in payees">
                                                                             {{ each.name }}
                                                                         </option>
                                                                     </template>
@@ -288,7 +288,7 @@ export default {
             invoice_number: '',
             formData: {
                 client_id: '',
-                employee_id: '',
+                payee_id: '',
                 category_id: '',
                 invoice_no: '',
                 invoice_due_date: '',
@@ -317,7 +317,7 @@ export default {
                 dateFormat: 'Y-m-d',
                 disableMobile: true
             },
-            employees: [],
+            payees: [],
             clients: [],
             categories: [],
             status: [],
@@ -328,11 +328,11 @@ export default {
     },
     methods: {
 
-        /*Get Employees*/
-        getEmployees() {
-            apiService.POST(apiRoutes.employeeList, {pagination: false}, (res) => {
+        /*Get Payees*/
+        getPayees() {
+            apiService.POST(apiRoutes.payeeList, {pagination: false}, (res) => {
                 if (res.status === 200) {
-                    this.employees = res.data;
+                    this.payees = res.data;
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }
@@ -370,7 +370,7 @@ export default {
 
         /*Get Invoice Number*/
         getInvoiceNumber(type, id) {
-            const param = type == 'client' ? {client_id: id} : {employee_id: id};
+            const param = type == 'client' ? {client_id: id} : {payee_id: id};
             apiService.POST(apiRoutes.invoiceNumber, param,(res) => {
                 this.formData.invoice_no = res.invoice_no;
                 this.invoice_number = res.invoice_number;
@@ -397,7 +397,7 @@ export default {
         changeInvoiceType(){
             this.formData.invoice_no = '';
             this.formData.client_id = '';
-            this.formData.employee_id = '';
+            this.formData.payee_id = '';
             this.invoice_number = '';
             this.formData.discount = '';
             this.formData.bonus = '';
@@ -467,7 +467,7 @@ export default {
         },
     },
     mounted() {
-        this.getEmployees();
+        this.getPayees();
         this.getClients();
         this.getCategories();
         this.getStatus();

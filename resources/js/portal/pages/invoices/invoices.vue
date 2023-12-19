@@ -35,7 +35,7 @@
                     <tr v-for="(each, index) in tableData">
                         <td>{{ each.invoice_number }}</td>
                         <td v-if="each.client"><i class="fa fa-fw fa-arrow-down text-success"></i> {{ each.client.name }}</td>
-                        <td v-if="each.employee"><i class="fa fa-fw fa-arrow-up text-warning"></i> {{ each.employee.name }}</td>
+                        <td v-if="each.payee"><i class="fa fa-fw fa-arrow-up text-warning"></i> {{ each.payee.name }}</td>
                         <td>{{ each.invoice_date_formatted ? each.invoice_date_formatted : 'N/A' }}</td>
                         <td>{{each.invoice_status_name}}</td>
                         <td>{{ each.total }}</td>

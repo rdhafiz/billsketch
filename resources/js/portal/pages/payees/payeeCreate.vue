@@ -1,9 +1,9 @@
 <template>
     <div class="row justify-content-center res">
         <div class="col-xxl-8">
-            <form @submit.prevent="employeeCreate" id="employeeCreate" enctype="multipart/form-data">
+            <form @submit.prevent="payeeCreate" id="payeeCreate" enctype="multipart/form-data">
                 <div class="col-lg-12">
-                    <h1 class="fs-24">New Employee</h1>
+                    <h1 class="fs-24">New Payee</h1>
                 </div>
                 <div class="row">
                     <div class="cl col-lg-12">
@@ -77,7 +77,7 @@
                                 </div>
                             </div>
                             <div class="card-footer py-3 text-end">
-                                <router-link :to="{name: 'Employees'}" class="btn btn-outline-secondary px-3 me-2">Cancel</router-link>
+                                <router-link :to="{name: 'Payees'}" class="btn btn-outline-secondary px-3 me-2">Cancel</router-link>
                                 <button type="submit" class="btn btn-theme px-3" v-if="loading === false">Submit</button>
                                 <button type="button" disabled v-if="loading === true"
                                         class="btn btn-theme px-3" style="width: 86px;">
@@ -113,16 +113,16 @@ export default {
         }
     },
     methods: {
-        /*Create Employee*/
-        employeeCreate() {
+        /*Create Payee*/
+        payeeCreate() {
             apiService.ClearErrorHandler();
             this.loading = true;
-            const formData = new FormData(document.getElementById('employeeCreate'));
-            apiService.POST_FORMDATA(apiRoutes.employeeCreate, formData, (res) => {
+            const formData = new FormData(document.getElementById('payeeCreate'));
+            apiService.POST_FORMDATA(apiRoutes.payeeCreate, formData, (res) => {
                 this.loading = false;
                 if (res.status === 200) {
                     toaster.info(res.message);
-                    this.$router.push({name: 'Employees'})
+                    this.$router.push({name: 'Payees'})
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }

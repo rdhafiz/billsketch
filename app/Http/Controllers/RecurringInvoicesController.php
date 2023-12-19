@@ -259,7 +259,7 @@ class RecurringInvoicesController extends Controller
                 'end_date' => $requestData['end_date'] ?? null,
                 'status' => $requestData['status'] ?? null,
                 'category_id' => $requestData['category_id'] ?? null,
-                'employee_id' => $requestData['employee_id'] ?? null,
+                'payee_id' => $requestData['payee_id'] ?? null,
                 'client_id' => $requestData['client_id'] ?? null
             ];
             $paginatedData = [

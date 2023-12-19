@@ -24,7 +24,7 @@ class PayeesRepositories
         $payeeModel->country = $payeeData['country'];
         $payeeModel->avatar = $payeeData['avatar'] ?? null;
         if (!$payeeModel->save()) {
-            return ['message' => 'Cannot save employee'];
+            return ['message' => 'Cannot save payee'];
         }
         return $payeeModel;
     }
@@ -47,21 +47,21 @@ class PayeesRepositories
             $payeeModel->avatar = $payeeData['avatar'];
         }
         if (!$payeeModel->save()) {
-            return ['message' => 'Cannot update employee'];
+            return ['message' => 'Cannot update payee'];
         }
         return $payeeModel;
     }
     /**
-     * @param integer $employeeId
+     * @param integer $payeeId
      * @return array|Payees
     */
-    public static function single(int $employeeId): array|Payees
+    public static function single(int $payeeId): array|Payees
     {
-        $employee = Payees::select('id', 'name', 'email', 'phone', 'address', 'city', 'country', 'avatar')->where('id', $employeeId)->first();
-        if (!$employee instanceof Payees) {
-            return ['message' => 'Cannot find employee'];
+        $payee = Payees::select('id', 'name', 'email', 'phone', 'address', 'city', 'country', 'avatar')->where('id', $payeeId)->first();
+        if (!$payee instanceof Payees) {
+            return ['message' => 'Cannot find payee'];
         }
-        return $employee;
+        return $payee;
     }
 
     /**

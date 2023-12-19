@@ -17,7 +17,7 @@ class InvoiceRepository
         $invoiceModel = new Invoices();
         $invoiceModel->user_id = $invoiceData['user_id'];
         $invoiceModel->client_id = $invoiceData['client_id'] ?? null;
-        $invoiceModel->employee_id = $invoiceData['employee_id'] ?? null;
+        $invoiceModel->payee_id = $invoiceData['payee_id'] ?? null;
         $invoiceModel->category_id = $invoiceData['category_id'];
         $invoiceModel->invoice_no = $invoiceData['invoice_no'];
         $invoiceModel->invoice_number = $invoiceData['invoice_number'];
@@ -109,7 +109,7 @@ class InvoiceRepository
      */
     public static function single(int $invoiceId): array|Invoices
     {
-        $invoice = Invoices::where('id', $invoiceId)->with(['invoice_items', 'category', 'client', 'employee'])->first();
+        $invoice = Invoices::where('id', $invoiceId)->with(['invoice_items', 'category', 'client', 'payee'])->first();
         if (!$invoice instanceof Invoices) {
             return ['message' => 'Cannot find invoice'];
         }
@@ -127,7 +127,7 @@ class InvoiceRepository
      */
     public static function list(array $filter, array $pagination, User $user): mixed
     {
-        $result = Invoices::where('user_id', $user['id'])->with(['invoice_items', 'category', 'client', 'employee']);
+        $result = Invoices::where('user_id', $user['id'])->with(['invoice_items', 'category', 'client', 'payee']);
         if (!empty($filter['list_type']) && $filter['list_type'] == 'archive') {
             $result->where('is_active', 0);
         } elseif ($filter['list_type'] == 'overdue') {
@@ -146,17 +146,17 @@ class InvoiceRepository
                 $result->where('created_at', '<=', $filter['end_date'].' 23:59:59');
             }
         }
-        if (!empty($filter['client_id']) && !empty($filter['employee_id'])) {
+        if (!empty($filter['client_id']) && !empty($filter['payee_id'])) {
             $result->where(function($q) use ($filter) {
                 $q->where('client_id', '=', $filter['client_id']);
-                $q->orWhere('employee_id', '=', $filter['employee_id']);
+                $q->orWhere('payee_id', '=', $filter['payee_id']);
             });
         } else {
             if (!empty($filter['client_id'])) {
                 $result->where('client_id', $filter['client_id']);
             }
-            if (!empty($filter['employee_id'])) {
-                $result->where('employee_id', $filter['employee_id']);
+            if (!empty($filter['payee_id'])) {
+                $result->where('payee_id', $filter['payee_id']);
             }
         }
         if (!empty($filter['category_id'])) {

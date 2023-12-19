@@ -33,8 +33,8 @@
                                 each.client.name
                             }}
                         </td>
-                        <td v-if="each.employee"><i class="fa fa-fw fa-arrow-up text-warning"></i> {{
-                                each.employee.name
+                        <td v-if="each.payee"><i class="fa fa-fw fa-arrow-up text-warning"></i> {{
+                                each.payee.name
                             }}
                         </td>
                         <td>{{each.category.name}}</td>
