@@ -25,7 +25,7 @@ class Recurring
                 $qq->where('next_schedule_date', '<=', date('Y-m-d 11:59:59'));
             });
         })->get();
-        print_r(PHP_EOL.'Total 3 Recurring Invoice(s) has been found'.PHP_EOL);
+        print_r(PHP_EOL.'Total '.$recurringInvoices->count().' Recurring Invoice(s) has been found'.PHP_EOL);
         foreach ($recurringInvoices as $recurringInvoice) {
 
             DB::beginTransaction();
