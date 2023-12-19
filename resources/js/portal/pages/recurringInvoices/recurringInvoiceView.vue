@@ -22,8 +22,8 @@
                                         <div class="row mb-4">
                                             <div class="col-sm-6 col-md-5 col-xl-4">
                                                 <div class="mb-3">
-                                                    <div><strong>{{ invoice?.client ? 'Client' : 'Employee'}}</strong></div>
-                                                    <div>{{ invoice?.client ? invoice?.client.name : invoice?.employee.name}}</div>
+                                                    <div><strong>{{ invoice?.client ? 'Client' : 'Payee'}}</strong></div>
+                                                    <div>{{ invoice?.client ? invoice?.client.name : invoice?.payee.name}}</div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <div><strong>Category</strong></div>
@@ -104,7 +104,7 @@
                                                     <span class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
                                                           style="min-width: 120px;">{{invoice?.discount}}</span></div>
                                                 <div class="d-flex flex-column flex-sm-row justify-content-end h6 mb-3 mb-sm-2"
-                                                     v-if="invoice?.employee_id"><strong
+                                                     v-if="invoice?.payee_id"><strong
                                                     class="text-start text-sm-end">Invoice Bonus: </strong>
                                                     <span class="ms-0 ms-sm-3 mt-1 mt-sm-0 text-start text-sm-end"
                                                           style="min-width: 120px;">{{invoice?.bonus}}</span></div>

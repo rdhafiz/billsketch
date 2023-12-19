@@ -61,8 +61,8 @@
             <img src="{{public_path('assets/images/bilify.png')}}" height="150px" alt="">
         </td>
         <td class="w-100">
-            <div class="fw-bold">{{ $invoice->client ? 'Client' : 'Employee'}}</div>
-            <div>{{ $invoice->client ? $invoice->client->name : $invoice->employee->name}}</div>
+            <div class="fw-bold">{{ $invoice->client ? 'Client' : 'Payee'}}</div>
+            <div>{{ $invoice->client ? $invoice->client->name : $invoice->payee->name}}</div>
         </td>
         <td class="w-100"></td>
         <td class="w-100"></td>

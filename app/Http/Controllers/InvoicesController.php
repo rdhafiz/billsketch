@@ -55,7 +55,7 @@ class InvoicesController extends Controller
                 $requestData['payee_id'] = null;
             }
             $invoiceUserType = !empty($requestData['payee_id']) ? 'payee_id' : 'client_id';
-            $invoiceUserId = !empty($requestData['employee_id']) ? $requestData['employee_id'] : $requestData['client_id'];
+            $invoiceUserId = !empty($requestData['payee_id']) ? $requestData['payee_id'] : $requestData['client_id'];
             $isInvoiceNoExist = InvoiceRepository::checkIfInvoiceNoExist($requestData['session_user'], $invoiceUserType, $invoiceUserId, $requestData['invoice_no']);
             if ($isInvoiceNoExist == true) {
                 return response()->json(['status' => 500, 'errors' => ['invoice_no' => ['Invoice no already exist']]]);
@@ -63,18 +63,18 @@ class InvoicesController extends Controller
 
             $invoiceNumber = '';
             if ($invoiceUserType === 'client_id') {
-                $employeeOrClient = Clients::where('id', $requestData['client_id'])->first();
+                $payeeOrClient = Clients::where('id', $requestData['client_id'])->first();
             } else {
-                $employeeOrClient = Employees::where('id', $requestData['employee_id'])->first();
+                $payeeOrClient = Payees::where('id', $requestData['payee_id'])->first();
             }
-            if ($employeeOrClient != null) {
-                $invoiceNumber = Invoices::generateInvoiceNumber($employeeOrClient->invoice_prefix, $requestData['invoice_no']);
+            if ($payeeOrClient != null) {
+                $invoiceNumber = Invoices::generateInvoiceNumber($payeeOrClient->invoice_prefix, $requestData['invoice_no']);
             }
 
             $invoiceData = [
                 'user_id' => $requestData['session_user']['id'],
                 'client_id' => $requestData['client_id'] ?? null,
-                'employee_id' => $requestData['employee_id'] ?? null,
+                'payee_id' => $requestData['payee_id'] ?? null,
                 'category_id' => $requestData['category_id'],
                 'invoice_no' => $requestData['invoice_no'],
                 'invoice_number' => $invoiceNumber,
@@ -232,27 +232,27 @@ class InvoicesController extends Controller
         try {
             $requestData = $request->all();
             $validator = Validator::make($requestData, [
-                'client_id' => 'integer|required_without:employee_id',
-                'employee_id' => 'integer|required_without:client_id',
+                'client_id' => 'integer|required_without:payee_id',
+                'payee_id' => 'integer|required_without:client_id',
             ]);
             if ($validator->fails()) {
                 return response()->json(['status' => 500, 'errors' => $validator->errors()]);
             }
-            if (!empty($requestData['client_id']) && !empty($requestData['employee_id'])) {
-                $requestData['employee_id'] = null;
+            if (!empty($requestData['client_id']) && !empty($requestData['payee_id'])) {
+                $requestData['payee_id'] = null;
             }
-            $invoiceUserType = !empty($requestData['employee_id']) ? 'employee_id' : 'client_id';
-            $invoiceUserId = !empty($requestData['employee_id']) ? $requestData['employee_id'] : $requestData['client_id'];
+            $invoiceUserType = !empty($requestData['payee_id']) ? 'payee_id' : 'client_id';
+            $invoiceUserId = !empty($requestData['payee_id']) ? $requestData['payee_id'] : $requestData['client_id'];
             $latestNumber = InvoiceRepository::getLatestNumber($requestData['session_user'], $invoiceUserType, $invoiceUserId);
 
             $invoiceNumber = '';
             if ($invoiceUserType === 'client_id') {
-                $employeeOrClient = Clients::where('id', $requestData['client_id'])->first();
+                $payeeOrClient = Clients::where('id', $requestData['client_id'])->first();
             } else {
-                $employeeOrClient = Employees::where('id', $requestData['employee_id'])->first();
+                $payeeOrClient = Payees::where('id', $requestData['payee_id'])->first();
             }
-            if ($employeeOrClient != null) {
-                $invoiceNumber = Invoices::generateInvoiceNumber($employeeOrClient->invoice_prefix, $latestNumber);
+            if ($payeeOrClient != null) {
+                $invoiceNumber = Invoices::generateInvoiceNumber($payeeOrClient->invoice_prefix, $latestNumber);
             }
 
             return response()->json(['status' => 200, 'invoice_no' => $latestNumber, 'invoice_number' => $invoiceNumber], 200);
@@ -362,7 +362,7 @@ class InvoicesController extends Controller
                 'end_date' => $requestData['end_date'] ?? null,
                 'invoice_status' => $requestData['invoice_status'] ?? null,
                 'category_id' => $requestData['category_id'] ?? null,
-                'employee_id' => $requestData['employee_id'] ?? null,
+                'payee_id' => $requestData['payee_id'] ?? null,
                 'client_id' => $requestData['client_id'] ?? null
             ];
             $paginatedData = [

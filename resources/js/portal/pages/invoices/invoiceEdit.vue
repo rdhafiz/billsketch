@@ -238,7 +238,7 @@ export default {
             invoice_type: 1,
             formData: {
                 client_id: '',
-                employee_id: '',
+                payee_id: '',
                 category_id: '',
                 invoice_no: '',
                 invoice_number: '',
@@ -275,7 +275,7 @@ export default {
                 dateFormat: 'Y-m-d',
                 disableMobile: true
             },
-            employees: [],
+            payees: [],
             clients: [],
             categories: [],
             status: [],
@@ -286,11 +286,11 @@ export default {
     },
     methods: {
 
-        /*Get Employees*/
-        getEmployees() {
-            apiService.POST(apiRoutes.employeeList, {pagination: false}, (res) => {
+        /*Get Payees*/
+        getPayees() {
+            apiService.POST(apiRoutes.payeeList, {pagination: false}, (res) => {
                 if (res.status === 200) {
-                    this.employees = res.data;
+                    this.payees = res.data;
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }
@@ -328,7 +328,7 @@ export default {
 
         /*Get Invoice Number*/
         getInvoiceNumber(type, id) {
-            const param = type == 'client' ? {client_id: id} : {employee_id: id};
+            const param = type == 'client' ? {client_id: id} : {payee_id: id};
             apiService.POST(apiRoutes.invoiceNumber, param, (res) => {
                 this.formData.invoice_no = res.invoice_number;
             })
@@ -373,7 +373,7 @@ export default {
         changeInvoiceType() {
             this.formData.invoice_no = '';
             this.formData.client_id = '';
-            this.formData.employee_id = '';
+            this.formData.payee_id = '';
             this.invoice_number = '';
             this.formData.discount = '';
             this.formData.bonus = '';
@@ -444,7 +444,7 @@ export default {
         },
     },
     mounted() {
-        this.getEmployees();
+        this.getPayees();
         this.getClients();
         this.getCategories();
         this.getStatus();

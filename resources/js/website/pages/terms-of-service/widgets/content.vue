@@ -65,7 +65,7 @@
             <div class="mb-3">
                 <div class="title mb-0 h4 fw-bold">Indemnification</div>
                 <div class="desc text-muted">You agree to indemnify and hold [Your Company Name], its affiliates,
-                    officers, and employees harmless from any claims, demands, or damages, including legal fees.
+                    officers, and payees harmless from any claims, demands, or damages, including legal fees.
                 </div>
             </div>
             <div class="mb-3">
