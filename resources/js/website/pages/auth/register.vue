@@ -16,7 +16,7 @@
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="w-100">
-                                            <div class="form-group mb-3">
+<!--                                            <div class="form-group mb-3">
                                                 <button class="btn btn-lg btn-primary w-100"  @click="initLogin" v-if="facebookLoading == false"><i
                                                     class="fa fa-fw fa-facebook"></i> Sign Up with Facebook
                                                 </button>
@@ -30,10 +30,13 @@
                                                 </button>
                                             </div>
                                             <div class="form-group my-4 text-center">
-                                                --- OR ---
-                                            </div>
+                                                -&#45;&#45; OR -&#45;&#45;
+                                            </div>-->
 
-                                            <form class="w-100" @submit.prevent="Register">
+                                            <h1>Join Now</h1>
+                                            <p>Get your Dashboard to manage your invoices</p>
+
+                                            <form class="w-100 mt-5" @submit.prevent="Register">
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="form-group mb-3">

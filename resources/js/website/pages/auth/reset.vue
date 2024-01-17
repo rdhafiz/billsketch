@@ -16,56 +16,61 @@
                                     </div>
                                     <div class="col-xl-5">
                                         <div class="w-100 h-100 d-flex align-items-center">
-                                            <form class="w-100" @submit.prevent="Reset">
-                                                <div v-if="message" class="alert alert-success">{{message}}</div>
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label" for="email">
-                                                        <strong>Email</strong>
-                                                    </label>
-                                                    <input type="text" class="form-control form-control-lg" id="email"
-                                                           name="email" placeholder="Email"
-                                                           v-model="formData.email">
-                                                    <div class="error-report text-danger"></div>
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label" for="reset_code">
-                                                        <strong>Reset Code</strong>
-                                                    </label>
-                                                    <input type="text" class="form-control form-control-lg" id="reset_code"
-                                                           name="reset_code" placeholder="Reset Code"
-                                                           v-model="formData.reset_code">
-                                                    <div class="error-report text-danger"></div>
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label" for="password">
-                                                        <strong>New Password</strong>
-                                                    </label>
-                                                    <input type="password" class="form-control form-control-lg" id="password"
-                                                           name="password" placeholder="Password" v-model="formData.password">
-                                                    <div class="error-report text-danger"></div>
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label" for="password_confirmation">
-                                                        <strong>Confirm Password</strong>
-                                                    </label>
-                                                    <input type="password" class="form-control form-control-lg" id="password_confirmation"
-                                                           name="password_confirmation" placeholder="Confirm Password"
-                                                           v-model="formData.password_confirmation">
-                                                    <div class="error-report text-danger"></div>
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <button type="submit" class="btn btn-lg btn-success w-100" v-if="loading === false"><i class="fa fa-fw fa-send"></i> Update</button>
-                                                    <button type="button" disabled v-if="loading === true" class="btn btn-lg btn-success w-100">
-                                                        <i class="fa fa-spinner spin" aria-hidden="true"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="w-100 text-center">
-                                                        Back to Forgot?
-                                                        <router-link :to="{name: 'Forgot'}">Forgot</router-link>
+                                            <div class="w-100">
+                                                <h1>Reset Password</h1>
+                                                <p>Set your new password and access your portal</p>
+
+                                                <form class="w-100 mt-5" @submit.prevent="Reset">
+                                                    <div v-if="message" class="alert alert-success">{{message}}</div>
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label" for="email">
+                                                            <strong>Email</strong>
+                                                        </label>
+                                                        <input type="text" class="form-control form-control-lg" id="email"
+                                                               name="email" placeholder="Email"
+                                                               v-model="formData.email">
+                                                        <div class="error-report text-danger"></div>
                                                     </div>
-                                                </div>
-                                            </form>
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label" for="reset_code">
+                                                            <strong>Reset Code</strong>
+                                                        </label>
+                                                        <input type="text" class="form-control form-control-lg" id="reset_code"
+                                                               name="reset_code" placeholder="Reset Code"
+                                                               v-model="formData.reset_code">
+                                                        <div class="error-report text-danger"></div>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label" for="password">
+                                                            <strong>New Password</strong>
+                                                        </label>
+                                                        <input type="password" class="form-control form-control-lg" id="password"
+                                                               name="password" placeholder="Password" v-model="formData.password">
+                                                        <div class="error-report text-danger"></div>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label" for="password_confirmation">
+                                                            <strong>Confirm Password</strong>
+                                                        </label>
+                                                        <input type="password" class="form-control form-control-lg" id="password_confirmation"
+                                                               name="password_confirmation" placeholder="Confirm Password"
+                                                               v-model="formData.password_confirmation">
+                                                        <div class="error-report text-danger"></div>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <button type="submit" class="btn btn-lg btn-success w-100" v-if="loading === false"><i class="fa fa-fw fa-send"></i> Reset Password</button>
+                                                        <button type="button" disabled v-if="loading === true" class="btn btn-lg btn-success w-100">
+                                                            <i class="fa fa-spinner spin" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="w-100 text-center">
+                                                            Back to Forgot?
+                                                            <router-link :to="{name: 'Forgot'}">Forgot</router-link>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

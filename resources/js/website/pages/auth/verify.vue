@@ -16,7 +16,9 @@
                                     </div>
                                     <div class="col-xl-5">
                                         <div class="w-100">
-                                            <form class="w-100" @submit.prevent="Verify">
+                                            <h1>Verify Account</h1>
+                                            <p>Verify your account to avoid account getting disabled</p>
+                                            <form class="w-100 mt-5" @submit.prevent="Verify">
                                                 <div v-if="message" class="alert alert-success">{{message}}</div>
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="code">Code</label>

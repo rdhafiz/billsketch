@@ -17,25 +17,30 @@
                                     <div class="col-xl-5">
                                         <div class="w-100 h-100 d-flex align-items-center">
 
-                                            <form class="w-100" @submit.prevent="Forgot">
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label" for="email"><strong>Email</strong></label>
-                                                    <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Email" v-model="formData.email">
-                                                    <div class="error-report text-danger"></div>
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <button type="submit" class="btn btn-lg btn-success w-100" v-if="loading === false"><i class="fa fa-fw fa-send"></i> Submit</button>
-                                                    <button type="button" disabled v-if="loading === true" class="btn btn-lg btn-success w-100">
-                                                        <i class="fa fa-spinner spin" aria-hidden="true"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="w-100 text-center">
-                                                        Back to Login?
-                                                        <router-link :to="{name: 'Login'}">Sign In</router-link>
+                                            <div class="w-100">
+                                                <h1>Forgot Password?</h1>
+                                                <p>Send Request to get a reset password code</p>
+
+                                                <form class="w-100 mt-5" @submit.prevent="Forgot">
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label" for="email"><strong>Email</strong></label>
+                                                        <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Email" v-model="formData.email">
+                                                        <div class="error-report text-danger"></div>
                                                     </div>
-                                                </div>
-                                            </form>
+                                                    <div class="form-group mb-3">
+                                                        <button type="submit" class="btn btn-lg btn-success w-100" v-if="loading === false"><i class="fa fa-fw fa-send"></i> Send Request</button>
+                                                        <button type="button" disabled v-if="loading === true" class="btn btn-lg btn-success w-100">
+                                                            <i class="fa fa-spinner spin" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="w-100 text-center">
+                                                            Back to Login?
+                                                            <router-link :to="{name: 'Login'}">Sign In</router-link>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
 
                                         </div>
                                     </div>

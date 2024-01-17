@@ -16,26 +16,28 @@
                                     </div>
                                     <div class="col-xl-5">
                                         <div class="w-100">
-                                            <div class="form-group mb-3">
-                                                <button class="btn btn-lg btn-primary w-100" @click="initLogin"
-                                                        v-if="facebookLoading == false"><i
-                                                    class="fa fa-fw fa-facebook"></i> Sign In with Facebook
-                                                </button>
-                                                <button type="button" disabled v-if="facebookLoading === true"
-                                                        class="btn btn-lg btn-primary w-100">
-                                                    <i class="fa fa-spinner spin" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                            <div class="form-group mb-3">
-                                                <button class="btn btn-lg btn-danger w-100"><i
-                                                    class="fa fa-fw fa-google-plus"></i> Sign In with Google
-                                                </button>
-                                            </div>
-                                            <div class="form-group my-4 text-center">
-                                                --- OR ---
-                                            </div>
+<!--                                            <div class="form-group mb-3">-->
+<!--                                                <button class="btn btn-lg btn-primary w-100" @click="initLogin"-->
+<!--                                                        v-if="facebookLoading == false"><i-->
+<!--                                                    class="fa fa-fw fa-facebook"></i> Sign In with Facebook-->
+<!--                                                </button>-->
+<!--                                                <button type="button" disabled v-if="facebookLoading === true"-->
+<!--                                                        class="btn btn-lg btn-primary w-100">-->
+<!--                                                    <i class="fa fa-spinner spin" aria-hidden="true"></i>-->
+<!--                                                </button>-->
+<!--                                            </div>-->
+<!--                                            <div class="form-group mb-3">-->
+<!--                                                <button class="btn btn-lg btn-danger w-100"><i-->
+<!--                                                    class="fa fa-fw fa-google-plus"></i> Sign In with Google-->
+<!--                                                </button>-->
+<!--                                            </div>-->
+<!--                                            <div class="form-group my-4 text-center">-->
+<!--                                                -&#45;&#45; OR -&#45;&#45;-->
+<!--                                            </div>-->
+                                            <h1>Sign In</h1>
+                                            <p>Explore and Manage your invoices</p>
 
-                                            <form class="w-100" @submit.prevent="Login">
+                                            <form class="w-100 mt-5" @submit.prevent="Login">
                                                 <div v-if="message" class="alert alert-success">{{message}}</div>
                                                 <div class="form-group mb-3">
                                                     <label class="form-label" for="email"><strong>Email</strong></label>
