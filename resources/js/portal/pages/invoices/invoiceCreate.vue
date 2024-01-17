@@ -20,153 +20,173 @@
                             <div class="cl col-lg-12">
                                 <div class="card">
                                     <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="row mb-4">
-                                                    <div class="col-lg-5 col-xl-4">
-                                                        <div class="form-group mb-3">
-                                                            <div>
-                                                                <div class="btn btn-light me-2 border">
-                                                                    <div class="form-check form-check-inline">
-                                                                        <input class="form-check-input" type="radio"
-                                                                               name="invoice_type"
-                                                                               id="inlineCheckbox1" value="1"
-                                                                               v-model="invoice_type" @change="changeInvoiceType">
-                                                                        <label class="form-check-label"
-                                                                               for="inlineCheckbox1">Bill To</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="btn btn-light me-2 border">
-                                                                    <div class="form-check form-check-inline">
-                                                                        <input class="form-check-input" type="radio"
-                                                                               name="invoice_type"
-                                                                               id="inlineCheckbox2" value="2"
-                                                                               v-model="invoice_type" @change="changeInvoiceType">
-                                                                        <label class="form-check-label"
-                                                                               for="inlineCheckbox2">Bill Pay</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group bg-light border p-3">
-                                                            <div class="form-group mb-3" v-if="invoice_type == 1">
-                                                                <label for="client"><strong>Client</strong></label>
-                                                                <select name="client_id" id="client" class="form-select"
-                                                                        v-model="formData.client_id" @change="getInvoiceNumber('client', formData.client_id)">
-                                                                    <option value="" disabled>Select</option>
-                                                                    <template v-if="clients.length > 0">
-                                                                        <option :value="each.id" v-for="(each) in clients">
-                                                                            {{ each.name }}
-                                                                        </option>
-                                                                    </template>
-                                                                </select>
-                                                                <div class="error-report text-danger "></div>
-                                                            </div>
-                                                            <div class="form-group mb-3" v-if="invoice_type == 2">
-                                                                <label for="payee"><strong>Payee</strong></label>
-                                                                <select name="payee_id" id="payee" class="form-select"
-                                                                        v-model="formData.payee_id"  @change="getInvoiceNumber('payee', formData.payee_id)">
-                                                                    <option value="" disabled>Select</option>
-                                                                    <template v-if="payees.length > 0">
-                                                                        <option :value="each.id" v-for="(each) in payees">
-                                                                            {{ each.name }}
-                                                                        </option>
-                                                                    </template>
-                                                                </select>
-                                                                <div class="error-report text-danger "></div>
-                                                            </div>
-                                                            <div class="form-group mb-3">
-                                                                <label for="category"><strong>Category</strong></label>
-                                                                <select name="category_id" id="category" class="form-select"
-                                                                        v-model="formData.category_id">
-                                                                    <option value="" disabled>Select</option>
-                                                                    <template v-if="categories.length > 0">
-                                                                        <option :value="each.id" v-for="(each) in categories">
-                                                                            {{ each.name }}
-                                                                        </option>
-                                                                    </template>
-                                                                </select>
-                                                                <div class="error-report text-danger "></div>
-                                                            </div>
-                                                            <div class="form-group mb-3">
-                                                                <label for="currency"><strong>Currency</strong></label>
-                                                                <select name="currency" id="currency"
-                                                                        class="form-select" v-model="formData.currency">
-                                                                    <option value="BDT">BDT</option>
-                                                                    <option value="USA">USA</option>
-                                                                </select>
-                                                            </div>
+
+                                        <!--Invoice Info-->
+                                        <div class="row mb-5">
+                                            <div class="col-lg-5">
+                                                <div class="form-group mb-2">
+                                                    <div class="btn btn-light me-2 border">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                   name="invoice_type"
+                                                                   id="inlineCheckbox1" value="1"
+                                                                   v-model="formData.invoice_type" @change="changeInvoiceType">
+                                                            <label class="form-check-label"
+                                                                   for="inlineCheckbox1">Bill To</label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-2 col-xl-4">&nbsp;</div>
-                                                    <div class="col-lg-5 col-xl-4">
-                                                        <div class="form-group mb-3 text-end">
-                                                            <div class="btn btn-light border">
-                                                                <label for="invoice_no" class="me-2"><strong>Invoice Number: </strong></label>
-                                                                <label for="invoice_no" class="text-theme"><strong>{{ invoice_number }}</strong></label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group bg-light border p-3">
-                                                            <div class="form-group mb-3">
-                                                                <label for="invoice_date"><strong>Invoice Date</strong></label>
-                                                                <flat-pickr v-model="formData.invoice_date"
-                                                                            :config="config"
-                                                                            class="form-control"
-                                                                            name="invoice_date"
-                                                                            placeholder="Select date"/>
-                                                            </div>
-                                                            <div class="form-group mb-3">
-                                                                <label for="invoice_due_date"><strong>Invoice Due
-                                                                    Date</strong></label>
-                                                                <flat-pickr v-model="formData.invoice_due_date"
-                                                                            :config="config"
-                                                                            class="form-control"
-                                                                            name="invoice_due_date"
-                                                                            placeholder="Select date"/>
-                                                            </div>
-                                                            <div class="form-group mb-3">
-                                                                <label for="invoice_status"><strong>Invoice Status</strong></label>
-                                                                <select name="invoice_status" id="invoice_status"
-                                                                        class="form-select" v-model="formData.invoice_status">
-                                                                    <option :value="each.value" v-for="(each) in status">{{ each.name }}</option>
-                                                                </select>
-                                                            </div>
+                                                    <div class="btn btn-light me-2 border">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                   name="invoice_type"
+                                                                   id="inlineCheckbox2" value="2"
+                                                                   v-model="formData.invoice_type" @change="changeInvoiceType">
+                                                            <label class="form-check-label"
+                                                                   for="inlineCheckbox2">Pay To</label>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="w-100 d-flex align-items-center border p-5 d-inline-block rounded rounded-3 mb-2">
+                                                    <div class="w-100 text-center">
+                                                        <i class="fa fa-fw fa-2x fa-cloud-upload text-secondary"></i>
+                                                        <span class="fs-4 text-secondary fw-bold">Upload Logo</span>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <div class="col-lg-2"></div>
+                                            <div class="col-lg-5">
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control form-control-lg fs-4 fw-bold" placeholder="Invoice title" value="Invoice">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <flat-pickr v-model="formData.invoice_date"
+                                                                :config="config"
+                                                                class="form-control"
+                                                                name="invoice_date"
+                                                                placeholder="Invoice Date"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <flat-pickr v-model="formData.invoice_due_date"
+                                                                :config="config"
+                                                                class="form-control"
+                                                                name="invoice_due_date"
+                                                                placeholder="Invoice Due Date"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <select name="invoice_status" class="form-select" v-model="formData.invoice_status">
+                                                        <optgroup label="Invoice Status">
+                                                            <option :value="each.value" v-for="(each) in status">{{ each.name }}</option>
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!--Invoice From To-->
+                                        <div class="row mb-5">
+                                            <div class="col-lg-5">
+                                                <h4 class="fs-4 fw-bold">Invoice From</h4>
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control" placeholder="Name">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control" placeholder="Email">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control" placeholder="Phone">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <textarea class="form-control" placeholder="Address" rows="2"></textarea>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <select name="currency" id="currency" class="form-select" v-model="formData.currency">
+                                                        <optgroup label="Currency">
+                                                            <option value="BDT">BDT</option>
+                                                            <option value="USD">USD</option>
+                                                            <option value="AUD">AUD</option>
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <h4 class="fs-4 fw-bold" v-if="formData.invoice_type == 1">Bill To</h4>
+                                                <h4 class="fs-4 fw-bold" v-if="formData.invoice_type == 2">Pay To</h4>
+
+                                                <div class="form-group mb-2" v-if="formData.invoice_type == 1">
+                                                    <select name="client_id" id="client" class="form-select"
+                                                            v-model="formData.client_id" @change="getInvoiceNumber('client', formData.client_id)">
+                                                        <option value="" disabled>Select whom you want to bill</option>
+                                                        <template v-if="clients.length > 0">
+                                                            <option :value="each.id" v-for="(each) in clients">
+                                                                {{ each.name }}
+                                                            </option>
+                                                        </template>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mb-2" v-if="formData.invoice_type == 2">
+                                                    <select name="payee_id" id="payee" class="form-select"
+                                                            v-model="formData.payee_id"  @change="getInvoiceNumber('payee', formData.payee_id)">
+                                                        <option value="" disabled>Select whom you want to pay</option>
+                                                        <template v-if="payees.length > 0">
+                                                            <option :value="each.id" v-for="(each) in payees">
+                                                                {{ each.name }}
+                                                            </option>
+                                                        </template>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control" placeholder="Name">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control" placeholder="Email">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control" placeholder="Phone">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <textarea class="form-control" placeholder="Address" rows="2"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!--Invoice Items-->
+
+                                        <div class="row">
                                             <div class="col-lg-12 my-3">
                                                 <div class="table-data table-responsive">
                                                     <table class="table table-bordered">
                                                         <thead>
                                                         <tr>
-                                                            <th style="min-width: 160px;" class="p-0">
+                                                            <th style="width: 40%" class="p-0">
                                                                 <div class="form-group">
-                                                                    <select class="form-select border-0 shadow-none" v-model="formData.invoice_item_headings.description">
+                                                                    <select class="form-select bg-light rounded-0 border-0 shadow-none" v-model="formData.invoice_item_headings.description">
                                                                         <option value="Services">Services</option>
                                                                         <option value="Products">Products</option>
                                                                         <option value="Description">Description</option>
                                                                     </select>
                                                                 </div>
                                                             </th>
-                                                            <th style="min-width: 160px;" class="p-0">
+                                                            <th style="width: 20%;" class="p-0">
                                                                 <div class="form-group">
-                                                                    <select class="form-select border-0 shadow-none text-center" v-model="formData.invoice_item_headings.frequency">
+                                                                    <select class="form-select bg-light rounded-0 border-0 shadow-none text-center" v-model="formData.invoice_item_headings.frequency">
                                                                         <option value="Hours">Hours</option>
                                                                         <option value="Days">Days</option>
                                                                         <option value="Months">Months</option>
                                                                     </select>
                                                                 </div>
                                                             </th>
-                                                            <th style="min-width: 160px;" class="p-0">
+                                                            <th style="width: 20%;" class="p-0">
                                                                 <div class="form-group">
-                                                                    <select class="form-select border-0 shadow-none text-center" v-model="formData.invoice_item_headings.value">
+                                                                    <select class="form-select bg-light rounded-0 border-0 shadow-none text-center" v-model="formData.invoice_item_headings.value">
                                                                         <option value="Unit Payment">Unit Payment</option>
                                                                         <option value="Unit Price">Unit Price</option>
                                                                     </select>
                                                                 </div>
                                                             </th>
-                                                            <th class="py-0 text-end" style="min-width: 160px;">Total</th>
+                                                            <th style="width: 20%;" class="py-0 text-end bg-light">Total</th>
                                                             <th class="py-0" v-if="formData.invoice_items.length > 1"></th>
                                                         </tr>
                                                         </thead>
@@ -217,15 +237,15 @@
                                             </div>
                                             <div class="col-lg-12">
                                                 <div class="row my-3">
-                                                    <div class="col-lg-5 col-xl-4">
+                                                    <div class="col-lg-5">
                                                         <div class="form-group">
                                                             <label for="notes"><strong>Notes</strong></label>
                                                             <textarea name="note" rows="3" class="form-control" v-model="formData.note"></textarea>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-2 col-xl-4">&nbsp;</div>
-                                                    <div class="col-lg-5 col-xl-4">
-                                                        <table class="table">
+                                                    <div class="col-lg-2">&nbsp;</div>
+                                                    <div class="col-lg-5">
+                                                        <table class="table table-borderless">
                                                             <tbody>
                                                             <tr>
                                                                 <td class="text-end"><strong>Subtotal:</strong></td>
@@ -284,20 +304,28 @@ export default {
     data() {
         return {
             loading: false,
-            invoice_type: 1,
-            invoice_number: '',
+            invoice_number: "",
             formData: {
+                invoice_type: 1,
+                invoice_logo: "",
+                invoice_title: "",
+                invoice_date: '',
+                invoice_due_date: '',
+                invoice_status: 1,
+                invoice_from: {
+                    name: '',
+                    email: '',
+                    phone: '',
+                    address: '',
+                },
                 client_id: '',
                 payee_id: '',
-                category_id: '',
-                invoice_no: '',
-                invoice_due_date: '',
-                invoice_date: '',
-                invoice_status: 1,
-                tax: 0,
-                discount: '',
-                bonus: '',
-                note: '',
+                invoice_to: {
+                    name: '',
+                    email: '',
+                    phone: '',
+                    address: '',
+                },
                 currency: 'BDT',
                 invoice_item_headings: {
                     description: 'Services',
@@ -310,6 +338,10 @@ export default {
                     unit_value: '',
                     total: 0,
                 }],
+                tax: 0,
+                discount: '',
+                bonus: '',
+                note: '',
             },
             config: {
                 altFormat: 'M j, Y',

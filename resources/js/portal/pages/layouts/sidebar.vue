@@ -13,44 +13,72 @@
             <img :src="'/assets/images/more.png'" alt="hamburger button">
         </a>
 
-        <div class="main_menu">
+        <div class="main_menu" v-if="UserInfo != null">
             <ul>
-                <li><router-link :to="{name: 'Dashboard'}"><img :src="'/assets/images/portal/menu/dashboard.png'" alt=""> <span>Dashboard</span></router-link></li>
-                <li><router-link :to="{name: 'Clients'}"><img :src="'/assets/images/portal/menu/clients.png'" alt=""> <span>Clients</span></router-link></li>
-                <li><router-link :to="{name: 'Payees'}"><img :src="'/assets/images/portal/menu/payee.png'" alt=""> <span>Payees</span></router-link></li>
-                <li><router-link :to="{name: 'Categories'}"><img :src="'/assets/images/portal/menu/category.png'" alt=""> <span>Categories</span></router-link></li>
-                <li><router-link :to="{name: 'Invoices'}"><img :src="'/assets/images/portal/menu/invoice.png'" alt="">  <span>Invoices</span></router-link></li>
-                <li><router-link :to="{name: 'RecurringInvoices'}"><img :src="'/assets/images/portal/menu/recurring.png'" alt=""> <span>Recurring Invoices</span></router-link></li>
+                <li>
+                    <router-link :to="{name: 'Dashboard'}"><img :src="'/assets/images/portal/menu/dashboard.png'" alt=""> <span>Dashboard</span></router-link>
+                </li>
+                <li>
+                    <router-link :to="{name: 'Clients'}"><img :src="'/assets/images/portal/menu/clients.png'" alt=""> <span>Clients</span></router-link>
+                </li>
+                <li v-if="UserInfo.user_type === 2">
+                    <router-link :to="{name: 'Payees'}"><img :src="'/assets/images/portal/menu/payee.png'" alt=""> <span>Payees</span></router-link>
+                </li>
+                <li>
+                    <router-link :to="{name: 'Categories'}"><img :src="'/assets/images/portal/menu/category.png'" alt=""> <span>Categories</span></router-link>
+                </li>
+                <li>
+                    <router-link :to="{name: 'Invoices'}"><img :src="'/assets/images/portal/menu/invoice.png'" alt=""> <span>Invoices</span></router-link>
+                </li>
+                <li>
+                    <router-link :to="{name: 'RecurringInvoices'}"><img :src="'/assets/images/portal/menu/recurring.png'" alt=""> <span>Recurring Invoices</span></router-link>
+                </li>
             </ul>
         </div>
 
     </div>
 </template>
 <script>
+import ApiService from "@/portal/services/ApiService";
+import ApiRoutes from "@/portal/services/ApiRoutes";
+
 export default {
     components: {},
+    data(){
+        return {
+            UserInfo: null
+        }
+    },
     methods: {
-      showMenu(){
-          document.querySelector('.side_bar').classList.add('active');
-          document.querySelector('.main_body').classList.add('active');
-      },
-      hideMenu(){
-          document.querySelector('.side_bar').classList.remove('active');
-          document.querySelector('.main_body').classList.remove('active');
-      },
-        outsideClick(){
-          document.addEventListener('click', (e) => {
-              const sideBar = document.querySelector('.side_bar');
-              if(!sideBar.contains(e.target)){
-                  this.hideMenu();
-              }
-          })
+        showMenu() {
+            document.querySelector('.side_bar').classList.add('active');
+            document.querySelector('.main_body').classList.add('active');
+        },
+        hideMenu() {
+            document.querySelector('.side_bar').classList.remove('active');
+            document.querySelector('.main_body').classList.remove('active');
+        },
+        outsideClick() {
+            document.addEventListener('click', (e) => {
+                const sideBar = document.querySelector('.side_bar');
+                if (!sideBar.contains(e.target)) {
+                    this.hideMenu();
+                }
+            })
+        },
+        profile() {
+            ApiService.GET(ApiRoutes.profile, (res) => {
+                if(res.status === 200){
+                    this.UserInfo = res.data;
+                }
+            })
         }
     },
     mounted() {
         this.outsideClick();
     },
     created() {
+        this.profile();
     }
 }
 </script>
