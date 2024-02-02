@@ -56,7 +56,7 @@
                                             <div class="col-lg-2"></div>
                                             <div class="col-lg-5">
                                                 <div class="form-group mb-2">
-                                                    <input type="text" class="form-control form-control-lg fs-4 fw-bold" placeholder="Invoice title" value="Invoice">
+                                                    <input type="text" class="form-control form-control-lg fs-4 fw-bold text-theme" placeholder="Invoice" v-model="formData.invoice_title">
                                                 </div>
                                                 <div class="form-group mb-2">
                                                     <flat-pickr v-model="formData.invoice_date"
@@ -87,19 +87,19 @@
                                             <div class="col-lg-5">
                                                 <h4 class="fs-4 fw-bold">Invoice From</h4>
                                                 <div class="form-group mb-2">
-                                                    <input type="text" class="form-control" placeholder="Name">
+                                                    <input type="text" class="form-control" placeholder="Name" v-model="formData.invoice_from.name">
                                                 </div>
                                                 <div class="form-group mb-2">
-                                                    <input type="text" class="form-control" placeholder="Email">
+                                                    <input type="text" class="form-control" placeholder="Email" v-model="formData.invoice_from.email">
                                                 </div>
                                                 <div class="form-group mb-2">
-                                                    <input type="text" class="form-control" placeholder="Phone">
+                                                    <input type="text" class="form-control" placeholder="Phone" v-model="formData.invoice_from.phone">
                                                 </div>
                                                 <div class="form-group mb-2">
-                                                    <textarea class="form-control" placeholder="Address" rows="2"></textarea>
+                                                    <textarea class="form-control" placeholder="Address" rows="2" v-model="formData.invoice_from.address"></textarea>
                                                 </div>
                                                 <div class="form-group mb-2">
-                                                    <select name="currency" id="currency" class="form-select" v-model="formData.currency">
+                                                    <select name="invoice_currency" class="form-select" v-model="formData.invoice_currency">
                                                         <optgroup label="Currency">
                                                             <option value="BDT">BDT</option>
                                                             <option value="USD">USD</option>
@@ -136,24 +136,22 @@
                                                         </template>
                                                     </select>
                                                 </div>
-
                                                 <div class="form-group mb-2">
-                                                    <input type="text" class="form-control" placeholder="Name">
+                                                    <input type="text" class="form-control" placeholder="Name" v-model="formData.invoice_to.name">
                                                 </div>
                                                 <div class="form-group mb-2">
-                                                    <input type="text" class="form-control" placeholder="Email">
+                                                    <input type="text" class="form-control" placeholder="Email" v-model="formData.invoice_to.email">
                                                 </div>
                                                 <div class="form-group mb-2">
-                                                    <input type="text" class="form-control" placeholder="Phone">
+                                                    <input type="text" class="form-control" placeholder="Phone" v-model="formData.invoice_to.phone">
                                                 </div>
                                                 <div class="form-group mb-2">
-                                                    <textarea class="form-control" placeholder="Address" rows="2"></textarea>
+                                                    <textarea class="form-control" placeholder="Address" rows="2" v-model="formData.invoice_to.address"></textarea>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <!--Invoice Items-->
-
                                         <div class="row">
                                             <div class="col-lg-12 my-3">
                                                 <div class="table-data table-responsive">
@@ -326,7 +324,7 @@ export default {
                     phone: '',
                     address: '',
                 },
-                currency: 'BDT',
+                invoice_currency: 'BDT',
                 invoice_item_headings: {
                     description: 'Services',
                     frequency: 'Hours',
@@ -406,6 +404,7 @@ export default {
             apiService.POST(apiRoutes.invoiceNumber, param,(res) => {
                 this.formData.invoice_no = res.invoice_no;
                 this.invoice_number = res.invoice_number;
+                this.formData.invoice_title = res.invoice_number;
             })
         },
 
@@ -428,6 +427,7 @@ export default {
         /*change invoice type*/
         changeInvoiceType(){
             this.formData.invoice_no = '';
+            this.formData.invoice_title = '';
             this.formData.client_id = '';
             this.formData.payee_id = '';
             this.invoice_number = '';

@@ -14,28 +14,8 @@ class InvoiceRepository
      */
     public static function save(array $invoiceData): array|Invoices
     {
-        $invoiceModel = new Invoices();
-        $invoiceModel->user_id = $invoiceData['user_id'];
-        $invoiceModel->client_id = $invoiceData['client_id'] ?? null;
-        $invoiceModel->payee_id = $invoiceData['payee_id'] ?? null;
-        $invoiceModel->recurring_id = $invoiceData['recurring_id'] ?? 0;
-        $invoiceModel->category_id = $invoiceData['category_id'];
-        $invoiceModel->invoice_no = $invoiceData['invoice_no'];
-        $invoiceModel->invoice_number = $invoiceData['invoice_number'];
-        $invoiceModel->invoice_date = $invoiceData['invoice_date'] ?? null;
-        $invoiceModel->invoice_due_date = $invoiceData['invoice_due_date'] ?? null;
-        $invoiceModel->invoice_status = $invoiceData['invoice_status'] ?? null;
-        $invoiceModel->cancel_reason = $invoiceData['cancel_reason'] ?? null;
-        $invoiceModel->overdue_reason = $invoiceData['overdue_reason'] ?? null;
-        $invoiceModel->currency = $invoiceData['currency'];
-        $invoiceModel->sub_total = $invoiceData['sub_total'] ?? null;
-        $invoiceModel->tax = $invoiceData['tax'] ?? null;
-        $invoiceModel->discount = $invoiceData['discount'] ?? null;
-        $invoiceModel->bonus = $invoiceData['bonus'] ?? null;
-        $invoiceModel->total = $invoiceData['total'] ?? null;
-        $invoiceModel->note = $invoiceData['note'] ?? null;
-        $invoiceModel->invoice_item_headings = $invoiceData['invoice_item_headings'] ?? null;
-        if (!$invoiceModel->save()) {
+        $invoiceModel = Invoices::create($invoiceData);
+        if (!$invoiceModel) {
             return ['message' => 'Cannot save invoice'];
         }
         return $invoiceModel;
@@ -47,22 +27,11 @@ class InvoiceRepository
      */
     public static function update(Invoices $invoiceModel, array $invoiceData): array|Invoices
     {
-        $invoiceModel->category_id = $invoiceData['category_id'];
-        $invoiceModel->invoice_date = $invoiceData['invoice_date'] ?? null;
-        $invoiceModel->invoice_due_date = $invoiceData['invoice_due_date'] ?? null;
-        $invoiceModel->invoice_status = $invoiceData['invoice_status'] ?? null;
-        $invoiceModel->currency = $invoiceData['currency'];
-        $invoiceModel->sub_total = $invoiceData['sub_total'] ?? null;
-        $invoiceModel->tax = $invoiceData['tax'] ?? null;
-        $invoiceModel->discount = $invoiceData['discount'] ?? null;
-        $invoiceModel->bonus = $invoiceData['bonus'] ?? null;
-        $invoiceModel->total = $invoiceData['total'] ?? null;
-        $invoiceModel->note = $invoiceData['note'] ?? null;
-        $invoiceModel->invoice_item_headings = $invoiceData['invoice_item_headings'] ?? null;
-        if (!$invoiceModel->save()) {
+        $invoiceSave = Invoices::where('id', $invoiceModel->id)->update($invoiceData);
+        if (!$invoiceSave) {
             return ['message' => 'Cannot save invoice'];
         }
-        return $invoiceModel;
+        return Invoices::where('id', $invoiceModel->id)->first();
     }
 
     /**
@@ -74,7 +43,13 @@ class InvoiceRepository
     public static function getLatestNumber(User $user, string $invoiceUserType, string $invoiceUserId): int
     {
         $invoiceNumber = Invoices::where('user_id', $user['id'])
-            ->where($invoiceUserType, $invoiceUserId)
+            ->where(function ($q) use($invoiceUserType, $invoiceUserId){
+                if($invoiceUserType == 1){
+                    $q->where('client_id', $invoiceUserId);
+                } else {
+                    $q->where('payee_id', $invoiceUserId);
+                }
+            })
             ->pluck('invoice_no')->toArray();
         if (!empty($invoiceNumber)) {
             $maxNumber = max($invoiceNumber);
@@ -114,7 +89,8 @@ class InvoiceRepository
         if (!$invoice instanceof Invoices) {
             return ['message' => 'Cannot find invoice'];
         }
-        if ($invoice->invoice_due_date < date('c')) {
+
+        if ($invoice->invoice_status != InvoiceStatus::Paid && $invoice->invoice_due_date < date('c')) {
             $invoice->invoice_status = InvoiceStatus::Overdue;
             $invoice->save();
         }
@@ -171,7 +147,7 @@ class InvoiceRepository
         if ($pagination['pagination'] === true) {
             $result = $result->orderBy($pagination['order_by'], $pagination['order_mode'])->paginate($pagination['limit']);
             foreach ($result as $item) {
-                if ($item->invoice_due_date < date('c')) {
+                if ($item->invoice_status != InvoiceStatus::Paid && $item->invoice_due_date < date('c')) {
                     $item->invoice_status = InvoiceStatus::Overdue;
                     $item->save();
                 }
@@ -180,7 +156,7 @@ class InvoiceRepository
         }
         $result = $result->orderBy($pagination['order_by'], $pagination['order_mode'])->get()->toArray();
         foreach ($result as $item) {
-            if ($item->invoice_due_date < date('c')) {
+            if ($item->invoice_status != InvoiceStatus::Paid && $item->invoice_due_date < date('c')) {
                 $item->invoice_status = InvoiceStatus::Overdue;
                 $item->save();
             }

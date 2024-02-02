@@ -20,71 +20,117 @@
                             <div class="cl col-lg-12">
                                 <div class="card">
                                     <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="row mb-4">
-                                                    <div class="col-lg-5 col-xl-4">
-                                                        <div class="form-group mb-3">
-                                                            <div class="btn btn-light border">
-                                                                <label for="invoice_no" class="me-2"><strong>Invoice Number: </strong></label>
-                                                                <label for="invoice_no" class="text-theme"><strong>{{ formData.invoice_number }}</strong></label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group bg-light border p-3">
-                                                            <div class="form-group mb-3">
-                                                                <label for="category"><strong>Category</strong></label>
-                                                                <select name="category_id" id="category" class="form-select"
-                                                                        v-model="formData.category_id">
-                                                                    <option value="" disabled>Select</option>
-                                                                    <template v-if="categories.length > 0">
-                                                                        <option :value="each.id" v-for="(each) in categories">
-                                                                            {{ each.name }}
-                                                                        </option>
-                                                                    </template>
-                                                                </select>
-                                                                <div class="error-report text-danger "></div>
-                                                            </div>
-                                                            <div class="form-group mb-3">
-                                                                <label for="currency"><strong>Currency</strong></label>
-                                                                <select name="currency" id="currency"
-                                                                        class="form-select" v-model="formData.currency">
-                                                                    <option value="BDT">BDT</option>
-                                                                    <option value="USA">USA</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2 col-xl-4"></div>
-                                                    <div class="col-lg-5 col-xl-4">
-                                                        <div class="form-group bg-light border p-3">
-                                                            <div class="form-group mb-3">
-                                                                <label for="invoice_date"><strong>Invoice Date</strong></label>
-                                                                <flat-pickr v-model="formData.invoice_date"
-                                                                            :config="date_config"
-                                                                            class="form-control"
-                                                                            name="invoice_date"
-                                                                            placeholder="Select date"/>
-                                                            </div>
-                                                            <div class="form-group mb-3">
-                                                                <label for="invoice_due_date"><strong>Invoice Due
-                                                                    Date</strong></label>
-                                                                <flat-pickr v-model="formData.invoice_due_date"
-                                                                            :config="due_date_config"
-                                                                            class="form-control"
-                                                                            name="invoice_due_date"
-                                                                            placeholder="Select date"/>
-                                                            </div>
-                                                            <div class="form-group mb-3">
-                                                                <label for="invoice_status"><strong>Invoice Status</strong></label>
-                                                                <select name="invoice_status" id="invoice_status"
-                                                                        class="form-select" v-model="formData.invoice_status">
-                                                                    <option :value="each.value" v-for="(each) in status">{{ each.name }}</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
+
+                                        <!--Invoice Info-->
+                                        <div class="row mb-5">
+                                            <div class="col-lg-5">
+                                                <div class="w-100 d-flex align-items-center border p-5 d-inline-block rounded rounded-3 mb-2">
+                                                    <div class="w-100 text-center">
+                                                        <i class="fa fa-fw fa-2x fa-cloud-upload text-secondary"></i>
+                                                        <span class="fs-4 text-secondary fw-bold">Upload Logo</span>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-lg-2"></div>
+                                            <div class="col-lg-5">
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control form-control-lg fs-4 fw-bold text-theme" placeholder="Invoice" v-model="formData.invoice_title">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <flat-pickr v-model="formData.invoice_date"
+                                                                :config="date_config"
+                                                                class="form-control"
+                                                                name="invoice_date"
+                                                                placeholder="Invoice Date"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <flat-pickr v-model="formData.invoice_due_date"
+                                                                :config="due_date_config"
+                                                                class="form-control"
+                                                                name="invoice_due_date"
+                                                                placeholder="Invoice Due Date"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <select name="invoice_status" class="form-select" v-model="formData.invoice_status">
+                                                        <optgroup label="Invoice Status">
+                                                            <option :value="each.value" v-for="(each) in status">{{ each.name }}</option>
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!--Invoice From To-->
+                                        <div class="row mb-5">
+                                            <div class="col-lg-5">
+                                                <h4 class="fs-4 fw-bold">Invoice From</h4>
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control" placeholder="Name" v-model="formData.invoice_from.name">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control" placeholder="Email" v-model="formData.invoice_from.email">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control" placeholder="Phone" v-model="formData.invoice_from.phone">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <textarea class="form-control" placeholder="Address" rows="2" v-model="formData.invoice_from.address"></textarea>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <select name="invoice_currency" class="form-select" v-model="formData.invoice_currency">
+                                                        <optgroup label="Currency">
+                                                            <option value="BDT">BDT</option>
+                                                            <option value="USD">USD</option>
+                                                            <option value="AUD">AUD</option>
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <h4 class="fs-4 fw-bold" v-if="formData.invoice_type == 1">Bill To</h4>
+                                                <h4 class="fs-4 fw-bold" v-if="formData.invoice_type == 2">Pay To</h4>
+
+                                                <div class="form-group mb-2" v-if="formData.invoice_type == 1">
+                                                    <select name="client_id" id="client" class="form-select"
+                                                            v-model="formData.client_id" @change="getInvoiceNumber('client', formData.client_id)">
+                                                        <option value="" disabled>Select whom you want to bill</option>
+                                                        <template v-if="clients.length > 0">
+                                                            <option :value="each.id" v-for="(each) in clients">
+                                                                {{ each.name }}
+                                                            </option>
+                                                        </template>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mb-2" v-if="formData.invoice_type == 2">
+                                                    <select name="payee_id" id="payee" class="form-select"
+                                                            v-model="formData.payee_id"  @change="getInvoiceNumber('payee', formData.payee_id)">
+                                                        <option value="" disabled>Select whom you want to pay</option>
+                                                        <template v-if="payees.length > 0">
+                                                            <option :value="each.id" v-for="(each) in payees">
+                                                                {{ each.name }}
+                                                            </option>
+                                                        </template>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control" placeholder="Name" v-model="formData.invoice_to.name">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control" placeholder="Email" v-model="formData.invoice_to.email">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <input type="text" class="form-control" placeholder="Phone" v-model="formData.invoice_to.phone">
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <textarea class="form-control" placeholder="Address" rows="2" v-model="formData.invoice_to.address"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!--Invoice Items-->
+                                        <div class="row">
                                             <div class="col-lg-12 my-3">
                                                 <div class="table-data table-responsive">
                                                     <table class="table table-bordered">
@@ -206,6 +252,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -235,22 +282,28 @@ export default {
     data() {
         return {
             loading: false,
-            invoice_type: 1,
             formData: {
+                invoice_type: 1,
+                invoice_logo: "",
+                invoice_title: "",
+                invoice_date: '',
+                invoice_due_date: '',
+                invoice_status: 1,
+                invoice_from: {
+                    name: '',
+                    email: '',
+                    phone: '',
+                    address: '',
+                },
                 client_id: '',
                 payee_id: '',
-                category_id: '',
-                invoice_no: '',
-                invoice_number: '',
-                invoice_due_date: '',
-                invoice_date: '',
-                invoice_status: '',
-                sub_total: '',
-                tax: '',
-                discount: '',
-                bonus: '',
-                note: '',
-                currency: 'BDT',
+                invoice_to: {
+                    name: '',
+                    email: '',
+                    phone: '',
+                    address: '',
+                },
+                invoice_currency: 'BDT',
                 invoice_item_headings: {
                     description: 'Services',
                     frequency: 'Hours',
@@ -262,6 +315,10 @@ export default {
                     unit_value: '',
                     total: 0,
                 }],
+                tax: 0,
+                discount: '',
+                bonus: '',
+                note: '',
             },
             date_config: {
                 altFormat: "F j, Y",
@@ -343,9 +400,9 @@ export default {
                         invoice_status: res.data.invoice_status,
                         invoice_item_headings: res.data.invoice_item_headings_formatted
                     };
-                    this.subTotal = res.data.sub_total,
-                        this.total = res.data.sub_total
-                    this.invoice_type = res.data.client ? 1 : 2;
+                    this.subTotal = res.data.sub_total;
+                    this.total = res.data.sub_total;
+                    this.invoice_type = res.data.invoice_type;
                     this.calculateTotal();
                 } else {
                     apiService.ErrorHandler(res.errors)
@@ -361,8 +418,7 @@ export default {
                 this.loading = false;
                 if (res.status === 200) {
                     toaster.info(res.message);
-                    const route = this.isRecurring ? 'RecurringInvoices' : 'Invoices';
-                    this.$router.push({name: route})
+                    this.$router.push({name: 'Invoices'})
                 } else {
                     apiService.ErrorHandler(res.errors)
                 }

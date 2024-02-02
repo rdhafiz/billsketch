@@ -7,194 +7,146 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Invoice</title>
     <style>
-        .w-100 {
-            width: 100%;
-        }
-
-        .fw-bold {
-            font-weight: bold;
-        }
-
-        .mb-10 {
-            margin-bottom: 10px;
-        }
-
-        .border {
-            border: 1px solid #dee2e6;
-        }
-
-        .border-top-0 {
-            border-top: 0 !important;
-        }
-
-        .border-right-0 {
-            border-right: 0 !important;
-        }
-
-        .p-8 {
-            padding: 8px;
-        }
-
-        .text-end {
-            text-align: right;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .d-inline-block {
-            display: inline-block
-        }
-        .mb-40{
-            margin-bottom: 40px;
-        }
-        .mw-120{
-            min-width: 120px;
-        }
+        @vite('resources/scss/portal/app.scss')
     </style>
 </head>
 <body>
-<table class="w-100">
-    <tr>
-        <td class="w-100 text-center">
-            <img src="{{public_path('assets/images/bilify.png')}}" height="150px" alt="">
-        </td>
-        <td class="w-100">
-            <div class="fw-bold">{{ $invoice->client ? 'Client' : 'Payee'}}</div>
-            <div>{{ $invoice->client ? $invoice->client->name : $invoice->payee->name}}</div>
-        </td>
-        <td class="w-100"></td>
-        <td class="w-100"></td>
-        <td class="w-100 text-end">
-            <div class="fw-bold">Invoice No</div>
-            <div>{{ $invoice->invoice_number ?? '' }}</div>
-        </td>
-    </tr>
-    <tr>
-        <td class="w-100">
-            <div class="fw-bold">Category</div>
-            <div>{{ $invoice->category->name ?? '' }}</div>
-        </td>
-        <td class="w-100"></td>
-        <td class="w-100"></td>
-        <td class="w-100 text-end">
-            <div class="fw-bold">Invoice Date</div>
-            <div>{{ $invoice->invoice_date_formatted ?? '' }}</div>
-        </td>
-    </tr>
-    <tr>
-        <td class="w-100">
-            <div class="fw-bold">Recurring Periods</div>
-            <div{{ $invoice->recurring_frequency ?? 'N/A' }}</div>
-        </td>
-        <td class="w-100"></td>
-        <td class="w-100"></td>
-        <td class="w-100 text-end">
-            <div class="fw-bold">Invoice Due Date</div>
-            <div>{{ $invoice->invoice_due_date_formatted ?? '' }}</div>
-        </td>
-    </tr>
-    <tr>
-        <td class="w-100">
-            <div class="fw-bold">Currency</div>
-            <div>{{ $invoice->currency }}</div>
-        </td>
-        <td class="w-100"></td>
-        <td class="w-100"></td>
-        <td class="w-100 text-end">
-            <div class="fw-bold">Invoice Status</div>
-            <div>{{ $invoice->invoice_status_name ?? '' }}</div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="mb-40"></div>
-        </td>
-    </tr>
-    <tr>
-        <td class="w-100 border border-right-0">
-            <div class="fw-bold p-8">{{ $invoice->invoice_item_headings_formatted->description ?? '' }}</div>
-        </td>
-        <td class="w-100 border border-right-0">
-            <div class="fw-bold p-8 text-center">{{ $invoice->invoice_item_headings_formatted->frequency ?? '' }}</div>
-        </td>
-        <td class="w-100 border border-right-0">
-            <div class="fw-bold p-8 text-center">{{ $invoice->invoice_item_headings_formatted->value ?? '' }}</div>
-        </td>
-        <td class="w-100 border">
-            <div class="fw-bold p-8 text-center">Total</div>
-        </td>
-    </tr>
-    @if(count($invoice->invoice_items) > 0)
-        @foreach($invoice->invoice_items as $item)
-            <tr>
-                <td class="w-100 border border-top-0 border-right-0">
-                    <div class="p-8">{{ $item->description }}</div>
-                </td>
-                <td class="w-100 border border-top-0 border-right-0">
-                    <div class="p-8 text-end">{{ $item->unit_frequency }}</div>
-                </td>
-                <td class="w-100 border border-top-0 border-right-0">
-                    <div class="p-8 text-end">{{ $item->unit_value }}</div>
-                </td>
-                <td class="w-100 border border-top-0">
-                    <div class="p-8 text-end">{{ $item->total }}</div>
-                </td>
-            </tr>
 
-        @endforeach
-    @endif
-
-    <tr>
-        <td>
-            <div class="mb-40"></div>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" style="vertical-align: top;">
-            <div class="fw-bold">Notes</div>
-            <div>{{$invoice->note ?? ''}}</div>
-        </td>
-        <td colspan="2" class="text-end" style="vertical-align: top;">
-            <div class="w-100">
-                <div class="fw-bold d-inline-block">Invoice Subtotal:</div>
-                <div class="d-inline-block text-end mw-120">{{ $invoice->sub_total ?? '' }}</div>
+<div class="">
+    <div class="w-100 p-5">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="w-100 d-flex align-items-center border p-5 d-inline-block rounded rounded-3 mb-2">
+                    <div class="w-100 text-center">
+                        <span class="fs-4 text-secondary fw-bold">Brand Logo</span>
+                    </div>
+                </div>
             </div>
-            <div class="mb-10"></div>
-            <div class="w-100">
-                <div class="fw-bold d-inline-block">Invoice Tax:</div>
-                <div class="d-inline-block text-end mw-120">{{ $invoice->tax ?? '' }}</div>
+            <div class="col-lg-3 offset-lg-5">
+                <table class="table table-borderless">
+                    <tbody>
+                    <tr>
+                        <td class="fs-5 fw-bold text-secondary text-start">Invoice</td>
+                        <td class="fs-5 fw-bold text-secondary text-end">{{ $invoice->invoice_number }}</td>
+                    </tr>
+                    <tr>
+                        <td class="fs-5 fw-bold text-secondary text-start">Invoice Date</td>
+                        <td class="fs-5 fw-bold text-secondary text-end">{{ $invoice->invoice_date_formatted }}</td>
+                    </tr>
+                    <tr>
+                        <td class="fs-5 fw-bold text-secondary text-start">Due Date</td>
+                        <td class="fs-5 fw-bold text-secondary text-end">{{ $invoice->invoice_due_date_formatted }}</td>
+                    </tr>
+                    <tr>
+                        <td class="fs-5 fw-bold text-secondary text-start">Status</td>
+                        <td class="fs-5 fw-bold text-secondary text-end">{{ $invoice->invoice_status_name }}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="mb-10"></div>
-            <div class="w-100">
-                <div class="fw-bold d-inline-block">{{ $invoice->client ? 'Discount:' : 'Bonus:'}}</div>
-                @if($invoice->client)
-                <div class="d-inline-block text-end mw-120">{{ $invoice->discount ?? '' }}</div>
-                @else
-                <div class="d-inline-block text-end mw-120">{{ $invoice->bonus ?? '' }}</div>
+        </div>
+    </div>
+    <div class="w-100 bg-success px-5">
+        <div class="row">
+            <div class="col-lg-3 offset-lg-9">
+                <h1 class="w-100 fs-1 fw-bold m-0 p-0 bg-white text-center py-2">{{ $invoice->invoice_title }}</h1>
+            </div>
+        </div>
+    </div>
+    <div class="w-100 p-5">
+        <div class="row">
+            <div class="col-lg-4">
+                <h3 class="fs-3 fw-bold">Invoice From</h3>
+                <h5 class="m-0 p-0">Equidesk Team</h5>
+                <p class="m-0 p-0">
+                    West Barandipara, Kotwali
+                    Jessore-7400, Khulna, Bangladesh
+                </p>
+                <p class="m-0 p-0"><a href="mailto:ridwanul.hafiz@gmail.com">ridwanul.hafiz@gmail.com</a></p>
+                <p class="m-0 p-0"><a href="tel:880 1717 863 320">880 1717 863 320</a></p>
+            </div>
+            <div class="col-lg-4 offset-lg-4">
+                <h3 class="fs-3 fw-bold">Bill To</h3>
+                <h5 class="m-0 p-0">Omar Fareda</h5>
+                <p class="m-0 p-0">
+                    Sydney Olympic Park
+                </p>
+                <p class="m-0 p-0"><a href="mailto:ridwanul.hafiz@gmail.com">omar@mybos.com</a></p>
+                <p class="m-0 p-0"><a href="tel:880 1717 863 320">+612 8378 1096</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="w-100 p-5">
+        <div class="table-data table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="bg-secondary text-white p-3" style="min-width: 160px;">{{ $invoice->invoice_item_headings_formatted->description }}</th>
+                    <th class="bg-secondary text-white p-3 text-center" style="min-width: 160px;">{{ $invoice->invoice_item_headings_formatted->frequency }}</th>
+                    <th class="bg-secondary text-white p-3 text-center" style="min-width: 160px;">{{ $invoice->invoice_item_headings_formatted->value }}</th>
+                    <th class="bg-secondary text-white p-3 text-end" style="min-width: 160px;">Total</th>
+                </tr>
+                </thead>
+                @if(count($invoice->invoice_items) > 0)
+                    <tbody>
+                    @foreach($invoice->invoice_items as $each)
+                        <tr>
+                            <td class="p-3 fw-bold text-secondary">{{ $each['description'] }}</td>
+                            <td class="p-3 fw-bold text-secondary text-center">{{ $each['unit_frequency'] }}</td>
+                            <td class="p-3 fw-bold text-secondary text-center">{{ $each['unit_value'] }}</td>
+                            <td class="p-3 fw-bold text-secondary text-end">{{ $each['total'] }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
                 @endif
+            </table>
+        </div>
+    </div>
+    <div class="w-100 px-5">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="w-100">
+                    <div><strong>Notes</strong></div>
+                    <div>{{ $invoice->note }}</div>
+                </div>
+                <div class="w-100" v-if="invoice?.qrcode_path != null">
+                    <img :src="invoice?.qrcode_path" height="100" width="100" alt="">
+                </div>
             </div>
-            <div class="mb-10"></div>
-            <div class="w-100">
-                <div class="fw-bold d-inline-block">Invoice Total:</div>
-                <div class="text-end d-inline-block mw-120">{{ $invoice->total ?? '' }}</div>
+            <div class="col-lg-3 offset-lg-3">
+                <table class="table table-borderless">
+                    <tbody>
+                    <tr>
+                        <td class="text-start fs-5 fw-bold text-secondary">Sub Total:</td>
+                        <td class="text-end fs-5 fw-bold text-secondary">{{ $invoice->sub_total }}</td>
+                    </tr>
+                    <tr v-if="invoice?.tax > 0">
+                        <td class="text-start fs-5 fw-bold text-secondary">Tax:</td>
+                        <td class="text-end fs-5 fw-bold text-secondary">{{ $invoice->tax }}</td>
+                    </tr>
+                    <tr v-if="invoice?.discount > 0">
+                        <td class="text-start fs-5 fw-bold text-secondary">Discount:</td>
+                        <td class="text-end fs-5 fw-bold text-secondary">{{ $invoice->discount }}</td>
+                    </tr>
+                    <tr v-if="invoice?.bonus > 0">
+                        <td class="text-start fs-5 fw-bold text-secondary">Bonus:</td>
+                        <td class="text-end fs-5 fw-bold text-secondary">{{ $invoice->bonus }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-borderless">
+                    <tbody>
+                    <tr>
+                        <td class="text-start fs-4 fw-bold text-white bg-success">Total:</td>
+                        <td class="text-end fs-4 fw-bold text-white bg-success">{{ $invoice->total }}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-        </td>
-    </tr>
-    @if($invoice->qrcode_path)
-        <tr>
-            <td>
-                <div class="mb-40"></div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3"></td>
-            <td colspan="1" class="text-end">
-                <img src="{{$invoice->qrcode_path}}" height="100" width="100" alt="qr code">
-            </td>
-        </tr>
-    @endif
-</table>
+        </div>
+    </div>
+</div>
+
+
 </body>
 </html>

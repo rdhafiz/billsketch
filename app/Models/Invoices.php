@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Invoices extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
     protected $appends = [
         'invoice_date_formatted',
         'invoice_due_date_formatted',

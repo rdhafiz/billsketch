@@ -120,7 +120,7 @@ Route::group(['prefix' => 'user/log', 'middleware' => ['auth:api']], function ()
     Route::get('get/type', [UserActivityLogsController::class, 'getLogType']);
 });
 
-Route::group(['prefix' => 'invoice'], function () {
+Route::group(['prefix' => 'invoice', 'middleware' => ['auth:api']], function () {
     Route::post('download', [InvoicesController::class, 'download']);
 });
 Route::group(['prefix' => 'invoice/public'], function () {
